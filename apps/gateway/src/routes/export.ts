@@ -6,6 +6,20 @@
 import { Router, Request, Response } from 'express';
 import { getDb } from '../db.js';
 
+/**
+ * Safe CSV field sanitization to prevent CSV / Formula Injection (CWE-1236).
+ * Any cell value starting with dangerous formula characters (=, +, -, @, \t, \r)
+ * is escaped with a leading apostrophe before enclosing in quotes.
+ */
+function sanitizeCsvValue(val: unknown): string {
+  if (val === null || val === undefined) return '""';
+  let str = String(val);
+  if (/^[=+\-@\t\r]/.test(str)) {
+    str = "'" + str;
+  }
+  return `"${str.replace(/"/g, '""')}"`;
+}
+
 export const exportRouter = Router();
 
 // GET /api/v1/export/attempts
@@ -52,7 +66,7 @@ exportRouter.get('/attempts', (req: Request, res: Response) => {
       r.role,
       r.experimentSession ?? ''
     ];
-    csvRows.push(cols.map(v => `"${String(v).replace(/"/g, '""')}"`).join(','));
+    csvRows.push(cols.map(sanitizeCsvValue).join(','));
   }
 
   res.setHeader('Content-Type', 'text/csv');
@@ -81,7 +95,7 @@ exportRouter.get('/attempts/:id/frames', (req: Request, res: Response) => {
   const headers = ['attemptId', 'sessionId', 't_sec', 't_us', 'force_n', 'gyro_deg_s', 'accel_m_s2'];
   const csvRows = [headers.join(',')];
   for (const r of rows) {
-    csvRows.push([
+    const cols = [
       r.attemptId,
       r.sessionId,
       (r.tUs / 1000000).toFixed(3),
@@ -89,7 +103,8 @@ exportRouter.get('/attempts/:id/frames', (req: Request, res: Response) => {
       r.force,
       r.gx,
       r.ax
-    ].join(','));
+    ];
+    csvRows.push(cols.map(sanitizeCsvValue).join(','));
   }
 
   res.setHeader('Content-Type', 'text/csv');

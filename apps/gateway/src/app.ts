@@ -9,6 +9,7 @@
 import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
+import rateLimit from 'express-rate-limit';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -36,6 +37,26 @@ export function createApp(): express.Application {
   app.use(cors({ origin: config.corsOrigin }));
   app.use(express.json({ limit: '2mb' }));
 
+  // Rate Limiting (CWE-770 Protection against Brute Force & Volumetric Ingestion Floods)
+  const isTest = process.env.NODE_ENV === 'test';
+  const apiLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    limit: isTest ? 10000 : 1000,
+    standardHeaders: true,
+    legacyHeaders: false,
+    message: { error: 'Too many requests, please try again later.' }
+  });
+
+  const ingestLimiter = rateLimit({
+    windowMs: 60 * 1000,
+    limit: isTest ? 10000 : 120,
+    standardHeaders: true,
+    legacyHeaders: false,
+    message: { error: 'Device ingest rate limit exceeded. Please back off.' }
+  });
+
+  app.use('/api/', apiLimiter);
+
   // Health checks
   app.get(['/health', '/api/v1/health'], (req: Request, res: Response) => {
     res.json({
@@ -49,7 +70,7 @@ export function createApp(): express.Application {
   // API v1 Routing
   const v1 = express.Router();
   v1.use('/status', statusRouter);
-  v1.use('/attempts', attemptsRouter);
+  v1.use('/attempts', ingestLimiter, attemptsRouter);
   v1.use('/settings', settingsRouter);
   v1.use('/profile', profileRouter);
   v1.use('/notifications', notificationsRouter);

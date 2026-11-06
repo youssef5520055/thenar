@@ -1,0 +1,234 @@
+openapi: 3.0.3
+info:
+  title: Thenar Gateway API
+  description: Official REST & WebSocket API specification for the Thenar Smart-Safe Handle telemetry and enrollment toolchain.
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000/api/v1
+    description: Local Gateway Instance
+
+paths:
+  /status:
+    get:
+      summary: Get system device and lock status
+      responses:
+        '200':
+          description: Current combined status
+    post:
+      summary: Ingest device heartbeat & lock state (device token required)
+      parameters:
+        - in: header
+          name: x-device-token
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Status acknowledged
+
+  /attempts:
+    get:
+      summary: Paginated list of biometric attempts
+      parameters:
+        - in: query
+          name: outcome
+          schema:
+            type: string
+            enum: [all, accept, reject, fault]
+        - in: query
+          name: from
+          schema:
+            type: integer
+        - in: query
+          name: to
+          schema:
+            type: integer
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 20
+        - in: query
+          name: cursor
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of attempts with pagination metadata
+    post:
+      summary: Ingest attempt decision from device (device token required)
+      parameters:
+        - in: header
+          name: x-device-token
+          required: true
+          schema:
+            type: string
+      responses:
+        '201':
+          description: Attempt logged successfully
+
+  /attempts/{id}:
+    get:
+      summary: Get detailed attempt record including feature deviations
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Attempt detail
+        '404':
+          description: Attempt not found
+
+  /attempts/{id}/frames:
+    get:
+      summary: Get raw telemetry frames for an attempt (experiment mode only)
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Array of high-rate telemetry frames
+        '404':
+          description: Frames not stored or attempt not found
+
+  /frames/batch:
+    post:
+      summary: Batch ingest raw experiment frames (device token required)
+      parameters:
+        - in: header
+          name: x-device-token
+          required: true
+          schema:
+            type: string
+      responses:
+        '201':
+          description: Frames stored
+
+  /settings:
+    get:
+      summary: Retrieve active system settings
+      responses:
+        '200':
+          description: Settings object
+    put:
+      summary: Update settings and push config to connected devices
+      responses:
+        '200':
+          description: Settings updated
+
+  /profile:
+    get:
+      summary: Retrieve enrolled owner profile metadata
+      responses:
+        '200':
+          description: Profile metadata
+
+  /profile/enroll:
+    post:
+      summary: Trigger offline enrollment fitting (proxies to Python Enrollment Service)
+      responses:
+        '200':
+          description: Fitted model export with C-header and diagnostics
+
+  /profile/reset:
+    post:
+      summary: Reset enrolled profile (requires confirmation token)
+      responses:
+        '200':
+          description: Profile reset acknowledged
+
+  /notifications:
+    get:
+      summary: List audit and security notifications
+      responses:
+        '200':
+          description: List of notifications
+
+  /notifications/{id}/read:
+    post:
+      summary: Mark notification as read
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Notification updated
+
+  /export/attempts:
+    get:
+      summary: Export attempts audit log
+      parameters:
+        - in: query
+          name: format
+          schema:
+            type: string
+            enum: [csv, json]
+            default: csv
+      responses:
+        '200':
+          description: Exported file stream
+
+  /export/attempts/{id}/frames:
+    get:
+      summary: Export raw frames for a specific attempt
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: format
+          schema:
+            type: string
+            enum: [csv, json]
+            default: csv
+      responses:
+        '200':
+          description: Exported frames stream
+
+  /demo/simulate:
+    post:
+      summary: Trigger server-side simulator scenario (for one-command committee presentations)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                scenario:
+                  type: string
+                  enum: [owner-unlock, impostor, mimic-l1, mimic-l2, fingerprint-accepted-impostor, sensor-fault]
+      responses:
+        '200':
+          description: Simulation initiated
+
+  /demo/reset:
+    post:
+      summary: Reset database and re-seed 40 realistic attempts (dev/demo only)
+      responses:
+        '200':
+          description: Database reset and seeded
+
+  /analytics/summary:
+    get:
+      summary: Retrieve experimental benchmark statistics (returns placeholders pending lab dataset)
+      responses:
+        '200':
+          description: Analytics summary object
+
+  /health:
+    get:
+      summary: Service health check
+      responses:
+        '200':
+          description: Health status

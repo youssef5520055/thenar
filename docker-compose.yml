@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  enrollment:
+    build:
+      context: .
+      dockerfile: apps/enrollment/Dockerfile
+    container_name: thenar-enrollment
+    ports:
+      - "8000:8000"
+    environment:
+      - PORT=8000
+    restart: unless-stopped
+
+  gateway:
+    build:
+      context: .
+      dockerfile: apps/gateway/Dockerfile
+    container_name: thenar-gateway
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+      - DEVICE_TOKEN=thenar-device-secret-2026
+      - ENROLLMENT_SERVICE_URL=http://enrollment:8000
+      - DB_PATH=/data/thenar.sqlite
+    volumes:
+      - thenar-data:/data
+    depends_on:
+      - enrollment
+    restart: unless-stopped
+
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+    container_name: thenar-web
+    ports:
+      - "5173:80"
+    environment:
+      - VITE_API_URL=http://localhost:3000/api/v1
+      - VITE_WS_URL=ws://localhost:3000/ws/live
+    depends_on:
+      - gateway
+    restart: unless-stopped
+
+volumes:
+  thenar-data:

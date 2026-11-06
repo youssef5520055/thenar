@@ -1,0 +1,17 @@
+cff-version: 1.2.0
+message: "If you use or reference this smart-safe biometrics system in your research, please cite it as below."
+authors:
+  - family-names: "Elsayed"
+    given-names: "Youssef"
+  - family-names: "Elghamrawy"
+    given-names: "Malak"
+  - family-names: "Nasr"
+    given-names: "Jana"
+  - family-names: "Alaa Eldin"
+    given-names: "Mohamed"
+  - family-names: "Younss"
+    given-names: "Younss"
+title: "Thenar: Fingerprint-Gated Behavioral Biometric Smart-Safe Handle using Grip-Force and Motion Dynamics"
+version: 0.1.0-demo
+date-released: 2026-11-06
+institution: "Misr International University (MIU), Faculty of Computer Science"

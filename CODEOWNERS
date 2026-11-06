@@ -1,0 +1,23 @@
+# Thenar Repository Codeowners
+
+# Default owners for entire repository
+* @youssef5520055 @MalakElghamrawy @jananasrr @mohamed11-alaaeldin @youunss
+
+# Machine learning & Python enrollment toolchain
+apps/enrollment/ @MalakElghamrawy @youssef5520055
+
+# Gateway & TypeScript contracts
+apps/gateway/ @youssef5520055
+packages/contracts/ @youssef5520055
+packages/engine/ @youssef5520055 @MalakElghamrawy
+
+# Frontend companion app
+apps/web/ @youssef5520055
+src/ @youssef5520055
+
+# Hardware simulation & future embedded firmware
+apps/device-sim/ @jananasrr @mohamed11-alaaeldin @youssef5520055
+
+# Study material & documentation
+docs/ @youssef5520055 @MalakElghamrawy @jananasrr @mohamed11-alaaeldin @youunss
+study/ @youssef5520055 @MalakElghamrawy @jananasrr @mohamed11-alaaeldin @youunss

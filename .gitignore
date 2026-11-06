@@ -1,0 +1,63 @@
+# Node dependencies & logs
+node_modules/
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Build outputs
+dist/
+dist-ssr/
+build/
+*.tsbuildinfo
+.oxlint-cache/
+
+# Databases & local state
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
+*.db
+*.db-shm
+*.db-wal
+.device-state.json
+
+# Python & virtual environments
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.coverage
+htmlcov/
+.venv/
+venv/
+ENV/
+env/
+
+# Test & Playwright artifacts
+coverage/
+test-results/
+playwright-report/
+blob-report/
+playwright/.cache/
+
+# OS and Editor files
+.DS_Store
+Thumbs.db
+desktop.ini
+.idea/
+.vscode/*
+!.vscode/extensions.json
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+*.local

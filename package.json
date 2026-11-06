@@ -1,0 +1,63 @@
+{
+  "name": "thenar-monorepo",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "vite",
+    "dev:all": "tsx scripts/dev-all.ts",
+    "dev:gateway": "tsx apps/gateway/src/server.ts",
+    "dev:web": "vite",
+    "dev:enrollment": "apps\\enrollment\\.venv\\Scripts\\python.exe -m uvicorn apps.enrollment.src.main:app --port 8000 --reload",
+    "sim": "tsx apps/device-sim/src/cli.ts",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "test:contrast": "python scripts/audit_contrast.py",
+    "test:all": "vitest run"
+  },
+  "dependencies": {
+    "better-sqlite3": "^13.0.3",
+    "canvas-confetti": "^1.9.4",
+    "clsx": "^2.1.1",
+    "cors": "^2.8.6",
+    "express": "^5.3.0",
+    "framer-motion": "^11.18.2",
+    "helmet": "^8.3.0",
+    "lucide-react": "^0.475.0",
+    "pino": "^10.4.0",
+    "pino-pretty": "^13.2.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.29.0",
+    "recharts": "^2.15.1",
+    "tailwind-merge": "^2.6.0",
+    "ws": "^8.22.1",
+    "zod": "^4.6.7",
+    "zustand": "^5.0.3"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^9.6.0",
+    "@types/canvas-confetti": "^1.9.0",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
+    "@types/node": "^22.13.4",
+    "@types/react": "^18.3.18",
+    "@types/react-dom": "^18.3.5",
+    "@types/supertest": "^7.2.1",
+    "@types/ws": "^8.18.2",
+    "@vitejs/plugin-react": "^4.3.4",
+    "autoprefixer": "^10.4.20",
+    "playwright": "^1.65.0",
+    "postcss": "^8.4.49",
+    "supertest": "^7.3.1",
+    "tailwindcss": "^3.4.17",
+    "tsx": "^4.23.15",
+    "typescript": "^5.7.3",
+    "vite": "^6.1.0",
+    "vitest": "^5.1.0"
+  }
+}

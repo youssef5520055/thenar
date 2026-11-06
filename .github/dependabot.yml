@@ -1,0 +1,59 @@
+# Dependabot Configuration for Thenar Private Monorepo
+version: 2
+updates:
+  # Root & Workspace npm dependencies
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "04:00"
+      timezone: "Africa/Cairo"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "youssef5520055"
+    assignees:
+      - "youssef5520055"
+    labels:
+      - "dependencies"
+      - "security"
+    groups:
+      npm-minor-and-patch:
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
+
+  # Python ML Enrollment Service dependencies
+  - package-ecosystem: "pip"
+    directory: "/apps/enrollment"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "04:30"
+      timezone: "Africa/Cairo"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "youssef5520055"
+    assignees:
+      - "youssef5520055"
+    labels:
+      - "dependencies"
+      - "python"
+      - "security"
+
+  # GitHub Actions Workflows
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "05:00"
+      timezone: "Africa/Cairo"
+    open-pull-requests-limit: 3
+    reviewers:
+      - "youssef5520055"
+    labels:
+      - "ci"
+      - "dependencies"

@@ -37,6 +37,16 @@ export const AttemptLog: React.FC = () => {
     return true;
   });
 
+  // Safe CSV field sanitizer to mitigate CSV Formula Injection (CWE-1236)
+  const sanitizeCsv = (val: unknown): string => {
+    if (val === null || val === undefined) return '""';
+    let s = String(val);
+    if (/^[=+\-@\t\r]/.test(s)) {
+      s = "'" + s;
+    }
+    return `"${s.replace(/"/g, '""')}"`;
+  };
+
   // Export Entire Log
   const handleExportCSV = () => {
     const headers = [
@@ -53,17 +63,17 @@ export const AttemptLog: React.FC = () => {
       'Rejection_Reason',
     ];
     const rows = attempts.map(a => [
-      a.timestamp,
-      a.id,
-      a.sessionTag,
-      a.role,
-      a.gate1Result ? 'PASS' : 'FAIL',
-      a.gate1TemplateId,
-      a.score,
-      a.tau,
-      a.decision,
-      a.failureCounterAtTime,
-      `"${a.rejectionReason || ''}"`,
+      sanitizeCsv(a.timestamp),
+      sanitizeCsv(a.id),
+      sanitizeCsv(a.sessionTag),
+      sanitizeCsv(a.role),
+      sanitizeCsv(a.gate1Result ? 'PASS' : 'FAIL'),
+      sanitizeCsv(a.gate1TemplateId),
+      sanitizeCsv(a.score),
+      sanitizeCsv(a.tau),
+      sanitizeCsv(a.decision),
+      sanitizeCsv(a.failureCounterAtTime),
+      sanitizeCsv(a.rejectionReason || ''),
     ]);
 
     const csvContent = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
@@ -81,7 +91,13 @@ export const AttemptLog: React.FC = () => {
 
     if (format === 'csv') {
       const headers = ['time_s', 'force_N', 'gyro_deg_s', 'accel_m_s2', 'phase'];
-      const rows = att.frames.map(f => [f.t, f.force, f.gyro, f.accel, f.phase]);
+      const rows = att.frames.map(f => [
+        sanitizeCsv(f.t),
+        sanitizeCsv(f.force),
+        sanitizeCsv(f.gyro),
+        sanitizeCsv(f.accel),
+        sanitizeCsv(f.phase)
+      ]);
       const csv = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
       downloadFile(csv, `thenar_telemetry_${att.id}.csv`, 'text/csv');
     } else {
@@ -252,7 +268,7 @@ export const AttemptLog: React.FC = () => {
                       <td className="py-3.5 px-3 whitespace-nowrap">
                         <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
                           isAccept
-                            ? 'bg-[color-mix(in_srgb,var(--sol-accent)_15%,transparent)] text-[var(--sol-accent)] border border-[color-mix(in_srgb,var(--sol-accent)_30%,transparent)]'
+                            ? 'bg-[color-mix(in_srgb,var(--sol-accent)_15%,transparent)] text-[#085049] dark:text-[#2dd4bf] border border-[color-mix(in_srgb,var(--sol-accent)_30%,transparent)]'
                             : attempt.decision === 'TIMEOUT'
                             ? 'bg-amber-500/15 text-amber-800 dark:text-amber-400 border border-amber-500/30'
                             : 'bg-red-500/15 text-red-800 dark:text-red-400 border border-red-500/30'
@@ -303,7 +319,7 @@ export const AttemptLog: React.FC = () => {
                 <div className="flex items-center justify-between">
                   <span className="sol-mono font-bold text-[var(--sol-accent)] text-xs">{attempt.id}</span>
                   <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold sol-mono ${
-                    isAccept ? 'bg-[color-mix(in_srgb,var(--sol-accent)_15%,transparent)] text-[var(--sol-accent)]' : 'bg-red-500/15 text-red-800 dark:text-red-400 font-bold'
+                    isAccept ? 'bg-[color-mix(in_srgb,var(--sol-accent)_15%,transparent)] text-[#085049] dark:text-[#2dd4bf]' : 'bg-red-500/15 text-red-800 dark:text-red-400 font-bold'
                   }`}>
                     {attempt.decision}
                   </span>
@@ -348,7 +364,7 @@ export const AttemptLog: React.FC = () => {
                 <h3 className="text-base font-bold text-[var(--sol-ink)] font-serif flex items-center gap-2">
                   <span>{selectedAttempt.id}</span>
                   <span className={`text-xs px-2 py-0.5 rounded sol-mono ${
-                    selectedAttempt.decision === 'ACCEPT' ? 'bg-[color-mix(in_srgb,var(--sol-accent)_20%,transparent)] text-[var(--sol-accent)]' : 'bg-red-500/20 text-red-800 dark:text-red-400 font-bold'
+                    selectedAttempt.decision === 'ACCEPT' ? 'bg-[color-mix(in_srgb,var(--sol-accent)_20%,transparent)] text-[#085049] dark:text-[#2dd4bf]' : 'bg-red-500/20 text-red-800 dark:text-red-400 font-bold'
                   }`}>
                     {selectedAttempt.decision}
                   </span>
@@ -417,12 +433,12 @@ export const AttemptLog: React.FC = () => {
               </p>
 
               <div className="space-y-1.5 max-h-48 overflow-y-auto pr-1">
-                {selectedAttempt.deviations.map((dev) => {
+                {selectedAttempt.deviations.map((dev, idx) => {
                   const absZ = Math.abs(dev.zScore);
                   const isSevere = absZ > 2.0;
 
                   return (
-                    <div key={dev.featureKey} className="flex items-center gap-2 text-xs">
+                    <div key={`${dev.featureKey}-${idx}`} className="flex items-center gap-2 text-xs">
                       <span className="w-40 truncate text-[var(--sol-soft)] text-[11px]">{dev.label}</span>
                       <div className="flex-1 bg-[var(--sol-card)] h-3.5 rounded relative flex items-center px-1 border border-[var(--sol-line)]">
                         {/* Center zero line */}

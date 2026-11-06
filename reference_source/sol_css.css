@@ -1,0 +1,2057 @@
+.sol-root{--sol-paper:#efefed;--sol-panel:#e8e8e5;--sol-card:#f8f8f6;--sol-ink:#141414;--sol-soft:#4a4a47;--sol-muted:#9a9a95;--sol-line:rgba(20,20,20,.09);--sol-line2:rgba(20,20,20,.16);--sol-shadow:0 1px 2px rgba(20,20,20,.06),0 8px 24px -12px rgba(20,20,20,.18);--sol-nav:64px;--sol-dotc:rgba(20,20,20,.16);--sol-btn:var(--sol-button);--sol-on-btn:var(--sol-on-button);
+position:relative;min-height:var(--sol-h);background:var(--sol-paper);color:var(--sol-ink);overflow-x:clip;-webkit-font-smoothing:antialiased;line-height:1.5;font-size:15px;color-scheme:light}
+.sol-root[data-theme="dark"]{--sol-paper:#111111;--sol-panel:#171717;--sol-card:#1d1d1c;--sol-ink:#f1f1ee;--sol-soft:#c2c2bd;--sol-muted:#7d7d78;--sol-line:rgba(255,255,255,.08);--sol-line2:rgba(255,255,255,.15);--sol-shadow:0 1px 2px rgba(0,0,0,.4),0 10px 30px -14px rgba(0,0,0,.7);--sol-dotc:rgba(255,255,255,.14);--sol-btn:#ecebe6;--sol-on-btn:#151515;color-scheme:dark}
+.sol-root[data-theme="dark"] .sol-tint-mint{background:color-mix(in srgb,var(--sol-mint) 16%,var(--sol-card))}
+.sol-root :where(*,*::before,*::after){box-sizing:border-box}
+.sol-root :where(h1,h2,h3,h4,p,ul,ol,li,figure,dl,dd){margin:0;padding:0}
+.sol-root :where(ul,ol){list-style:none}
+.sol-root :where(button,input,select,textarea){font:inherit;color:inherit;letter-spacing:inherit}
+.sol-root :where(button){background:none;border:0;padding:0;cursor:pointer}
+.sol-root :where(a){color:inherit;text-decoration:none}
+.sol-root :where(svg,img,canvas){display:block;max-width:none}
+.sol-root :where(:focus-visible){outline:2px solid var(--sol-accent);outline-offset:3px;border-radius:6px}
+.sol-wrap{width:100%;max-width:1200px;margin:0 auto;padding:0 28px}
+.sol-sec{position:relative;border-top:1px solid var(--sol-line);scroll-margin-top:var(--sol-nav)}
+.sol-mono{font-family:var(--sol-mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--sol-muted)}
+.sol-h2{font-size:clamp(26px,3.1vw,38px);line-height:1.12;letter-spacing:-.025em;font-weight:500}
+.sol-muted{color:var(--sol-muted)}
+.sol-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.sol-skip{position:absolute;left:12px;top:-60px;z-index:80;background:var(--sol-btn);color:var(--sol-on-btn);padding:10px 14px;border-radius:10px;font-size:13px}
+.sol-skip:focus{top:12px}
+
+/* buttons */
+.sol-btn{display:inline-flex;align-items:center;gap:8px;height:40px;padding:0 16px 0 18px;border-radius:10px;background:var(--sol-btn);color:var(--sol-on-btn);font-size:13.5px;font-weight:500;letter-spacing:-.005em;box-shadow:inset 0 1px 0 rgba(255,255,255,.14),0 1px 2px rgba(0,0,0,.2),0 6px 16px -8px var(--sol-btn);transition:transform .2s cubic-bezier(.2,.8,.2,1),box-shadow .2s;white-space:nowrap}
+.sol-btn svg{transition:transform .25s cubic-bezier(.2,.8,.2,1)}
+.sol-btn:hover{transform:translateY(-1px);box-shadow:inset 0 1px 0 rgba(255,255,255,.18),0 2px 4px rgba(0,0,0,.2),0 12px 24px -10px var(--sol-btn)}
+.sol-btn:hover svg{transform:translateX(3px)}
+.sol-btn:active{transform:translateY(0) scale(.98)}
+.sol-btn-ghost{background:var(--sol-card);color:var(--sol-ink);box-shadow:var(--sol-shadow)}
+.sol-root[data-theme="dark"] .sol-btn{box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 1px 2px rgba(0,0,0,.5)}
+.sol-link{display:inline-flex;align-items:center;gap:6px;font-size:13.5px;font-weight:500;border-bottom:1px solid transparent;transition:border-color .2s,gap .2s}
+.sol-link:hover{border-color:currentColor;gap:9px}
+
+/* nav */
+.sol-nav{position:sticky;top:0;z-index:40;height:var(--sol-nav);transition:background .3s,box-shadow .3s,backdrop-filter .3s}
+.sol-nav[data-stuck]{background:color-mix(in srgb,var(--sol-paper) 78%,transparent);backdrop-filter:blur(14px) saturate(1.4);-webkit-backdrop-filter:blur(14px) saturate(1.4);box-shadow:0 1px 0 var(--sol-line)}
+.sol-nav .sol-wrap{height:var(--sol-nav);display:flex;align-items:center;justify-content:space-between;gap:20px}
+.sol-brand{display:inline-flex;align-items:center;gap:9px;font-weight:650;font-size:13px;letter-spacing:.14em;text-transform:uppercase}
+.sol-links{display:flex;gap:28px;font-size:13px;color:var(--sol-soft)}
+.sol-links a{position:relative;padding:6px 0;transition:color .2s}
+.sol-links a::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:currentColor;transform:scaleX(0);transform-origin:left;transition:transform .3s cubic-bezier(.2,.8,.2,1)}
+.sol-links a:hover{color:var(--sol-ink)}
+.sol-links a:hover::after{transform:scaleX(1)}
+.sol-navr{display:flex;align-items:center;gap:8px}
+.sol-icon-btn{width:36px;height:36px;border-radius:10px;display:inline-flex;align-items:center;justify-content:center;color:var(--sol-soft);transition:background .2s,color .2s}
+.sol-icon-btn:hover{background:var(--sol-line);color:var(--sol-ink)}
+.sol-pill{height:36px;padding:0 14px 0 16px;border-radius:10px;font-size:13px;background:var(--sol-card);color:var(--sol-ink);box-shadow:var(--sol-shadow)}
+.sol-burger{display:none}
+.sol-sheet{position:fixed;inset:0;z-index:90;display:flex;flex-direction:column;background:var(--sol-paper);padding:16px 22px 28px;animation:sol-fade .25s ease}
+.sol-sheet-top{display:flex;justify-content:space-between;align-items:center;height:40px}
+.sol-sheet ul{margin-top:36px;display:flex;flex-direction:column}
+.sol-sheet li a{display:flex;justify-content:space-between;align-items:center;padding:18px 0;border-bottom:1px solid var(--sol-line);font-size:24px;letter-spacing:-.02em}
+.sol-sheet .sol-btn{margin-top:auto;justify-content:center;height:48px}
+
+/* hero */
+.sol-hero{position:relative;min-height:clamp(620px,calc(var(--sol-h) - var(--sol-nav)),980px);display:flex;flex-direction:column}
+.sol-hero-grid{flex:1;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);align-items:center;gap:24px;padding-top:24px}
+.sol-h1{font-size:clamp(40px,5.4vw,68px);line-height:1.02;letter-spacing:-.04em;font-weight:450}
+.sol-h1 span{display:block}
+.sol-hero-text{margin-top:22px;max-width:380px;color:var(--sol-soft);font-size:15px}
+.sol-hero-cta{margin-top:30px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.sol-faces{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--sol-soft)}
+.sol-faces span{display:flex}
+.sol-faces img{width:26px;height:26px;border-radius:50%;object-fit:cover;border:2px solid var(--sol-paper);margin-left:-8px}
+.sol-faces img:first-child{margin-left:0}
+.sol-orb{position:relative;width:min(100%,600px);aspect-ratio:1/1;justify-self:center;cursor:grab;touch-action:pan-y;outline:none;border-radius:50%}
+.sol-orb:active{cursor:grabbing}
+.sol-orb:focus-visible{outline:2px dashed var(--sol-accent);outline-offset:-6px}
+.sol-orb canvas{position:absolute;left:0;top:0}
+.sol-orb-hint{position:absolute;left:50%;bottom:4%;transform:translateX(-50%);display:flex;align-items:center;gap:8px;white-space:nowrap;padding:6px 10px;border-radius:999px;background:color-mix(in srgb,var(--sol-card) 80%,transparent);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);box-shadow:var(--sol-shadow);transition:opacity .5s,transform .5s;pointer-events:none}
+.sol-orb[data-touched] .sol-orb-hint{opacity:0;transform:translate(-50%,6px)}
+.sol-orb-hint i{width:6px;height:6px;border-radius:50%;background:var(--sol-accent);animation:sol-ping 1.8s ease-out infinite}
+.sol-backers{padding-top:28px;padding-bottom:34px}
+.sol-backers ul{margin-top:12px;display:flex;align-items:center;gap:34px;flex-wrap:wrap;color:var(--sol-muted)}
+.sol-backers li{display:flex;align-items:center;gap:8px;font-size:13px;letter-spacing:.02em;transition:color .25s}
+.sol-backers li:hover{color:var(--sol-ink)}
+
+/* thesis */
+.sol-thesis{padding:clamp(72px,10vw,128px) 0}
+.sol-thesis-grid{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.3fr);gap:48px;align-items:center}
+.sol-thesis h2{font-size:clamp(22px,2.3vw,28px);line-height:1.2;letter-spacing:-.02em;font-weight:500;max-width:440px}
+.sol-thesis .sol-btn{margin-top:28px}
+.sol-flow{display:grid;grid-template-columns:minmax(150px,190px) minmax(30px,1fr) 46px minmax(24px,.7fr) minmax(250px,300px);align-items:center}
+.sol-pool{position:relative;background:var(--sol-card);border-radius:12px;box-shadow:var(--sol-shadow);padding:6px}
+.sol-pool li{height:46px;display:flex;align-items:center;gap:9px;padding:0 8px;border-radius:8px;transition:background .25s}
+.sol-pool li[data-hot]{background:color-mix(in srgb,var(--sol-accent) 9%,transparent)}
+.sol-pool img{width:26px;height:26px;border-radius:7px;object-fit:cover;filter:grayscale(.35)}
+.sol-pool b{display:block;font-size:12px;font-weight:550;line-height:1.2}
+.sol-pool small{display:block;font-size:11px;color:var(--sol-muted);font-variant-numeric:tabular-nums}
+.sol-pool-more{position:absolute;left:8px;top:calc(100% + 8px);font-size:11px;color:var(--sol-muted)}
+.sol-wire{width:100%;height:150px;overflow:visible}
+.sol-wire path{fill:none;stroke:var(--sol-line2);stroke-width:1.2;stroke-dasharray:3 4;vector-effect:non-scaling-stroke}
+.sol-wire .sol-run{stroke:var(--sol-accent);stroke-dasharray:6 60;animation:sol-run 2.6s linear infinite}
+.sol-wire1{height:4px}
+.sol-node{width:46px;height:46px;border-radius:12px;background:var(--sol-card);box-shadow:var(--sol-shadow);display:flex;align-items:center;justify-content:center;position:relative}
+.sol-node::after{content:"";position:absolute;inset:-6px;border-radius:16px;border:1px solid var(--sol-accent);opacity:0;animation:sol-node 2.6s ease-out infinite}
+.sol-ring{position:relative;width:100%;aspect-ratio:1/1}
+.sol-ring>svg{position:absolute;left:0;top:0;width:100%;overflow:visible}
+.sol-ring-c{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);text-align:center;width:46%}
+.sol-ring-c strong{display:block;font-size:clamp(18px,2vw,24px);letter-spacing:-.03em;font-weight:550;font-variant-numeric:tabular-nums;margin-top:2px}
+.sol-tag{position:absolute;transform:translate(-50%,-50%);display:flex;align-items:center;gap:6px;padding:4px 8px 4px 6px;border-radius:8px;background:var(--sol-card);box-shadow:var(--sol-shadow);font-size:11px;white-space:nowrap;transition:transform .3s cubic-bezier(.2,.8,.2,1),box-shadow .3s;z-index:1}
+.sol-tag span{color:var(--sol-muted);font-variant-numeric:tabular-nums}
+.sol-tag svg{color:var(--sol-muted)}
+.sol-tag[data-on]{transform:translate(-50%,-50%) scale(1.06);box-shadow:0 0 0 1px var(--sol-accent),var(--sol-shadow)}
+.sol-tag[data-on] svg{color:var(--sol-accent)}
+.sol-tag[data-flash] span{animation:sol-flash 1.2s ease}
+.sol-seg{transition:fill .3s,opacity .3s;cursor:pointer}
+
+/* paths */
+.sol-paths{padding:clamp(72px,10vw,120px) 0}
+.sol-paths-grid{margin-top:44px;display:grid;grid-template-columns:1fr 1fr;gap:28px}
+.sol-path h3{font-size:19px;font-weight:550;letter-spacing:-.015em}
+.sol-path>p{margin-top:10px;color:var(--sol-soft);max-width:440px;min-height:4.5em}
+.sol-path .sol-link{margin-top:16px}
+.sol-panel{position:relative;margin-top:22px;border-radius:14px;background:var(--sol-panel);overflow:hidden;aspect-ratio:16/10;box-shadow:inset 0 0 0 1px var(--sol-line)}
+.sol-panel svg.sol-art{position:absolute;left:0;top:0;width:100%}
+.sol-panel-ul{position:absolute;left:18px;top:16px;display:flex;flex-direction:column;gap:5px;font-size:11.5px;color:var(--sol-soft);z-index:1}
+.sol-panel-ul li{display:flex;align-items:center;gap:7px}
+.sol-panel-ul li::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--sol-muted)}
+.sol-panel-cap{position:absolute;left:18px;bottom:14px;font-size:11.5px;color:var(--sol-soft);z-index:1}
+.sol-panel-badge{position:absolute;right:16px;top:14px;text-align:right;z-index:1}
+.sol-panel-badge strong{display:flex;align-items:center;justify-content:flex-end;gap:7px;font-size:17px;letter-spacing:-.02em;font-weight:600;font-variant-numeric:tabular-nums}
+.sol-panel-badge strong::before{content:"";width:9px;height:9px;border-radius:3px;background:var(--sol-accent)}
+.sol-use{position:absolute;transform:translateY(calc(-100% - 4px));display:flex;align-items:center;gap:6px;white-space:nowrap;transition:color .25s;z-index:1}
+.sol-use i{width:8px;height:8px;border-radius:2px;box-shadow:inset 0 0 0 1px var(--sol-line2)}
+.sol-tip{position:absolute;transform:translate(-50%,calc(-100% - 10px));padding:5px 8px;border-radius:7px;background:var(--sol-ink);color:var(--sol-paper);font-size:11px;white-space:nowrap;pointer-events:none;font-variant-numeric:tabular-nums;z-index:2}
+.sol-ctrl{margin-top:14px;display:grid;grid-template-columns:auto 1fr;gap:12px 18px;align-items:center;padding:14px 16px;border-radius:12px;background:var(--sol-card);box-shadow:var(--sol-shadow)}
+.sol-ctrl label,.sol-ctrl .sol-lab{font-size:12px;color:var(--sol-muted)}
+.sol-seg-btns{display:flex;gap:4px;padding:3px;border-radius:9px;background:var(--sol-panel);width:max-content;max-width:100%}
+.sol-seg-btns button{height:28px;padding:0 11px;border-radius:7px;font-size:12px;color:var(--sol-soft);font-variant-numeric:tabular-nums;transition:background .2s,color .2s,box-shadow .2s}
+.sol-seg-btns button[aria-checked="true"]{background:var(--sol-card);color:var(--sol-ink);box-shadow:0 1px 2px rgba(0,0,0,.12)}
+.sol-range{display:flex;align-items:center;gap:12px}
+.sol-range output{font-size:12px;font-variant-numeric:tabular-nums;min-width:58px;text-align:right}
+.sol-range input{flex:1;appearance:none;-webkit-appearance:none;height:4px;border-radius:4px;background:linear-gradient(90deg,var(--sol-accent) var(--p),var(--sol-line2) var(--p));outline-offset:6px;cursor:pointer;min-width:0}
+.sol-range input::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--sol-card);box-shadow:0 0 0 1px var(--sol-line2),0 2px 6px rgba(0,0,0,.2);transition:transform .15s}
+.sol-range input::-moz-range-thumb{width:16px;height:16px;border:0;border-radius:50%;background:var(--sol-card);box-shadow:0 0 0 1px var(--sol-line2),0 2px 6px rgba(0,0,0,.2)}
+.sol-range input:active::-webkit-slider-thumb{transform:scale(1.15)}
+.sol-out{grid-column:1/-1;display:flex;justify-content:space-between;align-items:flex-end;gap:12px;padding-top:12px;border-top:1px dashed var(--sol-line2)}
+.sol-out strong{font-size:24px;letter-spacing:-.03em;font-weight:550;font-variant-numeric:tabular-nums;line-height:1}
+.sol-out small{display:block;font-size:11.5px;color:var(--sol-muted);margin-top:5px}
+.sol-out .sol-x{font-size:12px;padding:4px 8px;border-radius:7px;background:color-mix(in srgb,var(--sol-accent) 14%,transparent);color:var(--sol-ink);font-variant-numeric:tabular-nums;white-space:nowrap}
+
+/* steps */
+.sol-steps{padding:clamp(72px,10vw,120px) 0}
+.sol-steps-grid{margin-top:40px;display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.sol-step h3{font-size:16px;font-weight:550;letter-spacing:-.01em;margin-bottom:12px}
+.sol-step p{margin-top:14px;font-size:13.5px;color:var(--sol-soft);max-width:300px}
+.sol-vig{position:relative;display:block;width:100%;aspect-ratio:5/4;border-radius:14px;background:var(--sol-panel);overflow:hidden;box-shadow:inset 0 0 0 1px var(--sol-line);text-align:left;transition:box-shadow .3s}
+.sol-vig:hover{box-shadow:inset 0 0 0 1px var(--sol-line2)}
+.sol-vig::before{content:"";position:absolute;inset:0;background-image:radial-gradient(circle,var(--sol-dotc) 1px,transparent 1.3px);background-size:16px 16px;opacity:.55;-webkit-mask-image:radial-gradient(ellipse at center,#000 30%,transparent 75%);mask-image:radial-gradient(ellipse at center,#000 30%,transparent 75%)}
+.sol-vig-replay{position:absolute;right:10px;bottom:10px;display:flex;align-items:center;gap:5px;font-size:10.5px;color:var(--sol-muted);opacity:0;transition:opacity .25s}
+.sol-vig:hover .sol-vig-replay,.sol-vig:focus-visible .sol-vig-replay{opacity:1}
+.sol-vig *{animation-duration:7s;animation-iteration-count:infinite;animation-timing-function:cubic-bezier(.4,0,.2,1);animation-play-state:paused}
+.sol-vig[data-in] *{animation-play-state:running}
+.sol-guide{position:absolute;left:50%;top:0;bottom:0;border-left:1px dashed var(--sol-line2)}
+.sol-guide-h{position:absolute;left:0;right:0;top:50%;border-top:1px dashed var(--sol-line2)}
+.sol-card{position:absolute;background:var(--sol-card);border-radius:10px;box-shadow:var(--sol-shadow)}
+.sol-cursor{position:absolute;width:18px;height:18px;z-index:5;filter:drop-shadow(0 2px 3px rgba(0,0,0,.25))}
+.sol-q{left:50%;top:50%;width:62%;transform:translate(-50%,-62%);padding:12px 12px 12px}
+.sol-q .sol-mono{font-size:9px}
+.sol-field{margin-top:7px;height:28px;border-radius:7px;box-shadow:inset 0 0 0 1px var(--sol-line2);display:flex;align-items:center;padding:0 8px;font-family:var(--sol-mono);font-size:10px;color:var(--sol-soft);overflow:hidden}
+.sol-type{display:inline-block;overflow:hidden;white-space:nowrap;width:0;animation-name:sol-type;animation-timing-function:steps(22,end)}
+.sol-caret{display:inline-block;width:1px;height:12px;background:var(--sol-accent);margin-left:1px;animation-name:sol-blink;animation-duration:1s;animation-timing-function:steps(1)}
+.sol-join{position:absolute;left:50%;top:calc(50% + 34px);transform:translateX(-50%);height:30px;padding:0 14px;border-radius:8px;background:var(--sol-card);box-shadow:var(--sol-shadow);display:flex;align-items:center;gap:6px;font-size:11px;font-weight:550;white-space:nowrap;animation-name:sol-press}
+.sol-join i{width:14px;height:14px;border-radius:50%;background:var(--sol-accent);color:#fff;display:flex;align-items:center;justify-content:center;transform:scale(0);animation-name:sol-pop}
+.sol-c1{animation-name:sol-cur1}
+.sol-c2{animation-name:sol-cur2}
+.sol-c3{animation-name:sol-cur3}
+.sol-meta{position:absolute;left:14px;top:12px;font-size:9px}
+.sol-meta-r{position:absolute;right:14px;top:12px;display:flex;align-items:center;gap:6px;font-size:9px}
+.sol-meta-r i{width:7px;height:7px;border-radius:2px;background:var(--sol-accent)}
+.sol-stack{position:absolute;left:24%;top:30%;width:38%;height:34%}
+.sol-stack .sol-card{inset:0;display:flex;align-items:flex-end;padding:8px;gap:7px}
+.sol-stack .sol-card:nth-child(1){transform:translate(-18px,-18px);background:#2a2a2a;opacity:.92}
+.sol-stack .sol-card:nth-child(2){transform:translate(-12px,-12px);background:#353535;opacity:.95}
+.sol-stack .sol-card:nth-child(3){transform:translate(-6px,-6px);background:#424242}
+.sol-root[data-theme="dark"] .sol-stack .sol-card:nth-child(-n+3){background:#3b3b3a}
+.sol-app{animation-name:sol-slide;width:120%!important;padding:8px 10px!important;align-items:center!important}
+.sol-app img{width:24px;height:24px;border-radius:6px;object-fit:cover}
+.sol-app b{display:block;font-size:10.5px;font-weight:550;line-height:1.15}
+.sol-app small{display:block;font-size:8.5px;color:var(--sol-muted);text-transform:uppercase;letter-spacing:.06em}
+.sol-stamp{position:absolute;right:12%;top:58%;padding:4px 9px;border-radius:7px;border:1.5px solid var(--sol-accent);color:var(--sol-accent);font-size:10px;font-weight:650;letter-spacing:.1em;text-transform:uppercase;transform:rotate(-8deg) scale(0);animation-name:sol-stamp;background:var(--sol-card)}
+.sol-prof{left:16%;top:34%;width:64%;padding:10px;display:flex;gap:9px;align-items:center}
+.sol-prof img{width:30px;height:30px;border-radius:8px;object-fit:cover}
+.sol-prof b{display:block;font-size:11px;font-weight:550;line-height:1.2}
+.sol-prof small{display:block;font-size:9px;color:var(--sol-muted);line-height:1.3}
+.sol-bar{position:absolute;left:16%;width:64%;top:67%;height:5px;border-radius:5px;background:var(--sol-line2);overflow:hidden}
+.sol-bar i{display:block;height:5px;width:42%;background:var(--sol-accent);border-radius:5px;animation-name:sol-bar}
+.sol-back{position:absolute;right:20%;top:24%;height:24px;padding:0 10px;border-radius:7px;background:var(--sol-btn);color:var(--sol-on-btn);font-size:10px;font-weight:550;display:flex;align-items:center;animation-name:sol-press2}
+.sol-toast{position:absolute;left:50%;bottom:12%;transform:translate(-50%,20px);opacity:0;padding:6px 10px;border-radius:8px;background:var(--sol-ink);color:var(--sol-paper);font-size:10.5px;white-space:nowrap;animation-name:sol-toast;font-variant-numeric:tabular-nums}
+
+/* stories */
+.sol-stories{padding:clamp(72px,10vw,120px) 0}
+.sol-stories-head{display:flex;justify-content:space-between;align-items:flex-end;gap:20px}
+.sol-arrows{display:flex;gap:8px}
+.sol-arrows button{width:38px;height:38px;border-radius:10px;background:var(--sol-card);box-shadow:var(--sol-shadow);display:flex;align-items:center;justify-content:center;transition:transform .2s,opacity .2s}
+.sol-arrows button:hover:not(:disabled){transform:translateY(-1px)}
+.sol-arrows button:disabled{opacity:.4;cursor:default}
+.sol-track{margin-top:36px;display:grid;grid-auto-flow:column;grid-auto-columns:calc((100% - 22px)/2);gap:22px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;padding:4px 4px 12px;margin-left:-4px;margin-right:-4px;overscroll-behavior-x:contain}
+.sol-track::-webkit-scrollbar{display:none}
+.sol-story{scroll-snap-align:start;background:var(--sol-panel);border-radius:14px;padding:8px;box-shadow:inset 0 0 0 1px var(--sol-line);display:flex;flex-direction:column}
+.sol-story-h{display:flex;justify-content:space-between;align-items:baseline;gap:10px;padding:8px 8px 2px}
+.sol-story-h h3{font-size:17px;font-weight:550;letter-spacing:-.015em}
+.sol-story-reach{padding:0 8px 10px;font-size:12px;color:var(--sol-soft)}
+.sol-photo{position:relative;border-radius:10px;overflow:hidden;background:var(--sol-line)}
+.sol-photo img{width:100%;height:auto;aspect-ratio:16/11;object-fit:cover;object-position:50% 30%;transition:transform 1.2s cubic-bezier(.2,.8,.2,1)}
+.sol-story:hover .sol-photo img{transform:scale(1.04)}
+.sol-spark{position:absolute;left:10px;right:10px;bottom:10px;padding:10px 12px 8px;border-radius:10px;background:color-mix(in srgb,var(--sol-card) 86%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);transform:translateY(8px);opacity:0;transition:transform .45s cubic-bezier(.2,.8,.2,1),opacity .35s}
+.sol-story:hover .sol-spark,.sol-story:focus-within .sol-spark{transform:none;opacity:1}
+.sol-spark div{display:flex;justify-content:space-between;font-size:11px}
+.sol-spark b{font-weight:600;color:var(--sol-ink);font-variant-numeric:tabular-nums}
+.sol-spark svg{width:100%;margin-top:6px}
+.sol-points{padding:14px 8px 6px;display:flex;flex-direction:column;gap:7px}
+.sol-points li{display:flex;gap:9px;font-size:12.5px;color:var(--sol-soft);line-height:1.4}
+.sol-points li svg{flex:none;margin-top:3px;color:var(--sol-muted)}
+.sol-raise{margin:auto 8px 6px;padding-top:12px;border-top:1px dashed var(--sol-line2);display:flex;align-items:center;gap:12px;font-size:12px}
+.sol-raise b{font-variant-numeric:tabular-nums;font-weight:600}
+.sol-meter{flex:1;height:4px;border-radius:4px;background:var(--sol-line2);overflow:hidden}
+.sol-meter i{display:block;height:4px;border-radius:4px;background:var(--sol-accent);transform-origin:left;transform:scaleX(var(--k));transition:transform 1.4s cubic-bezier(.2,.8,.2,1)}
+.sol-dots{margin-top:14px;display:flex;justify-content:center;gap:6px}
+.sol-dots button{width:6px;height:6px;border-radius:6px;background:var(--sol-line2);transition:width .3s,background .3s}
+.sol-dots button[aria-current="true"]{width:20px;background:var(--sol-ink)}
+
+/* cta */
+.sol-cta{position:relative;padding:clamp(90px,12vw,150px) 0;text-align:center;overflow:hidden}
+.sol-cta::before{content:"";position:absolute;inset:0;background-image:radial-gradient(circle,var(--sol-dotc) 1.1px,transparent 1.5px);background-size:15px 15px;-webkit-mask-image:radial-gradient(420px circle at var(--mx,50%) var(--my,50%),#000 0%,rgba(0,0,0,.35) 45%,transparent 75%);mask-image:radial-gradient(420px circle at var(--mx,50%) var(--my,50%),#000 0%,rgba(0,0,0,.35) 45%,transparent 75%);transition:-webkit-mask-position .2s}
+.sol-cta::after{content:"";position:absolute;left:var(--mx,50%);top:var(--my,50%);width:360px;height:360px;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(circle,color-mix(in srgb,var(--sol-accent) 18%,transparent),transparent 65%);pointer-events:none;opacity:var(--glow,0);transition:opacity .4s}
+.sol-cta h2{position:relative;z-index:1;max-width:620px;margin:0 auto;font-size:clamp(28px,3.4vw,42px);line-height:1.1;letter-spacing:-.03em;font-weight:500}
+.sol-cta .sol-btn{position:relative;z-index:1;margin-top:30px}
+
+/* faq */
+.sol-faq{padding:clamp(72px,10vw,120px) 0}
+.sol-faq-grid{margin-top:40px;display:grid;grid-template-columns:1fr 1fr;gap:28px 44px}
+.sol-faq h3{font-size:14px;font-weight:550;margin-bottom:12px}
+.sol-qa{border-radius:10px;background:var(--sol-card);box-shadow:var(--sol-shadow);margin-bottom:8px;overflow:hidden;transition:box-shadow .25s}
+.sol-qa[data-open]{box-shadow:0 0 0 1px var(--sol-line2),var(--sol-shadow)}
+.sol-qa button{width:100%;min-height:44px;display:flex;justify-content:space-between;align-items:center;gap:14px;padding:10px 14px;text-align:left;font-size:13.5px}
+.sol-qa button svg{flex:none;transition:transform .35s cubic-bezier(.2,.8,.2,1);color:var(--sol-muted)}
+.sol-qa[data-open] button svg{transform:rotate(180deg);color:var(--sol-ink)}
+.sol-ans{display:grid;grid-template-rows:0fr;transition:grid-template-rows .4s cubic-bezier(.2,.8,.2,1)}
+.sol-qa[data-open] .sol-ans{grid-template-rows:1fr}
+.sol-ans>div{overflow:hidden}
+.sol-ans p{padding:0 14px 14px;font-size:13px;color:var(--sol-soft);max-width:520px}
+
+/* footer */
+.sol-foot{position:relative;padding-top:clamp(80px,10vw,120px);overflow:hidden}
+.sol-foot-tag{position:relative;z-index:1;text-align:center;font-size:clamp(18px,2vw,22px);letter-spacing:-.02em;max-width:420px;margin:0 auto;line-height:1.3}
+.sol-horizon{position:relative;height:340px;margin-top:-70px}
+.sol-horizon canvas{position:absolute;left:0;top:0}
+.sol-foot-row{position:relative;z-index:1;display:flex;justify-content:space-between;align-items:flex-end;gap:24px;padding-bottom:28px;margin-top:-120px;flex-wrap:wrap}
+.sol-foot-cols{display:flex;gap:44px}
+.sol-foot-cols h4{font-size:12px;font-weight:550;margin-bottom:8px}
+.sol-foot-cols li a{display:block;font-size:12px;color:var(--sol-soft);padding:2px 0;transition:color .2s}
+.sol-foot-cols li a:hover{color:var(--sol-ink)}
+.sol-foot-r{text-align:right;font-size:11.5px;color:var(--sol-muted);max-width:300px}
+.sol-foot-r p+p{margin-top:6px}
+
+/* dialog */
+.sol-modal{position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(10,10,10,.42);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);animation:sol-fade .25s ease}
+.sol-dialog{position:relative;width:100%;max-width:440px;max-height:calc(100svh - 32px);overflow:auto;border-radius:16px;background:var(--sol-paper);color:var(--sol-ink);box-shadow:0 30px 80px -20px rgba(0,0,0,.45);padding:26px;animation:sol-pop-in .35s cubic-bezier(.2,.8,.2,1)}
+.sol-dialog h2{font-size:22px;letter-spacing:-.025em;font-weight:550}
+.sol-dialog>p{margin-top:6px;font-size:13px;color:var(--sol-soft)}
+.sol-dialog form{margin-top:20px;display:flex;flex-direction:column;gap:14px}
+.sol-x-btn{position:absolute;right:14px;top:14px}
+.sol-roles{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.sol-roles button{padding:12px;border-radius:10px;background:var(--sol-card);box-shadow:inset 0 0 0 1px var(--sol-line2);text-align:left;transition:box-shadow .2s}
+.sol-roles button b{display:block;font-size:13px;font-weight:550}
+.sol-roles button small{display:block;font-size:11.5px;color:var(--sol-muted);margin-top:2px}
+.sol-roles button[aria-checked="true"]{box-shadow:inset 0 0 0 1.5px var(--sol-accent)}
+.sol-fld label{display:block;font-size:12px;color:var(--sol-soft);margin-bottom:6px}
+.sol-fld input,.sol-fld select{width:100%;height:42px;border-radius:10px;border:0;background:var(--sol-card);box-shadow:inset 0 0 0 1px var(--sol-line2);padding:0 12px;font-size:14px;outline:none;transition:box-shadow .2s}
+.sol-fld input:focus,.sol-fld select:focus{box-shadow:inset 0 0 0 1.5px var(--sol-accent)}
+.sol-fld[data-bad] input{box-shadow:inset 0 0 0 1.5px #d4473a}
+.sol-err{display:block;margin-top:5px;font-size:11.5px;color:#d4473a}
+.sol-dialog .sol-btn{justify-content:center;height:44px;margin-top:4px}
+.sol-done{text-align:center;padding:16px 0 4px}
+.sol-done i{width:52px;height:52px;margin:0 auto 16px;border-radius:50%;background:var(--sol-accent);color:#fff;display:flex;align-items:center;justify-content:center;animation:sol-pop-in .5s cubic-bezier(.2,1.4,.4,1)}
+.sol-spin{width:14px;height:14px;border-radius:50%;border:2px solid currentColor;border-right-color:transparent;animation:sol-spin .7s linear infinite}
+
+/* reveal */
+.sol-root[data-ready] .sol-rv[data-armed]:not([data-in]){opacity:0;transform:translateY(18px)}
+.sol-rv{transition:opacity .9s cubic-bezier(.2,.8,.2,1),transform .9s cubic-bezier(.2,.8,.2,1)}
+.sol-rv[data-d="1"]{transition-delay:.08s}
+.sol-rv[data-d="2"]{transition-delay:.16s}
+.sol-rv[data-d="3"]{transition-delay:.24s}
+
+@keyframes sol-fade{from{opacity:0}to{opacity:1}}
+@keyframes sol-pop-in{from{opacity:0;transform:translateY(10px) scale(.97)}to{opacity:1;transform:none}}
+@keyframes sol-spin{to{transform:rotate(360deg)}}
+@keyframes sol-ping{0%{box-shadow:0 0 0 0 var(--sol-accent)}70%,100%{box-shadow:0 0 0 7px transparent}}
+@keyframes sol-run{from{stroke-dashoffset:66}to{stroke-dashoffset:0}}
+@keyframes sol-node{0%{opacity:.7;transform:scale(.9)}80%,100%{opacity:0;transform:scale(1.25)}}
+@keyframes sol-flash{0%{color:var(--sol-accent)}100%{color:var(--sol-muted)}}
+@keyframes sol-type{0%,6%{width:0}40%,96%{width:22ch}100%{width:0}}
+@keyframes sol-blink{50%{opacity:0}}
+@keyframes sol-cur1{0%,40%{left:88%;top:94%;opacity:0}48%{opacity:1}58%{left:var(--cx);top:var(--cy);transform:none}62%{transform:scale(.85)}66%{transform:none;opacity:1}88%{opacity:1}92%,100%{left:var(--cx);top:var(--cy);opacity:0}}
+@keyframes sol-press{0%,60%{transform:translateX(-50%) scale(1)}62%{transform:translateX(-50%) scale(.94)}66%,100%{transform:translateX(-50%) scale(1)}}
+@keyframes sol-pop{0%,62%{transform:scale(0)}70%,92%{transform:scale(1)}100%{transform:scale(0)}}
+@keyframes sol-slide{0%,12%{transform:translate(0,0)}26%,100%{transform:translate(26px,-4px)}}
+@keyframes sol-cur2{0%,22%{left:92%;top:96%;opacity:0}30%{opacity:1}48%{left:var(--cx);top:var(--cy);transform:none}54%{transform:scale(.85)}58%{transform:none;opacity:1}86%{opacity:1}90%,100%{left:var(--cx);top:var(--cy);opacity:0}}
+@keyframes sol-stamp{0%,54%{transform:rotate(-8deg) scale(0);opacity:0}60%{transform:rotate(-8deg) scale(1.25);opacity:1}66%,94%{transform:rotate(-8deg) scale(1);opacity:1}100%{transform:rotate(-8deg) scale(1);opacity:0}}
+@keyframes sol-cur3{0%,18%{left:6%;top:94%;opacity:0}26%{opacity:1}45%{left:var(--cx);top:var(--cy);transform:none}50%{transform:scale(.85)}54%{transform:none;opacity:1}88%{opacity:1}92%,100%{left:var(--cx);top:var(--cy);opacity:0}}
+@keyframes sol-press2{0%,49%{transform:scale(1)}51%{transform:scale(.92)}54%,100%{transform:scale(1)}}
+@keyframes sol-bar{0%,52%{width:42%}66%,94%{width:58%}100%{width:42%}}
+@keyframes sol-toast{0%,54%{opacity:0;transform:translate(-50%,14px)}62%,90%{opacity:1;transform:translate(-50%,0)}100%{opacity:0;transform:translate(-50%,0)}}
+
+@media (max-width:960px){
+.sol-hero-grid{grid-template-columns:1fr;padding-top:12px}
+.sol-orb{width:min(100%,460px);order:-1;margin-bottom:-24px}
+.sol-thesis-grid{grid-template-columns:1fr}
+.sol-paths-grid{grid-template-columns:1fr;gap:56px}
+.sol-steps-grid{grid-template-columns:1fr;max-width:480px}
+.sol-faq-grid{grid-template-columns:1fr}
+}
+@media (max-width:720px){
+.sol-wrap{padding:0 18px}
+.sol-links,.sol-pill{display:none}
+.sol-burger{display:inline-flex}
+.sol-flow{grid-template-columns:1fr;justify-items:center;gap:0}
+.sol-flow>.sol-wire{display:none}
+.sol-flow>.sol-wire-v{display:block}
+.sol-pool{width:min(100%,280px)}
+.sol-pool-more{position:static;margin:8px 0 0 8px}
+.sol-ring{width:min(calc(100% - 130px),260px);margin:30px 0}
+.sol-use{display:none!important}
+.sol-legend{display:flex!important}
+.sol-track{grid-auto-columns:86%}
+.sol-ctrl{grid-template-columns:1fr}
+.sol-panel-ul{font-size:10.5px}
+.sol-foot-row{margin-top:-80px}
+.sol-foot-r{text-align:left}
+}
+.sol-legend{display:none;flex-wrap:wrap;gap:6px 14px;margin-top:10px;padding:0 4px}
+.sol-legend li{display:flex;align-items:center;gap:6px}
+.sol-legend i{width:8px;height:8px;border-radius:2px;box-shadow:inset 0 0 0 1px var(--sol-line2)}
+.sol-wire-v{display:none;width:2px;height:34px;border-left:1px dashed var(--sol-line2)}
+@media (prefers-reduced-motion:reduce){
+.sol-root *,.sol-root *::before,.sol-root *::after{animation-duration:.001s!important;animation-iteration-count:1!important;transition-duration:.001s!important}
+.sol-vig *{animation:none!important}
+.sol-type{width:22ch}
+.sol-join i,.sol-stamp{transform:rotate(-8deg) scale(1)}
+.sol-join i{transform:scale(1)}
+.sol-toast{opacity:1;transform:translate(-50%,0)}
+.sol-cursor{display:none}
+.sol-app{transform:translate(26px,-4px)}
+}
+`
+
+/* ---------- hooks ---------- */
+
+const useIsoLayoutEffect = typeof window !== "undefined" ? React.useLayoutEffect : React.useEffect
+
+function useReducedMotion() {
+  const [reduced, setReduced] = React.useState(false)
+  React.useEffect(() => {
+    if (typeof matchMedia !== "function") return
+    const mq = matchMedia("(prefers-reduced-motion: reduce)")
+    const on = () => setReduced(mq.matches)
+    on()
+    mq.addEventListener("change", on)
+    return () => mq.removeEventListener("change", on)
+  }, [])
+  return reduced
+}
+
+function useTheme(pref: "system" | "light" | "dark") {
+  const [dark, setDark] = React.useState(pref === "dark")
+  React.useEffect(() => {
+    if (pref !== "system") {
+      setDark(pref === "dark")
+      return
+    }
+    const mq = typeof matchMedia === "function" ? matchMedia("(prefers-color-scheme: dark)") : null
+    const read = () => {
+      const el = document.documentElement
+      if (el.classList.contains("dark")) return setDark(true)
+      if (el.classList.contains("light")) return setDark(false)
+      setDark(!!(mq && mq.matches))
+    }
+    read()
+    const mo = new MutationObserver(read)
+    mo.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] })
+    if (mq) mq.addEventListener("change", read)
+    return () => {
+      mo.disconnect()
+      if (mq) mq.removeEventListener("change", read)
+    }
+  }, [pref])
+  return [dark, setDark] as const
+}
+
+/** Reveal-on-scroll, armed only after mount, so nothing is hidden without JS or under reduced motion. */
+function useReveal(root: { current: HTMLElement | null }, reduced: boolean) {
+  React.useEffect(() => {
+    const el = root.current
+    if (!el || reduced || typeof IntersectionObserver === "undefined") return
+    const items = Array.from(el.querySelectorAll(".sol-rv"))
+    const io = new IntersectionObserver(
+      (es) => {
+        for (const e of es)
+          if (e.isIntersecting) {
+            e.target.setAttribute("data-in", "")
+            io.unobserve(e.target)
+          }
+      },
+      { rootMargin: "0px 0px -8% 0px" }
+    )
+    const vh = window.innerHeight
+    for (const it of items) {
+      // what is already on screen is never hidden
+      if (it.getBoundingClientRect().top < vh) continue
+      it.setAttribute("data-armed", "")
+      io.observe(it)
+    }
+    return () => io.disconnect()
+  }, [root, reduced])
+}
+
+/** Whether the element is on screen now. */
+function useOnScreen(ref: { current: Element | null }, margin = "0px") {
+  const [on, setOn] = React.useState(false)
+  React.useEffect(() => {
+    const el = ref.current
+    if (!el) return
+    if (typeof IntersectionObserver === "undefined") {
+      setOn(true)
+      return
+    }
+    const io = new IntersectionObserver((es) => setOn(es[es.length - 1].isIntersecting), { rootMargin: margin })
+    io.observe(el)
+    return () => io.disconnect()
+  }, [ref, margin])
+  return on
+}
+
+/** Eases a number toward its target. */
+function useTween(target: number, reduced: boolean, ms = 650) {
+  const [v, setV] = React.useState(target)
+  const cur = React.useRef(target)
+  React.useEffect(() => {
+    if (reduced) {
+      cur.current = target
+      setV(target)
+      return
+    }
+    const a = cur.current
+    const t0 = performance.now()
+    let raf = 0
+    const tick = (now: number) => {
+      const k = Math.min(1, (now - t0) / ms)
+      const x = a + (target - a) * (1 - Math.pow(1 - k, 3))
+      cur.current = x
+      setV(x)
+      if (k < 1) raf = requestAnimationFrame(tick)
+    }
+    raf = requestAnimationFrame(tick)
+    return () => cancelAnimationFrame(raf)
+  }, [target, reduced, ms])
+  return v
+}
+
+/** Keeps Tab inside a dialog, closes on Escape and gives focus back on close. */
+function useDialog(open: boolean, ref: { current: HTMLElement | null }, close: () => void) {
+  React.useEffect(() => {
+    if (!open) return
+    const prev = document.activeElement as HTMLElement | null
+    const el = ref.current
+    const focusables = () =>
+      el ? (Array.from(el.querySelectorAll('button,[href],input,select,textarea,[tabindex]:not([tabindex="-1"])')) as HTMLElement[]).filter((n) => !n.hasAttribute("disabled")) : []
+    const first = focusables()[0]
+    if (first) first.focus()
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        e.preventDefault()
+        close()
+        return
+      }
+      if (e.key !== "Tab") return
+      const f = focusables()
+      if (!f.length) return
+      const a = f[0]
+      const b = f[f.length - 1]
+      if (e.shiftKey && document.activeElement === a) {
+        e.preventDefault()
+        b.focus()
+      } else if (!e.shiftKey && document.activeElement === b) {
+        e.preventDefault()
+        a.focus()
+      }
+    }
+    document.addEventListener("keydown", onKey)
+    const html = document.documentElement
+    const overflow = html.style.overflow
+    html.style.overflow = "hidden"
+    return () => {
+      document.removeEventListener("keydown", onKey)
+      html.style.overflow = overflow
+      if (prev && prev.focus) prev.focus()
+    }
+  }, [open, ref, close])
+}
+
+/* ---------- canvas plumbing ---------- */
+
+/** Draws dots in colour and alpha buckets, so a frame costs a few dozen fillStyle changes instead of thousands. */
+function makeBuckets(colors: number, alphas: number) {
+  const b: number[][] = []
+  for (let i = 0; i < colors * alphas; i++) b.push([])
+  return {
+    colors,
+    alphas,
+    add(c: number, a: number, x: number, y: number, s: number) {
+      b[c * alphas + a].push(x, y, s)
+    },
+    flush(ctx: CanvasRenderingContext2D, palette: string[]) {
+      for (let c = 0; c < colors; c++)
+        for (let a = 0; a < alphas; a++) {
+          const list = b[c * alphas + a]
+          if (!list.length) continue
+          ctx.fillStyle = palette[c]
+          ctx.globalAlpha = (a + 1) / alphas
+          for (let i = 0; i < list.length; i += 3) {
+            const s = list[i + 2]
+            ctx.fillRect(list[i] - s / 2, list[i + 1] - s / 2, s, s)
+          }
+          list.length = 0
+        }
+      ctx.globalAlpha = 1
+    },
+  }
+}
+
+function sizeCanvas(wrap: HTMLElement, canvas: HTMLCanvasElement) {
+  const r = wrap.getBoundingClientRect()
+  const dpr = Math.min(2, window.devicePixelRatio || 1)
+  const w = Math.max(1, Math.round(r.width))
+  const h = Math.max(1, Math.round(r.height))
+  canvas.width = Math.round(w * dpr)
+  canvas.height = Math.round(h * dpr)
+  canvas.style.width = w + "px"
+  canvas.style.height = h + "px"
+  return { w, h, dpr }
+}
+
+/* ---------- the orb ---------- */
+
+function Orb({ accent, dark, reduced, label }: { accent: string; dark: boolean; reduced: boolean; label: string }) {
+  const wrapRef = React.useRef(null as HTMLDivElement | null)
+  const canvasRef = React.useRef(null as HTMLCanvasElement | null)
+  const [touched, setTouched] = React.useState(false)
+  const on = useOnScreen(wrapRef, "120px")
+  const api = React.useRef({ nudge: (_d: number) => {}, ripple: () => {} })
+
+  React.useEffect(() => {
+    const wrap = wrapRef.current
+    const canvas = canvasRef.current
+    if (!wrap || !canvas) return
+    const ctx = canvas.getContext("2d")
+    if (!ctx) return
+    const grey: Rgb = dark ? [118, 118, 112] : [126, 126, 120]
+    const warm = hexToRgb(accent)
+    const hot: Rgb = [Math.min(255, warm[0] + 30), Math.min(255, warm[1] + 50), Math.min(255, warm[2] + 50)]
+    const colors = ramp(grey, warm, 14).concat(ramp(warm, hot, 3).slice(1))
+    const buckets = makeBuckets(colors.length, 5)
+    let W = 0
+    let H = 0
+    let dpr = 1
+    let pts = fibSphere(10, 7)
+    let n = 0
+    const resize = () => {
+      const s = sizeCanvas(wrap, canvas)
+      W = s.w
+      H = s.h
+      dpr = s.dpr
+      const want = Math.round(Math.min(15000, Math.max(5000, (W * H) / 24)))
+      if (want !== n) {
+        n = want
+        pts = fibSphere(n, 11)
+      }
+    }
+    resize()
+
+    const st = {
+      yaw: 0.9,
+      pitch: -0.32,
+      vel: 0.12,
+      auto: reduced ? 0 : 0.12,
+      drag: false,
+      moved: 0,
+      lx: 0,
+      ly: 0,
+      lt: 0,
+      px: -1e4,
+      py: -1e4,
+      hover: 0,
+      hoverTo: 0,
+      ripples: [] as { x: number; y: number; t: number }[],
+    }
+    const tmp = [0, 0, 0]
+    let last = performance.now()
+    let raf = 0
+    let running = false
+
+    const draw = (now: number) => {
+      const dt = Math.min(0.05, (now - last) / 1000)
+      last = now
+      if (!st.drag) {
+        st.vel += (st.auto - st.vel) * Math.min(1, dt * 1.6)
+        st.yaw += st.vel * dt
+      }
+      st.hover += (st.hoverTo - st.hover) * Math.min(1, dt * 6)
+      st.ripples = st.ripples.filter((r) => now - r.t < 1600)
+
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
+      ctx.clearRect(0, 0, W, H)
+      const R = Math.min(W, H) * 0.43
+      const cx = W / 2
+      const cy = H / 2
+      const cyw = Math.cos(st.yaw)
+      const syw = Math.sin(st.yaw)
+      const cp = Math.cos(st.pitch)
+      const sp = Math.sin(st.pitch)
+      const rad = Math.max(70, R * 0.38)
+      const rad2 = rad * rad
+      const base = Math.max(1.05, R / 210)
+      // a faint haze under the lit cap, so the dense side reads as a glow, not just dots
+      const gx = cx + LIGHT[0] * R * 0.55
+      const gy = cy + LIGHT[1] * R * 0.55
+      const glow = ctx.createRadialGradient(gx, gy, 0, gx, gy, R * 1.05)
+      glow.addColorStop(0, "rgba(" + warm[0] + "," + warm[1] + "," + warm[2] + "," + (dark ? 0.16 : 0.13) + ")")
+      glow.addColorStop(1, "rgba(" + warm[0] + "," + warm[1] + "," + warm[2] + ",0)")
+      ctx.fillStyle = glow
+      ctx.beginPath()
+      ctx.arc(cx, cy, R * 1.02, 0, Math.PI * 2)
+      ctx.fill()
+
+      for (let i = 0; i < n; i++) {
+        const o = i * 5
+        rotate(pts[o], pts[o + 1], pts[o + 2], cyw, syw, cp, sp, tmp)
+        const x = tmp[0]
+        const y = tmp[1]
+        const z = tmp[2]
+        const k = pts[o + 3]
+        let sx = cx + x * R * k
+        let sy = cy + y * R * k
+        const sh = shade(x, y, z)
+        let lit = sh.lit
+        let alpha = (sh.density - pts[o + 4]) * 5
+        if (alpha <= 0.02) continue
+        if (alpha > 1) alpha = 1
+        // the far side shows through, faintly
+        if (z < 0) alpha *= 0.08 + 0.22 * (1 + z)
+
+        // ripples run across the surface from where it was clicked
+        for (let r = 0; r < st.ripples.length; r++) {
+          const rp = st.ripples[r]
+          const age = (now - rp.t) / 1000
+          const front = age * R * 1.25
+          const d = Math.hypot(sx - rp.x, sy - rp.y)
+          const band = Math.exp(-Math.pow((d - front) / (R * 0.09), 2)) * (1 - age / 1.6)
+          if (band > 0.01 && z > -0.2) {
+            sx += x * band * R * 0.07
+            sy += y * band * R * 0.07
+            lit += band * 0.9
+            alpha = Math.min(1, alpha + band * 0.6)
+          }
+        }
+
+        // the pointer parts the dots
+        if (st.hover > 0.01 && z > -0.1) {
+          const dx = sx - st.px
+          const dy = sy - st.py
+          const d2 = dx * dx + dy * dy
+          if (d2 < rad2 && d2 > 0.01) {
+            const d = Math.sqrt(d2)
+            const f = (1 - d / rad) * (1 - d / rad) * st.hover * R * 0.09
+            sx += (dx / d) * f
+            sy += (dy / d) * f
+            lit += (1 - d / rad) * st.hover * 0.35
+          }
+        }
+
+        const t = smooth(-0.25, 0.7, lit)
+        const ci = Math.min(colors.length - 1, Math.round(t * 13 + Math.max(0, lit - 1.05) * 6))
+        const ai = Math.min(4, Math.floor(alpha * 4.999))
+        const size = base * (0.7 + 0.7 * (z * 0.5 + 0.5)) * (0.8 + pts[o + 4] * 0.4)
+        buckets.add(ci, ai, sx, sy, size)
+      }
+      buckets.flush(ctx, colors)
+    }
+
+    const loop = (now: number) => {
+      draw(now)
+      if (running) raf = requestAnimationFrame(loop)
+    }
+    const start = () => {
+      if (running) return
+      running = true
+      last = performance.now()
+      raf = requestAnimationFrame(loop)
+    }
+    const stop = () => {
+      running = false
+      cancelAnimationFrame(raf)
+    }
+    // under reduced motion nothing runs on its own: one frame, and one per interaction
+    const kick = () => {
+      if (!reduced) return
+      draw(performance.now())
+    }
+
+    const local = (e: PointerEvent) => {
+      const r = canvas.getBoundingClientRect()
+      return [e.clientX - r.left, e.clientY - r.top]
+    }
+    const onDown = (e: PointerEvent) => {
+      const [x, y] = local(e)
+      st.drag = true
+      st.moved = 0
+      st.lx = x
+      st.ly = y
+      st.lt = performance.now()
+      try {
+        canvas.setPointerCapture(e.pointerId)
+      } catch {}
+    }
+    const onMove = (e: PointerEvent) => {
+      const [x, y] = local(e)
+      st.px = x
+      st.py = y
+      st.hoverTo = e.pointerType === "mouse" || st.drag ? 1 : 0
+      if (st.drag) {
+        const now = performance.now()
+        const dx = x - st.lx
+        const dy = y - st.ly
+        st.moved += Math.abs(dx) + Math.abs(dy)
+        st.yaw += dx * 0.008
+        st.pitch = Math.max(-1.1, Math.min(1.1, st.pitch + dy * 0.005))
+        const dts = Math.max(0.008, (now - st.lt) / 1000)
+        st.vel = st.vel * 0.6 + ((dx * 0.008) / dts) * 0.4
+        st.lx = x
+        st.ly = y
+        st.lt = now
+        if (st.moved > 6) setTouched(true)
+      }
+      kick()
+    }
+    const onUp = (e: PointerEvent) => {
+      if (!st.drag) return
+      st.drag = false
+      if (st.moved < 6) {
+        const [x, y] = local(e)
+        st.ripples.push({ x, y, t: performance.now() })
+        setTouched(true)
+      }
+      if (e.pointerType !== "mouse") st.hoverTo = 0
+      st.vel = Math.max(-4, Math.min(4, st.vel))
+      kick()
+    }
+    const onLeave = () => {
+      st.hoverTo = 0
+      kick()
+    }
+    canvas.addEventListener("pointerdown", onDown)
+    canvas.addEventListener("pointermove", onMove)
+    canvas.addEventListener("pointerup", onUp)
+    canvas.addEventListener("pointercancel", onUp)
+    canvas.addEventListener("pointerleave", onLeave)
+
+    api.current = {
+      nudge: (d: number) => {
+        st.vel += d
+        if (reduced) st.yaw += d * 0.6
+        setTouched(true)
+        kick()
+      },
+      ripple: () => {
+        st.ripples.push({ x: W * 0.62, y: H * 0.36, t: performance.now() })
+        setTouched(true)
+        kick()
+      },
+    }
+
+    const ro = typeof ResizeObserver !== "undefined" ? new ResizeObserver(() => {
+      resize()
+      if (!running) draw(performance.now())
+    }) : null
+    if (ro) ro.observe(wrap)
+    const onVis = () => {
+      if (document.hidden) stop()
+      else if (on && !reduced) start()
+    }
+    document.addEventListener("visibilitychange", onVis)
+
+    draw(performance.now())
+    if (on && !reduced) start()
+
+    return () => {
+      stop()
+      if (ro) ro.disconnect()
+      document.removeEventListener("visibilitychange", onVis)
+      canvas.removeEventListener("pointerdown", onDown)
+      canvas.removeEventListener("pointermove", onMove)
+      canvas.removeEventListener("pointerup", onUp)
+      canvas.removeEventListener("pointercancel", onUp)
+      canvas.removeEventListener("pointerleave", onLeave)
+    }
+  }, [accent, dark, reduced, on])
+
+  return (
+    <div
+      ref={wrapRef}
+      className="sol-orb"
+      role="img"
+      tabIndex={0}
+      aria-label={label + ". Drag to spin, click to send a ripple. With the keyboard, arrow keys spin it and Enter sends a ripple."}
+      data-touched={touched ? "" : undefined}
+      onKeyDown={(e) => {
+        if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
+          e.preventDefault()
+          api.current.nudge(e.key === "ArrowLeft" ? -1.2 : 1.2)
+        } else if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault()
+          api.current.ripple()
+        }
+      }}
+    >
+      <canvas ref={canvasRef} aria-hidden="true" />
+      <span className="sol-orb-hint sol-mono" aria-hidden="true">
+        <i />
+        Drag to spin
+      </span>
+    </div>
+  )
+}
+
+/* ---------- the horizon ---------- */
+
+function Horizon({ accent, dark, reduced }: { accent: string; dark: boolean; reduced: boolean }) {
+  const wrapRef = React.useRef(null as HTMLDivElement | null)
+  const canvasRef = React.useRef(null as HTMLCanvasElement | null)
+  const on = useOnScreen(wrapRef, "80px")
+
+  React.useEffect(() => {
+    const wrap = wrapRef.current
+    const canvas = canvasRef.current
+    if (!wrap || !canvas) return
+    const ctx = canvas.getContext("2d")
+    if (!ctx) return
+    const grey: Rgb = dark ? [110, 110, 104] : [140, 140, 134]
+    const warm = hexToRgb(accent)
+    const colors = ramp(grey, warm, 12)
+    const buckets = makeBuckets(colors.length, 4)
+    const pts = horizonPoints(6000, 5)
+    let W = 0
+    let H = 0
+    let dpr = 1
+    const resize = () => {
+      const s = sizeCanvas(wrap, canvas)
+      W = s.w
+      H = s.h
+      dpr = s.dpr
+    }
+    resize()
+    let px = -1e4
+    let py = -1e4
+    let raf = 0
+    let running = false
+
+    const draw = (now: number) => {
+      const t = now / 1000
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
+      ctx.clearRect(0, 0, W, H)
+      const sx0 = Math.min(W * 0.6, 700)
+      const glow = ctx.createRadialGradient(W / 2, H, 0, W / 2, H, Math.min(W * 0.4, 420))
+      glow.addColorStop(0, "rgba(" + warm[0] + "," + warm[1] + "," + warm[2] + "," + (dark ? 0.22 : 0.16) + ")")
+      glow.addColorStop(1, "rgba(" + warm[0] + "," + warm[1] + "," + warm[2] + ",0)")
+      ctx.fillStyle = glow
+      ctx.fillRect(0, 0, W, H)
+      const sy0 = H * 1.9
+      const rr = 110
+      for (let i = 0; i < pts.length / 5; i++) {
+        const o = i * 5
+        // each dot drifts up and fades, then starts again lower down
+        const life = reduced ? 0.5 : (pts[o + 2] + t * 0.05 * pts[o + 3]) % 1
+        const gx = pts[o]
+        const gy = pts[o + 1] - (reduced ? 0 : life * 0.04)
+        const rad = Math.hypot(gx, gy)
+        let x = W / 2 + gx * sx0
+        let y = H + gy * sy0 * 0.5
+        if (y < -4) continue
+        const dx = x - px
+        const dy = y - py
+        const d2 = dx * dx + dy * dy
+        if (d2 < rr * rr && d2 > 0.01) {
+          const d = Math.sqrt(d2)
+          const f = (1 - d / rr) * (1 - d / rr) * 22
+          x += (dx / d) * f
+          y += (dy / d) * f
+        }
+        const tw = reduced ? 0.8 : Math.sin(life * Math.PI)
+        const a = tw * (1 - smooth(0.2, 0.95, rad)) * (0.55 + 0.45 * (1 - smooth(0, 0.35, rad)))
+        if (a < 0.04) continue
+        const ci = Math.min(colors.length - 1, Math.round((1 - smooth(0.03, 0.5, rad)) * (colors.length - 1)))
+        buckets.add(ci, Math.min(3, Math.floor(a * 3.999)), x, y, 0.9 + pts[o + 4] * 0.8)
+      }
+      buckets.flush(ctx, colors)
+    }
+    const loop = (now: number) => {
+      draw(now)
+      if (running) raf = requestAnimationFrame(loop)
+    }
+    const onMove = (e: PointerEvent) => {
+      const r = canvas.getBoundingClientRect()
+      px = e.clientX - r.left
+      py = e.clientY - r.top
+      if (reduced) draw(performance.now())
+    }
+    const onLeave = () => {
+      px = py = -1e4
+      if (reduced) draw(performance.now())
+    }
+    const host = wrap.parentElement || wrap
+    host.addEventListener("pointermove", onMove)
+    host.addEventListener("pointerleave", onLeave)
+    const ro = typeof ResizeObserver !== "undefined" ? new ResizeObserver(() => {
+      resize()
+      if (!running) draw(performance.now())
+    }) : null
+    if (ro) ro.observe(wrap)
+    draw(performance.now())
+    if (on && !reduced) {
+      running = true
+      raf = requestAnimationFrame(loop)
+    }
+    return () => {
+      running = false
+      cancelAnimationFrame(raf)
+      if (ro) ro.disconnect()
+      host.removeEventListener("pointermove", onMove)
+      host.removeEventListener("pointerleave", onLeave)
+    }
+  }, [accent, dark, reduced, on])
+
+  return (
+    <div ref={wrapRef} className="sol-horizon" aria-hidden="true">
+      <canvas ref={canvasRef} />
+    </div>
+  )
+}
+
+/* ---------- small drawings ---------- */
+
+function Arrow({ dir = "right", size = 14 }: { dir?: "right" | "left" | "down"; size?: number }) {
+  const r = dir === "left" ? 180 : dir === "down" ? 90 : 0
+  return (
+    <svg width={size} height={size} viewBox="0 0 16 16" fill="none" aria-hidden="true" style={{ transform: "rotate(" + r + "deg)" }}>
+      <path d="M3 8h9.5M8.5 3.5 13 8l-4.5 4.5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  )
+}
+
+function Check({ size = 12 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 16 16" fill="none" aria-hidden="true">
+      <path d="m3.5 8.5 3 3 6-7" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  )
+}
+
+function Mark({ size = 20 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 20.7 20.7" aria-hidden="true">
+      {LOGO_DOTS.map((d, i) => (
+        <circle key={i} cx={d.x} cy={d.y} r={d.hot ? 1.25 : 1.05} fill={d.hot ? "var(--sol-accent)" : "currentColor"} opacity={d.hot ? 1 : 0.55 + (d.x / 20) * 0.3} />
+      ))}
+    </svg>
+  )
+}
+
+function StreamIcon({ icon }: { icon?: SolStreamIcon }) {
+  const p = { stroke: "currentColor", strokeWidth: 1.4, fill: "none", strokeLinecap: "round" as const, strokeLinejoin: "round" as const }
+  return (
+    <svg width="13" height="13" viewBox="0 0 16 16" aria-hidden="true">
+      {icon === "rocket" ? (
+        <g {...p}>
+          <path d="M9.5 2.5c2.5 0 4 1.5 4 4L8 12l-4-4 5.5-5.5Z" />
+          <path d="M4 8 2 8.5 4 6M8 12l-.5 2 2-2" />
+          <circle cx="10" cy="6" r="1" />
+        </g>
+      ) : icon === "megaphone" ? (
+        <g {...p}>
+          <path d="M2.5 6.5v3h2l5 3v-9l-5 3h-2Z" />
+          <path d="M12 6c.8.6.8 3.4 0 4" />
+        </g>
+      ) : icon === "note" ? (
+        <g {...p}>
+          <path d="M6 12V3.5l7-1.5v8.5" />
+          <circle cx="4.5" cy="12" r="1.6" />
+          <circle cx="11.5" cy="10.5" r="1.6" />
+        </g>
+      ) : icon === "case" ? (
+        <g {...p}>
+          <rect x="2" y="5" width="12" height="8.5" rx="1.5" />
+          <path d="M6 5V3.5h4V5M2 9h12" />
+        </g>
+      ) : icon === "play" ? (
+        <g {...p}>
+          <rect x="2" y="3" width="12" height="10" rx="2" />
+          <path d="m7 6 3 2-3 2Z" />
+        </g>
+      ) : (
+        <g {...p}>
+          <path d="M8 2v3M8 11v3M2 8h3M11 8h3M4 4l1.8 1.8M10.2 10.2 12 12M12 4l-1.8 1.8M5.8 10.2 4 12" />
+        </g>
+      )}
+    </svg>
+  )
+}
+
+function BackerMark({ mark }: { mark?: SolBacker["mark"] }) {
+  const p = { stroke: "currentColor", strokeWidth: 1.4, fill: "none" }
+  return (
+    <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true">
+      {mark === "pine" ? (
+        <path d="M9 2 4 9h3l-3.5 5h11L11 9h3L9 2ZM9 14v2.5" {...p} strokeLinejoin="round" />
+      ) : mark === "rings" ? (
+        <g {...p}>
+          <circle cx="7" cy="9" r="4.5" />
+          <circle cx="11" cy="9" r="4.5" />
+        </g>
+      ) : mark === "monogram" ? (
+        <g {...p}>
+          <rect x="1.5" y="2.5" width="15" height="13" rx="2" />
+          <path d="M4.5 12V6l2.3 3.5L9 6v6M11.5 6.5l1.5 5.5 1.5-5.5" strokeLinejoin="round" />
+        </g>
+      ) : (
+        <path d="M1.5 10c2-3 3.5-3 5 0s3 3 5 0 3.5-3 5 0" {...p} strokeLinecap="round" />
+      )}
+    </svg>
+  )
+}
+
+function Cursor({ className, style }: { className: string; style?: React.CSSProperties }) {
+  return (
+    <svg className={"sol-cursor " + className} style={style} viewBox="0 0 18 18" aria-hidden="true">
+      <path d="M3 2v13l3.4-3.2 2.3 5 2.2-1-2.3-4.9H13L3 2Z" fill="#fff" stroke="#111" strokeWidth="1.2" strokeLinejoin="round" />
+    </svg>
+  )
+}
+
+function Head({ parts, as = "h2", className }: { parts: string; as?: "h1" | "h2"; className?: string }) {
+  const Tag = as
+  return (
+    <Tag className={className}>
+      {twoTone(parts).map((p, i) => (p.muted ? <span key={i} className="sol-muted">{p.text}</span> : <React.Fragment key={i}>{p.text}</React.Fragment>))}
+    </Tag>
+  )
+}
+
+/* ---------- sections ---------- */
+
+function Thesis({
+  data,
+  currency,
+  reduced,
+  onAction,
+}: {
+  data: NonNullable<StippleOrbLandingProps["thesis"]>
+  currency: string
+  reduced: boolean
+  onAction: (l?: SolLink) => void
+}) {
+  const ref = React.useRef(null as HTMLDivElement | null)
+  const on = useOnScreen(ref)
+  const investors = data.investors && data.investors.length ? data.investors.slice(0, 3) : DEFAULT_INVESTORS
+  const [streams, setStreams] = React.useState(() => (data.streams && data.streams.length ? data.streams : DEFAULT_THESIS.streams).slice(0, 6))
+  const [hot, setHot] = React.useState(-1)
+  const [flash, setFlash] = React.useState(-1)
+  const [row, setRow] = React.useState(0)
+  const stake = data.stake ?? DEFAULT_THESIS.stake
+  const total = streams.reduce((a, s) => a + s.value, 0)
+  const shown = hot >= 0 ? streams[hot].value * stake : total * stake
+  const tween = useTween(shown, reduced)
+
+  // earnings keep arriving while it is on screen
+  React.useEffect(() => {
+    if (!on || reduced) return
+    const id = window.setInterval(() => {
+      setStreams((s) => {
+        const i = Math.floor(Math.random() * s.length)
+        setFlash(i)
+        return s.map((x, k) => (k === i ? { ...x, value: x.value + 200 + Math.round(Math.random() * 1400) } : x))
+      })
+      setRow((r) => (r + 1) % 3)
+    }, 2600)
+    return () => window.clearInterval(id)
+  }, [on, reduced])
+
+  const arcs = ringArcs(streams.map((s) => s.value), 0.06, -Math.PI * 0.42, Math.PI * 1.25)
+  const shades = ["#c9c9c4", "#b9b9b3", "#d6d6d1", "#adada7", "#c2c2bc", "#d0d0ca"]
+  return (
+    <section className="sol-sec sol-thesis" data-sec="thesis" aria-labelledby="sol-thesis-h">
+      <div className="sol-wrap sol-thesis-grid">
+        <div className="sol-rv">
+          <Head parts={data.title} />
+          <span id="sol-thesis-h" className="sol-sr">{twoTone(data.title).map((p) => p.text).join("")}</span>
+          <button type="button" className="sol-btn" onClick={() => onAction(data.action)}>
+            {(data.action && data.action.label) || "Request access"}
+            <Arrow />
+          </button>
+        </div>
+        <div className="sol-flow sol-rv" data-d="1" ref={ref}>
+          <div className="sol-pool">
+            <ul aria-label="Backers">
+              {investors.map((v, i) => (
+                <li key={v.name} data-hot={row === i && !reduced ? "" : undefined}>
+                  {v.avatar ? <img src={v.avatar} alt="" width={26} height={26} /> : null}
+                  <div>
+                    <b>{v.name}</b>
+                    <small>{money(v.amount, currency)}</small>
+                  </div>
+                </li>
+              ))}
+            </ul>
+            <span className="sol-pool-more">+{data.more ?? DEFAULT_THESIS.more} backers</span>
+          </div>
+          <svg className="sol-wire" viewBox="0 0 100 150" preserveAspectRatio="none" aria-hidden="true">
+            {[25, 75, 125].map((y, i) => (
+              <React.Fragment key={y}>
+                <path d={"M0 " + (y - 0.5 + 6) + " C 55 " + (y + 6) + ", 45 75, 100 75"} />
+                <path className="sol-run" d={"M0 " + (y - 0.5 + 6) + " C 55 " + (y + 6) + ", 45 75, 100 75"} style={{ animationDelay: i * -0.8 + "s" }} />
+              </React.Fragment>
+            ))}
+          </svg>
+          <span className="sol-wire-v" aria-hidden="true" />
+          <div className="sol-node" aria-hidden="true">
+            <Mark size={22} />
+          </div>
+          <svg className="sol-wire sol-wire1" viewBox="0 0 100 4" preserveAspectRatio="none" aria-hidden="true">
+            <path d="M0 2 L100 2" />
+            <path className="sol-run" d="M0 2 L100 2" />
+          </svg>
+          <span className="sol-wire-v" aria-hidden="true" />
+          <div className="sol-ring">
+            <svg viewBox="0 0 300 300" aria-hidden="true">
+              <defs>
+                <filter id="sol-ring-sh" x="-20%" y="-20%" width="140%" height="140%">
+                  <feDropShadow dx="0" dy="6" stdDeviation="8" floodOpacity="0.12" />
+                </filter>
+              </defs>
+              <circle cx="150" cy="150" r="104" fill="none" stroke="var(--sol-card)" strokeWidth="30" filter="url(#sol-ring-sh)" />
+              {arcs.map((a, i) => (
+                <path
+                  key={i}
+                  className="sol-seg"
+                  d={arcPath(150, 150, 89, 119, a.a0, a.a1)}
+                  fill={hot === i ? "var(--sol-accent)" : shades[i % shades.length]}
+                  opacity={hot >= 0 && hot !== i ? 0.45 : 1}
+                  onPointerEnter={() => setHot(i)}
+                  onPointerLeave={() => setHot(-1)}
+                />
+              ))}
+              <circle cx="150" cy="150" r="78" fill="none" stroke="var(--sol-line2)" strokeDasharray="2 4" />
+            </svg>
+            <div className="sol-ring-c" aria-live="polite">
+              <span className="sol-mono">{hot >= 0 ? streams[hot].label : "Your " + Math.round(stake * 1000) / 10 + "% stake"}</span>
+              <strong>{money(tween, currency)}</strong>
+              <span className="sol-mono">this year</span>
+            </div>
+            {arcs.map((a, i) => {
+              const r = 0.5 + 0.47 * 1
+              const x = 50 + Math.cos(a.mid) * r * 50 * 0.98
+              const y = 50 + Math.sin(a.mid) * r * 50 * 0.98
+              return (
+                <button
+                  key={i}
+                  type="button"
+                  className="sol-tag"
+                  style={{ left: x + "%", top: y + "%" }}
+                  data-on={hot === i ? "" : undefined}
+                  data-flash={flash === i ? "" : undefined}
+                  onPointerEnter={() => setHot(i)}
+                  onPointerLeave={() => setHot(-1)}
+                  onFocus={() => setHot(i)}
+                  onBlur={() => setHot(-1)}
+                  onAnimationEnd={() => setFlash(-1)}
+                  aria-label={streams[i].label + ": " + money(streams[i].value, currency) + " earned this year"}
+                >
+                  <StreamIcon icon={streams[i].icon} />
+                  {streams[i].label}
+                  <span key={streams[i].value}>{compact(streams[i].value, currency)}</span>
+                </button>
+              )
+            })}
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+function SegButtons({ label, options, value, onChange }: { label: string; options: { label: string; value: number }[]; value: number; onChange: (v: number) => void }) {
+  const refs = React.useRef([] as (HTMLButtonElement | null)[])
+  const idx = Math.max(0, options.findIndex((o) => o.value === value))
+  return (
+    <div className="sol-seg-btns" role="radiogroup" aria-label={label}>
+      {options.map((o, i) => (
+        <button
+          key={o.value}
+          ref={(el) => {
+            refs.current[i] = el
+          }}
+          type="button"
+          role="radio"
+          aria-checked={i === idx}
+          tabIndex={i === idx ? 0 : -1}
+          onClick={() => onChange(o.value)}
+          onKeyDown={(e) => {
+            const j = nextIndex(i, e.key, options.length)
+            if (j < 0) return
+            e.preventDefault()
+            onChange(options[j].value)
+            const b = refs.current[j]
+            if (b) b.focus()
+          }}
+        >
+          {o.label}
+        </button>
+      ))}
+    </div>
+  )
+}
+
+function Range({ id, label, min, max, step, value, onChange, format }: { id: string; label: string; min: number; max: number; step: number; value: number; onChange: (v: number) => void; format: (v: number) => string }) {
+  const p = ((value - min) / (max - min)) * 100
+  return (
+    <>
+      <label htmlFor={id}>{label}</label>
+      <div className="sol-range">
+        <input
+          id={id}
+          type="range"
+          min={min}
+          max={max}
+          step={step}
+          value={value}
+          onChange={(e) => onChange(+e.target.value)}
+          style={{ ["--p" as string]: p + "%" } as React.CSSProperties}
+          aria-valuetext={format(value)}
+        />
+        <output htmlFor={id}>{format(value)}</output>
+      </div>
+    </>
+  )
+}
+
+function BackerPanel({ path, model, currency, reduced, uid }: { path: SolPath; model: SolModel; currency: string; reduced: boolean; uid: string }) {
+  const [amount, setAmount] = React.useState(25000)
+  const [years, setYears] = React.useState(model.years)
+  const [scrub, setScrub] = React.useState(-1)
+  const proj = projectStake(amount, model, years)
+  const total = useTween(proj.total, reduced)
+  const multiple = useTween(proj.multiple, reduced)
+  // the chart: years across, cumulative distributions up
+  const X0 = 252
+  const X1 = 500
+  const Y0 = 262
+  const Y1 = 64
+  const cap = Math.max(proj.total, amount) * 1.08
+  const pts = [[X0, Y0]].concat(proj.cumulative.map((v, i) => [X0 + ((i + 1) / years) * (X1 - X0), Y0 - (v / cap) * (Y0 - Y1)]))
+  const line = smoothPath(pts)
+  const area = line + " L" + X1 + " " + Y0 + " L" + X0 + " " + Y0 + " Z"
+  const beY = Y0 - (amount / cap) * (Y0 - Y1)
+  const wedge = (years / 15) * Math.PI * 1.15
+  const s = scrub >= 0 ? scrub : -1
+  const svgRef = React.useRef(null as SVGSVGElement | null)
+  const onScrub = (e: React.PointerEvent) => {
+    const svg = svgRef.current
+    if (!svg) return
+    const r = svg.getBoundingClientRect()
+    const x = ((e.clientX - r.left) / r.width) * 520
+    if (x < X0 - 10) return setScrub(-1)
+    setScrub(Math.max(0, Math.min(years - 1, Math.round(((x - X0) / (X1 - X0)) * years) - 1)))
+  }
+  return (
+    <div className="sol-path sol-rv">
+      <h3>{path.title}</h3>
+      <p>{path.text}</p>
+      <a className="sol-link" href="#paths" data-access="invest">
+        {path.link} <Arrow />
+      </a>
+      <div className="sol-panel sol-tint-mint" onPointerMove={onScrub} onPointerLeave={() => setScrub(-1)}>
+        <ul className="sol-panel-ul">
+          {path.bullets.map((b) => (
+            <li key={b}>{b}</li>
+          ))}
+        </ul>
+        <svg ref={svgRef} className="sol-art" viewBox="0 0 520 325" aria-hidden="true">
+          <defs>
+            <linearGradient id={uid + "-area"} x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stopColor="var(--sol-mint)" stopOpacity="0.95" />
+              <stop offset="1" stopColor="var(--sol-mint)" stopOpacity="0.15" />
+            </linearGradient>
+            <linearGradient id={uid + "-wedge"} x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stopColor="var(--sol-mint)" />
+              <stop offset="1" stopColor="var(--sol-mint)" stopOpacity="0.4" />
+            </linearGradient>
+          </defs>
+          <path d={"M0 " + Y0 + " H" + X1} stroke="var(--sol-line2)" strokeDasharray="3 4" />
+          <path d={area} fill={"url(#" + uid + "-area)"} />
+          <path d={line} fill="none" stroke="var(--sol-accent)" strokeOpacity="0.0" />
+          <path d={line} fill="none" stroke="color-mix(in srgb,var(--sol-mint) 50%,#3f8f4f)" strokeWidth="1.6" />
+          <path d={"M" + X0 + " " + beY + " H" + X1} stroke="var(--sol-soft)" strokeDasharray="2 4" opacity="0.6" />
+          <text x={X1 - 2} y={beY - 6} textAnchor="end" fontSize="10" fill="var(--sol-soft)">
+            {"Your " + compact(amount, currency) + " back"}
+          </text>
+          {proj.breakeven > 0 ? (
+            <circle cx={X0 + (proj.breakeven / years) * (X1 - X0)} cy={Y0 - (proj.cumulative[proj.breakeven - 1] / cap) * (Y0 - Y1)} r="3.5" fill="var(--sol-card)" stroke="var(--sol-soft)" />
+          ) : null}
+          {s >= 0 ? (
+            <g>
+              <path d={"M" + pts[s + 1][0] + " " + Y0 + " V" + pts[s + 1][1]} stroke="var(--sol-ink)" strokeOpacity="0.3" />
+              <circle cx={pts[s + 1][0]} cy={pts[s + 1][1]} r="4.5" fill="var(--sol-ink)" />
+            </g>
+          ) : null}
+          <circle cx="142" cy="184" r="70" fill="none" stroke="var(--sol-card)" strokeWidth="24" />
+          <path d={arcPath(142, 184, 58, 100, -Math.PI * 0.98, -Math.PI * 0.98 + wedge)} fill={"url(#" + uid + "-wedge)"} style={{ transition: reduced ? "none" : "d .5s" }} />
+          <circle cx="142" cy="184" r="58" fill="none" stroke="var(--sol-line2)" strokeDasharray="2 4" />
+          <text x="142" y="181" textAnchor="middle" fontSize="9" letterSpacing="1" fill="var(--sol-muted)" style={{ fontFamily: MONO }}>
+            UP TO
+          </text>
+          <text x="142" y="196" textAnchor="middle" fontSize="11" letterSpacing="1" fill="var(--sol-ink)" style={{ fontFamily: MONO }}>
+            {years + " YEARS"}
+          </text>
+        </svg>
+        {s >= 0 ? (
+          <span className="sol-tip" style={{ left: (pts[s + 1][0] / 520) * 100 + "%", top: (pts[s + 1][1] / 325) * 100 + "%" }}>
+            Year {s + 1}: {money(proj.cumulative[s], currency)}
+          </span>
+        ) : null}
+        <span className="sol-panel-cap">{path.caption}</span>
+      </div>
+      <div className="sol-ctrl">
+        <span className="sol-lab" id={uid + "-amt"}>
+          You put in
+        </span>
+        <SegButtons
+          label="You put in"
+          value={amount}
+          onChange={setAmount}
+          options={[5000, 25000, 100000].map((v) => ({ value: v, label: compact(v, currency) }))}
+        />
+        <Range id={uid + "-years"} label="Term" min={5} max={15} step={1} value={years} onChange={setYears} format={(v) => v + " years"} />
+        <div className="sol-out" aria-live="polite">
+          <div>
+            <strong>{money(total, currency)}</strong>
+            <small>
+              {proj.breakeven > 0 ? "Paid back in year " + proj.breakeven + ". " : "Not paid back within the term. "}
+              Illustrative, not a forecast.
+            </small>
+          </div>
+          <span className="sol-x">{multiple.toFixed(1)}x</span>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function RaisePanel({ path, model, currency, reduced, avatar }: { path: SolPath; model: SolModel; currency: string; reduced: boolean; avatar?: string }) {
+  const [income, setIncome] = React.useState(250000)
+  const [share, setShare] = React.useState(6)
+  const [hot, setHot] = React.useState(-1)
+  const years = model.years
+  const raise = capitalFor(income, share / 100, years, model.growth)
+  const tween = useTween(raise, reduced)
+  const uses = [
+    { label: "Sales & marketing", value: 42, fill: "var(--sol-cream)" },
+    { label: "Team", value: 22, fill: "var(--sol-mint)" },
+    { label: "Working capital", value: 36, fill: "var(--sol-sky)" },
+  ]
+  const arcs = ringArcs(uses.map((u) => u.value), 0.12, Math.PI * 0.72, Math.PI * 1.56)
+  const uid = React.useId().replace(/[^a-zA-Z0-9]/g, "")
+  return (
+    <div className="sol-path sol-rv" data-d="1">
+      <h3>{path.title}</h3>
+      <p>{path.text}</p>
+      <a className="sol-link" href="#paths" data-access="raise">
+        {path.link} <Arrow />
+      </a>
+      <div className="sol-panel">
+        <ul className="sol-panel-ul">
+          {path.bullets.map((b) => (
+            <li key={b}>{b}</li>
+          ))}
+        </ul>
+        <div className="sol-panel-badge">
+          <strong>{compact(tween, currency)}</strong>
+          <span className="sol-mono">Capital raised</span>
+        </div>
+        <svg className="sol-art" viewBox="0 0 520 325" aria-hidden="true">
+          <defs>
+            <clipPath id={uid + "-face"}>
+              <circle cx="260" cy="176" r="40" />
+            </clipPath>
+          </defs>
+          <circle cx="260" cy="176" r="86" fill="none" stroke="var(--sol-card)" strokeWidth="26" />
+          {arcs.map((a, i) => (
+            <path
+              key={i}
+              className="sol-seg"
+              d={arcPath(260, 176, hot === i ? 66 : 72, hot === i ? 116 : 108, a.a0, a.a1)}
+              fill={uses[i].fill}
+              stroke="var(--sol-line2)"
+              strokeDasharray="3 3"
+              opacity={hot >= 0 && hot !== i ? 0.5 : 1}
+              onPointerEnter={() => setHot(i)}
+              onPointerLeave={() => setHot(-1)}
+              style={{ transition: reduced ? "none" : "d .35s, opacity .3s" }}
+            />
+          ))}
+          <circle cx="260" cy="176" r="56" fill="var(--sol-card)" />
+          {avatar ? <image href={avatar} x="220" y="136" width="80" height="80" clipPath={"url(#" + uid + "-face)"} preserveAspectRatio="xMidYMid slice" /> : null}
+          <circle cx="260" cy="176" r="40" fill="none" stroke="var(--sol-line2)" />
+          {arcs.map((a, i) => {
+            // a dashed leader from the arc out to its label at the panel's edge
+            const x0 = 260 + Math.cos(a.mid) * 112
+            const y0 = 176 + Math.sin(a.mid) * 112
+            const right = Math.cos(a.mid) > 0
+            const lx = right ? 500 : 20
+            const ly = Math.max(122, Math.min(300, y0 + Math.sin(a.mid) * 30))
+            return <path key={i} d={"M" + x0 + " " + y0 + " Q " + (right ? x0 + 40 : x0 - 40) + " " + ly + ", " + lx + " " + ly} fill="none" stroke={hot === i ? "var(--sol-soft)" : "var(--sol-line2)"} strokeDasharray="3 4" />
+          })}
+        </svg>
+        {arcs.map((a, i) => {
+          const y0 = 176 + Math.sin(a.mid) * 112
+          const right = Math.cos(a.mid) > 0
+          const ly = Math.max(122, Math.min(300, y0 + Math.sin(a.mid) * 30))
+          return (
+            <span
+              key={uses[i].label}
+              className="sol-mono sol-use"
+              style={{ left: right ? "auto" : "3.8%", right: right ? "3.8%" : "auto", top: (ly / 325) * 100 + "%", color: hot === i ? "var(--sol-ink)" : undefined }}
+              onPointerEnter={() => setHot(i)}
+              onPointerLeave={() => setHot(-1)}
+            >
+              <i style={{ background: uses[i].fill }} />
+              {uses[i].label} {uses[i].value}%
+            </span>
+          )
+        })}
+      </div>
+      <ul className="sol-legend sol-mono" aria-label={path.caption}>
+        {uses.map((u) => (
+          <li key={u.label}>
+            <i style={{ background: u.fill }} />
+            {u.label} {u.value}%
+          </li>
+        ))}
+      </ul>
+      <div className="sol-ctrl">
+        <span className="sol-lab">You earn a year</span>
+        <SegButtons label="You earn a year" value={income} onChange={setIncome} options={[80000, 250000, 1000000].map((v) => ({ value: v, label: compact(v, currency) }))} />
+        <Range id={uid + "-share"} label="You share" min={2} max={15} step={0.5} value={share} onChange={setShare} format={(v) => v + "% for " + years + "y"} />
+        <div className="sol-out" aria-live="polite">
+          <div>
+            <strong>{money(tween, currency)}</strong>
+            <small>Indicative raise, priced at a 20% backer return.</small>
+          </div>
+          <span className="sol-x">{compact(raise / years, currency)}/yr</span>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function Steps({ data, avatars }: { data: NonNullable<StippleOrbLandingProps["steps"]>; avatars: string[] }) {
+  const refs = [React.useRef(null as HTMLButtonElement | null), React.useRef(null as HTMLButtonElement | null), React.useRef(null as HTMLButtonElement | null)]
+  const ins = [useOnScreen(refs[0]), useOnScreen(refs[1]), useOnScreen(refs[2])]
+  const [plays, setPlays] = React.useState([0, 0, 0])
+  const replay = (i: number) => setPlays((p) => p.map((v, k) => (k === i ? v + 1 : v)))
+  const items = data.items.slice(0, 3)
+  const vig = (i: number) => {
+    if (i === 0)
+      return (
+        <>
+          <span className="sol-guide" />
+          <div className="sol-card sol-q">
+            <span className="sol-mono">Question 1 of 3</span>
+            <div className="sol-field">
+              <span className="sol-type">What are you building?</span>
+              <span className="sol-caret" />
+            </div>
+          </div>
+          <span className="sol-join">
+            Join Kindling
+            <i>
+              <Check size={9} />
+            </i>
+          </span>
+          <Cursor className="sol-c1" style={{ ["--cx" as string]: "56%", ["--cy" as string]: "67%" } as React.CSSProperties} />
+        </>
+      )
+    if (i === 1)
+      return (
+        <>
+          <span className="sol-guide-h" />
+          <span className="sol-mono sol-meta">Applications</span>
+          <span className="sol-mono sol-meta-r">
+            <i />
+            Ready to review
+          </span>
+          <div className="sol-stack">
+            <div className="sol-card" />
+            <div className="sol-card" />
+            <div className="sol-card" />
+            <div className="sol-card sol-app">
+              {avatars[3] ? <img src={avatars[3]} alt="" width={24} height={24} /> : null}
+              <div>
+                <small>Applicant</small>
+                <b>Mateo Rhys</b>
+              </div>
+            </div>
+          </div>
+          <span className="sol-stamp">Approved</span>
+          <Cursor className="sol-c2" style={{ ["--cx" as string]: "50%", ["--cy" as string]: "50%" } as React.CSSProperties} />
+        </>
+      )
+    return (
+      <>
+        <span className="sol-guide" />
+        <span className="sol-mono sol-meta">Backer view</span>
+        <span className="sol-mono sol-meta-r">
+          <i />
+          Raising $500k
+        </span>
+        <div className="sol-card sol-prof">
+          {avatars[2] ? <img src={avatars[2]} alt="" width={30} height={30} /> : null}
+          <div>
+            <b>Iris Kalani</b>
+            <small>Ceramics studio, 4 years trading</small>
+          </div>
+        </div>
+        <span className="sol-back">Back Iris</span>
+        <span className="sol-bar">
+          <i />
+        </span>
+        <span className="sol-toast">+$5,000 committed</span>
+        <Cursor className="sol-c3" style={{ ["--cx" as string]: "72%", ["--cy" as string]: "29%" } as React.CSSProperties} />
+      </>
+    )
+  }
+  return (
+    <section className="sol-sec sol-steps" data-sec="how" aria-labelledby="sol-how-h">
+      <div className="sol-wrap">
+        <h2 id="sol-how-h" className="sol-h2 sol-rv">
+          {data.title}
+        </h2>
+        <ol className="sol-steps-grid">
+          {items.map((it, i) => (
+            <li key={it.title} className="sol-step sol-rv" data-d={String(i + 1)}>
+              <h3>
+                <span className="sol-sr">Step {i + 1}: </span>
+                {it.title}
+              </h3>
+              <button
+                ref={refs[i]}
+                type="button"
+                className="sol-vig"
+                data-in={ins[i] ? "" : undefined}
+                onClick={() => replay(i)}
+                aria-label={"Replay the " + it.title.toLowerCase() + " animation"}
+              >
+                <span key={plays[i]} style={{ position: "absolute", inset: 0, display: "block" }}>
+                  {vig(i)}
+                </span>
+                <span className="sol-vig-replay" aria-hidden="true">
+                  <svg width="11" height="11" viewBox="0 0 16 16" fill="none">
+                    <path d="M3 8a5 5 0 1 0 1.5-3.5M3 2.5v3h3" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                  Replay
+                </span>
+              </button>
+              <p>{it.text}</p>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </section>
+  )
+}
+
+function Spark({ data, uid }: { data: number[]; uid: string }) {
+  if (data.length < 2) return null
+  const max = Math.max(...data)
+  const min = Math.min(...data)
+  const pts = data.map((v, i) => [(i / (data.length - 1)) * 200, 34 - ((v - min) / (max - min || 1)) * 30])
+  const line = smoothPath(pts)
+  return (
+    <svg viewBox="0 0 200 36" height="36" preserveAspectRatio="none" aria-hidden="true">
+      <defs>
+        <linearGradient id={uid} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor="var(--sol-accent)" stopOpacity="0.35" />
+          <stop offset="1" stopColor="var(--sol-accent)" stopOpacity="0" />
+        </linearGradient>
+      </defs>
+      <path d={line + " L200 36 L0 36 Z"} fill={"url(#" + uid + ")"} />
+      <path d={line} fill="none" stroke="var(--sol-accent)" strokeWidth="1.6" vectorEffect="non-scaling-stroke" />
+    </svg>
+  )
+}
+
+function Stories({ data, currency }: { data: NonNullable<StippleOrbLandingProps["stories"]>; currency: string }) {
+  const trackRef = React.useRef(null as HTMLDivElement | null)
+  const [active, setActive] = React.useState(0)
+  const [pages, setPages] = React.useState(1)
+  const seen = useOnScreen(trackRef)
+  const [filled, setFilled] = React.useState(false)
+  const uid = React.useId().replace(/[^a-zA-Z0-9]/g, "")
+  React.useEffect(() => {
+    if (seen) setFilled(true)
+  }, [seen])
+  const measure = React.useCallback(() => {
+    const t = trackRef.current
+    if (!t) return
+    const first = t.children[0] as HTMLElement | undefined
+    if (!first) return
+    const step = first.offsetWidth + 22
+    const per = Math.max(1, Math.round((t.clientWidth + 22) / step))
+    setPages(Math.max(1, data.items.length - per + 1))
+    setActive(Math.round(t.scrollLeft / step))
+  }, [data.items.length])
+  React.useEffect(() => {
+    measure()
+    const t = trackRef.current
+    if (!t || typeof ResizeObserver === "undefined") return
+    const ro = new ResizeObserver(measure)
+    ro.observe(t)
+    return () => ro.disconnect()
+  }, [measure])
+  const go = (i: number) => {
+    const t = trackRef.current
+    if (!t) return
+    const first = t.children[0] as HTMLElement | undefined
+    if (!first) return
+    const reduced = typeof matchMedia === "function" && matchMedia("(prefers-reduced-motion: reduce)").matches
+    t.scrollTo({ left: Math.max(0, Math.min(pages - 1, i)) * (first.offsetWidth + 22), behavior: reduced ? "auto" : "smooth" })
+  }
+  return (
+    <section className="sol-sec sol-stories" data-sec="stories" aria-labelledby="sol-stories-h">
+      <div className="sol-wrap">
+        <div className="sol-stories-head sol-rv">
+          <h2 id="sol-stories-h" className="sol-h2">
+            {data.title}
+          </h2>
+          {pages > 1 ? (
+            <div className="sol-arrows">
+              <button type="button" aria-label="Previous story" disabled={active <= 0} onClick={() => go(active - 1)}>
+                <Arrow dir="left" />
+              </button>
+              <button type="button" aria-label="Next story" disabled={active >= pages - 1} onClick={() => go(active + 1)}>
+                <Arrow />
+              </button>
+            </div>
+          ) : null}
+        </div>
+        <div
+          ref={trackRef}
+          className="sol-track sol-rv"
+          data-d="1"
+          onScroll={measure}
+          tabIndex={0}
+          role="region"
+          aria-label={data.title + ", scroll sideways for more"}
+          onKeyDown={(e) => {
+            if (e.key === "ArrowRight" || e.key === "ArrowLeft") {
+              e.preventDefault()
+              go(active + (e.key === "ArrowRight" ? 1 : -1))
+            }
+          }}
+        >
+          {data.items.map((s, i) => {
+            const growth = s.growth && s.growth.length > 1 ? s.growth : null
+            const lift = growth ? Math.round((growth[growth.length - 1] / growth[0] - 1) * 100) : 0
+            return (
+              <article key={s.name} className="sol-story" aria-label={s.name}>
+                <div className="sol-story-h">
+                  <h3>{s.name}</h3>
+                  <span className="sol-mono">{s.role}</span>
+                </div>
+                <p className="sol-story-reach">{s.reach}</p>
+                <div className="sol-photo">
+                  {s.photo ? <img src={s.photo} alt={"Portrait of " + s.name} width={420} height={500} loading="lazy" decoding="async" /> : null}
+                  {growth ? (
+                    <div className="sol-spark">
+                      <div>
+                        <span className="sol-mono">Earnings since the raise</span>
+                        <b>{(lift >= 0 ? "+" : "") + lift + "%"}</b>
+                      </div>
+                      <Spark data={growth} uid={uid + "-s" + i} />
+                    </div>
+                  ) : null}
+                </div>
+                <ul className="sol-points">
+                  {s.points.map((p) => (
+                    <li key={p}>
+                      <Check />
+                      {p}
+                    </li>
+                  ))}
+                </ul>
+                <div className="sol-raise">
+                  <b>{compact(s.raised, currency)}</b>
+                  <span className="sol-meter" aria-hidden="true">
+                    <i style={{ ["--k" as string]: filled ? 1 : 0 } as React.CSSProperties} />
+                  </span>
+                  <span className="sol-muted">
+                    {Math.round(s.share * 1000) / 10}% for {s.years}y
+                  </span>
+                </div>
+              </article>
+            )
+          })}
+        </div>
+        {pages > 1 ? (
+          <div className="sol-dots">
+            {Array.from({ length: pages }, (_, i) => (
+              <button key={i} type="button" aria-label={"Go to story " + (i + 1)} aria-current={i === active ? "true" : undefined} onClick={() => go(i)} />
+            ))}
+          </div>
+        ) : null}
+      </div>
+    </section>
+  )
+}
+
+function Faq({ data }: { data: NonNullable<StippleOrbLandingProps["faq"]> }) {
+  const [open, setOpen] = React.useState(() => data.groups.map(() => -1))
+  const uid = React.useId().replace(/[^a-zA-Z0-9]/g, "")
+  return (
+    <section className="sol-sec sol-faq" data-sec="faq" aria-labelledby="sol-faq-h">
+      <div className="sol-wrap">
+        <h2 id="sol-faq-h" className="sol-h2 sol-rv">
+          {data.title}
+        </h2>
+        <div className="sol-faq-grid">
+          {data.groups.map((g, gi) => (
+            <div key={g.title} className="sol-rv" data-d={String(gi + 1)}>
+              <h3>{g.title}</h3>
+              {g.items.map((it, i) => {
+                const on = open[gi] === i
+                const id = uid + "-" + gi + "-" + i
+                return (
+                  <div key={it.q} className="sol-qa" data-open={on ? "" : undefined}>
+                    <button type="button" aria-expanded={on} aria-controls={id} onClick={() => setOpen((o) => o.map((v, k) => (k === gi ? (v === i ? -1 : i) : v)))}>
+                      {it.q}
+                      <Arrow dir="down" />
+                    </button>
+                    <div className="sol-ans" id={id} role="region" aria-hidden={!on}>
+                      <div>
+                        <p>{it.a}</p>
+                      </div>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+function AccessDialog({
+  open,
+  role,
+  setRole,
+  close,
+  brand,
+  onRequestAccess,
+}: {
+  open: boolean
+  role: "invest" | "raise"
+  setRole: (r: "invest" | "raise") => void
+  close: () => void
+  brand: string
+  onRequestAccess?: (d: SolAccessRequest) => unknown
+}) {
+  const ref = React.useRef(null as HTMLDivElement | null)
+  const [name, setName] = React.useState("")
+  const [email, setEmail] = React.useState("")
+  const [detail, setDetail] = React.useState("")
+  const [tried, setTried] = React.useState(false)
+  const [state, setState] = React.useState("idle" as "idle" | "sending" | "done" | "error")
+  const roleRefs = React.useRef([] as (HTMLButtonElement | null)[])
+  useDialog(open, ref, close)
+  React.useEffect(() => {
+    if (!open) return
+    setTried(false)
+    setState((s) => (s === "done" ? "idle" : s))
+  }, [open])
+  if (!open) return null
+  const bad = { name: !name.trim(), email: !isEmail(email), detail: !detail.trim() }
+  const submit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setTried(true)
+    if (bad.name || bad.email || bad.detail) return
+    setState("sending")
+    let ok = true
+    try {
+      const data = { role, name: name.trim(), email: email.trim(), detail: detail.trim() }
+      const res = onRequestAccess ? await onRequestAccess(data) : await new Promise((r) => setTimeout(() => r(true), 900))
+      if (res === false) ok = false
+    } catch {
+      ok = false
+    }
+    setState(ok ? "done" : "error")
+  }
+  const roles = [
+    { v: "invest" as const, t: "I want to back people", s: "Browse and commit" },
+    { v: "raise" as const, t: "I want to raise", s: "Apply for funding" },
+  ]
+  return (
+    <div className="sol-modal" onPointerDown={(e) => e.target === e.currentTarget && close()}>
+      <div ref={ref} className="sol-dialog" role="dialog" aria-modal="true" aria-labelledby="sol-dlg-h">
+        <button type="button" className="sol-icon-btn sol-x-btn" aria-label="Close" onClick={close}>
+          <svg width="14" height="14" viewBox="0 0 16 16" aria-hidden="true">
+            <path d="m3.5 3.5 9 9m0-9-9 9" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+          </svg>
+        </button>
+        {state === "done" ? (
+          <div className="sol-done" role="status">
+            <i>
+              <Check size={22} />
+            </i>
+            <h2 id="sol-dlg-h">You are on the list</h2>
+            <p className="sol-muted" style={{ marginTop: 6, fontSize: 13 }}>
+              We review every request by hand. Expect a note at {email.trim()} within a few days.
+            </p>
+            <button type="button" className="sol-btn" style={{ marginTop: 22 }} onClick={close}>
+              Done
+            </button>
+          </div>
+        ) : (
+          <>
+            <h2 id="sol-dlg-h">Request access</h2>
+            <p>{brand} is invite only while we grow. Tell us a little about you.</p>
+            <form onSubmit={submit} noValidate>
+              <div className="sol-roles" role="radiogroup" aria-label="I am here to">
+                {roles.map((r, i) => (
+                  <button
+                    key={r.v}
+                    ref={(el) => {
+                      roleRefs.current[i] = el
+                    }}
+                    type="button"
+                    role="radio"
+                    aria-checked={role === r.v}
+                    tabIndex={role === r.v ? 0 : -1}
+                    onClick={() => setRole(r.v)}
+                    onKeyDown={(e) => {
+                      const j = nextIndex(i, e.key, 2)
+                      if (j < 0) return
+                      e.preventDefault()
+                      setRole(roles[j].v)
+                      const b = roleRefs.current[j]
+                      if (b) b.focus()
+                    }}
+                  >
+                    <b>{r.t}</b>
+                    <small>{r.s}</small>
+                  </button>
+                ))}
+              </div>
+              <div className="sol-fld" data-bad={tried && bad.name ? "" : undefined}>
+                <label htmlFor="sol-f-name">Full name</label>
+                <input id="sol-f-name" value={name} onChange={(e) => setName(e.target.value)} autoComplete="name" aria-invalid={tried && bad.name} aria-describedby={tried && bad.name ? "sol-e-name" : undefined} />
+                {tried && bad.name ? <span className="sol-err" id="sol-e-name">Tell us your name.</span> : null}
+              </div>
+              <div className="sol-fld" data-bad={tried && bad.email ? "" : undefined}>
+                <label htmlFor="sol-f-email">Email</label>
+                <input id="sol-f-email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="email" inputMode="email" aria-invalid={tried && bad.email} aria-describedby={tried && bad.email ? "sol-e-email" : undefined} />
+                {tried && bad.email ? <span className="sol-err" id="sol-e-email">That email does not look right.</span> : null}
+              </div>
+              <div className="sol-fld" data-bad={tried && bad.detail ? "" : undefined}>
+                <label htmlFor="sol-f-detail">{role === "invest" ? "Typical check size" : "Link to your work"}</label>
+                {role === "invest" ? (
+                  <select id="sol-f-detail" value={detail} onChange={(e) => setDetail(e.target.value)} aria-invalid={tried && bad.detail} aria-describedby={tried && bad.detail ? "sol-e-detail" : undefined}>
+                    <option value="">Choose one</option>
+                    <option>Under $5k</option>
+                    <option>$5k to $25k</option>
+                    <option>$25k to $100k</option>
+                    <option>Over $100k</option>
+                  </select>
+                ) : (
+                  <input id="sol-f-detail" value={detail} onChange={(e) => setDetail(e.target.value)} placeholder="Portfolio, channel or company" inputMode="url" aria-invalid={tried && bad.detail} aria-describedby={tried && bad.detail ? "sol-e-detail" : undefined} />
+                )}
+                {tried && bad.detail ? <span className="sol-err" id="sol-e-detail">{role === "invest" ? "Pick a range." : "Add a link so we can look."}</span> : null}
+              </div>
+              {state === "error" ? (
+                <span className="sol-err" role="alert">
+                  Something went wrong sending that. Please try again.
+                </span>
+              ) : null}
+              <button type="submit" className="sol-btn" disabled={state === "sending"}>
+                {state === "sending" ? (
+                  <>
+                    <span className="sol-spin" aria-hidden="true" /> Sending
+                  </>
+                ) : (
+                  <>
+                    Request access <Arrow />
+                  </>
+                )}
+              </button>
+            </form>
+          </>
+        )}
+      </div>
+    </div>
+  )
+}
+
+/* ---------- the page ---------- */
+
+export default function StippleOrbLanding({
+  brand = "Kindling",
+  logo,
+  nav = DEFAULT_NAV,
+  navAction = { label: "Request access" },
+  hero,
+  thesis,
+  paths,
+  steps,
+  stories,
+  cta,
+  faq,
+  footer,
+  currency = "$",
+  palette = "ember",
+  theme = "system",
+  themeToggle = true,
+  onRequestAccess,
+  height = "100svh",
+  className,
+}: StippleOrbLandingProps) {
+  const rootRef = React.useRef(null as HTMLDivElement | null)
+  const navRef = React.useRef(null as HTMLElement | null)
+  const reduced = useReducedMotion()
+  const [dark, setDark] = useTheme(theme)
+  const [ready, setReady] = React.useState(false)
+  const [stuck, setStuck] = React.useState(false)
+  const [menu, setMenu] = React.useState(false)
+  const [dialog, setDialog] = React.useState(false)
+  const [role, setRole] = React.useState("invest" as "invest" | "raise")
+  const menuRef = React.useRef(null as HTMLDivElement | null)
+  const pal = resolvePalette(palette)
+  const h = { ...DEFAULT_HERO, ...(hero || {}) }
+  const th = thesis === null ? null : { ...DEFAULT_THESIS, investors: DEFAULT_INVESTORS, ...(thesis || {}) }
+  const pa = paths === null ? null : { ...DEFAULT_PATHS, ...(paths || {}) }
+  const model = { ...DEFAULT_MODEL, ...((paths && paths.model) || {}) }
+  const st = steps === null ? null : steps || DEFAULT_STEPS
+  const so = stories === null ? null : stories || DEFAULT_STORIES
+  const ct = cta === null ? null : cta || { title: "Join *the next generation of* backers *funding* individual success *stories.*", action: { label: "Request access" } }
+  const fq = faq === null ? null : faq || DEFAULT_FAQ
+  const ft = footer === null ? null : { ...DEFAULT_FOOTER, ...(footer || {}) }
+  const uid = React.useId().replace(/[^a-zA-Z0-9]/g, "")
+  const ctaRef = React.useRef(null as HTMLElement | null)
+
+  useIsoLayoutEffect(() => setReady(true), [])
+  useReveal(rootRef, reduced)
+
+  React.useEffect(() => {
+    const onScroll = () => {
+      const r = rootRef.current
+      if (!r) return
+      setStuck(r.getBoundingClientRect().top < -8)
+    }
+    onScroll()
+    window.addEventListener("scroll", onScroll, { passive: true, capture: true })
+    return () => window.removeEventListener("scroll", onScroll, { capture: true })
+  }, [])
+
+  const closeMenu = React.useCallback(() => setMenu(false), [])
+  const closeDialog = React.useCallback(() => setDialog(false), [])
+  useDialog(menu, menuRef, closeMenu)
+
+  const openAccess = React.useCallback((r?: "invest" | "raise") => {
+    if (r) setRole(r)
+    setMenu(false)
+    setDialog(true)
+  }, [])
+
+  const jump = (href: string) => {
+    const root = rootRef.current
+    if (!root || href[0] !== "#" || href.length < 2) return false
+    const target = root.querySelector('[data-sec="' + href.slice(1) + '"]')
+    if (!target) return false
+    target.scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: "start" })
+    return true
+  }
+
+  const act = (l?: SolLink) => {
+    if (l && l.href) {
+      if (jump(l.href)) return
+      window.location.href = l.href
+      return
+    }
+    openAccess()
+  }
+
+  const onClick = (e: React.MouseEvent) => {
+    const a = (e.target as HTMLElement).closest("a")
+    if (!a || !rootRef.current || !rootRef.current.contains(a)) return
+    const access = a.getAttribute("data-access")
+    if (access === "invest" || access === "raise") {
+      e.preventDefault()
+      openAccess(access)
+      return
+    }
+    const href = a.getAttribute("href") || ""
+    if (href[0] === "#" && jump(href)) {
+      e.preventDefault()
+      setMenu(false)
+    }
+  }
+
+  const style = {
+    "--sol-h": height,
+    "--sol-accent": pal.accent,
+    "--sol-button": pal.button,
+    "--sol-on-button": pal.onButton,
+    "--sol-mint": pal.mint,
+    "--sol-cream": pal.cream,
+    "--sol-sky": pal.sky,
+    "--sol-mono": MONO,
+    fontFamily: FONT,
+  } as React.CSSProperties
+
+  const faces = [IMG_A1, IMG_A2, IMG_A3, IMG_A4]
+  const titleLines = (h.title || "").split("\n")
+  const brandEl = (
+    <span className="sol-brand">
+      {logo || <Mark />}
+      {brand}
+    </span>
+  )
+
+  return (
+    <div
+      ref={rootRef}
+      className={"sol-root" + (className ? " " + className : "")}
+      style={style}
+      data-theme={dark ? "dark" : "light"}
+      data-ready={ready && !reduced ? "" : undefined}
+      onClick={onClick}
+    >

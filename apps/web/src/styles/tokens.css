@@ -1,0 +1,120 @@
+:root {
+  /* Default: Stipple Orb Landing "lagoon" Design System (Light Theme as reference default) */
+  --sol-paper: #efefed;
+  --sol-panel: #e8e8e5;
+  --sol-card: #f8f8f6;
+  --sol-ink: #141414;
+  --sol-soft: #4a4a47;
+  --sol-muted: #5e5e5a;
+  --sol-line: rgba(20, 20, 20, 0.09);
+  --sol-line2: rgba(20, 20, 20, 0.16);
+  --sol-shadow: 0 1px 2px rgba(20, 20, 20, 0.06), 0 8px 24px -12px rgba(20, 20, 20, 0.18);
+  --sol-nav: 64px;
+  --sol-dotc: rgba(20, 20, 20, 0.16);
+  --sol-btn: #123b3a;
+  --sol-on-btn: #ffffff;
+  --sol-h: 100vh;
+
+  /* Lagoon Palette Specifics */
+  --sol-accent: #0d746b;
+  --sol-button: #123b3a;
+  --sol-on-button: #ffffff;
+  --sol-mint: #d2efe9;
+  --sol-cream: #efeccd;
+  --sol-sky: #d3e6f3;
+
+  /* Theme-aware Semantic Button Tokens */
+  --btn-tonal-bg: #d2efe9;
+  --btn-tonal-fg: #123b3a;
+  --btn-tonal-fg-hover: #0a2625;
+  --btn-tonal-border: rgba(26, 165, 154, 0.35);
+
+  --btn-accent-bg: #1aa59a;
+  --btn-accent-fg: #ffffff;
+  --btn-accent-fg-hover: #ffffff;
+  --btn-accent-border: transparent;
+
+  /* Font variables matching reference */
+  --sol-font: "Inter", "Inter Tight", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --sol-mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+
+  /* Semantic Status mapped to lagoon palette */
+  --color-accept: #1aa59a;
+  --color-reject: #d1495b;
+  --color-warn: #e29d3b;
+  --color-info: #0284c7;
+
+  /* Tailwind Theme Bridge */
+  --bg-canvas: var(--sol-paper);
+  --bg-surface: var(--sol-card);
+  --bg-surface-elevated: var(--sol-panel);
+  --bg-subtle: var(--sol-panel);
+  --border-subtle: var(--sol-line);
+  --border-strong: var(--sol-line2);
+  --text-primary: var(--sol-ink);
+  --text-secondary: var(--sol-soft);
+  --text-muted: var(--sol-muted);
+  --accent: var(--sol-accent);
+  --accent-hover: #148077;
+  --accent-coral: #d1495b;
+
+  --chart-grid: var(--sol-line);
+  --chart-force: #1aa59a;
+  --chart-gyro: #0284c7;
+  --chart-accel: #8b5cf6;
+  --chart-threshold: #1aa59a;
+}
+
+/* Dark Mode (.sol-root[data-theme="dark"] or html.dark) */
+html.dark,
+.sol-root[data-theme="dark"] {
+  --sol-paper: #111111;
+  --sol-panel: #171717;
+  --sol-card: #1d1d1c;
+  --sol-ink: #f1f1ee;
+  --sol-soft: #c2c2bd;
+  --sol-muted: #8e8e89;
+  --sol-line: rgba(255, 255, 255, 0.08);
+  --sol-line2: rgba(255, 255, 255, 0.15);
+  --sol-shadow: 0 1px 3px rgba(0, 0, 0, 0.7), 0 10px 30px -14px rgba(0, 0, 0, 0.9), inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+  --sol-dotc: rgba(255, 255, 255, 0.14);
+  --sol-btn: #ecebe6;
+  --sol-on-btn: #151515;
+
+  --sol-accent: #1aa59a;
+  --sol-button: #143d38;
+  --sol-on-button: #e6fbf7;
+  --sol-mint: #153c37;
+  --sol-cream: #353224;
+  --sol-sky: #193144;
+
+  /* Theme-aware Semantic Button Tokens */
+  --btn-tonal-bg: #143d38;
+  --btn-tonal-fg: #e6fbf7;
+  --btn-tonal-fg-hover: #ffffff;
+  --btn-tonal-border: rgba(26, 165, 154, 0.45);
+
+  --btn-accent-bg: #1aa59a;
+  --btn-accent-fg: #ffffff;
+  --btn-accent-fg-hover: #ffffff;
+  --btn-accent-border: transparent;
+
+  --bg-canvas: var(--sol-paper);
+  --bg-surface: var(--sol-card);
+  --bg-surface-elevated: var(--sol-panel);
+  --bg-subtle: var(--sol-panel);
+  --border-subtle: var(--sol-line);
+  --border-strong: var(--sol-line2);
+  --text-primary: var(--sol-ink);
+  --text-secondary: var(--sol-soft);
+  --text-muted: var(--sol-muted);
+  --accent: var(--sol-accent);
+  --accent-hover: #2dd4bf;
+  --accent-coral: #f43f5e;
+
+  --chart-grid: var(--sol-line);
+  --chart-force: #2dd4bf;
+  --chart-gyro: #38bdf8;
+  --chart-accel: #a78bfa;
+  --chart-threshold: #2dd4bf;
+}

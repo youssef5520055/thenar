@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="10 15 235 205" fill="none" width="100%" height="100%">
+  <defs>
+    <linearGradient id="thenar-dial-grad" x1="65" y1="110" x2="175" y2="165" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#f28337" />
+      <stop offset="28%" stop-color="#f59e0b" />
+      <stop offset="68%" stop-color="#f06f58" />
+      <stop offset="100%" stop-color="#ed4f8d" />
+    </linearGradient>
+  </defs>
+
+  <g id="dial-emblem">
+    <path
+      d="M 163.4 177.3 A 58.0 58.0 0 0 1 69.7 131.6"
+      stroke="#334155"
+      stroke-width="12"
+      stroke-linecap="butt"
+    />
+    <path
+      d="M 69.7 131.6 A 58.0 58.0 0 1 1 163.4 177.3"
+      stroke="url(#thenar-dial-grad)"
+      stroke-width="12"
+      stroke-linecap="round"
+    />
+    <circle cx="37.0" cy="158.0" r="12.0" fill="#f59e0b" />
+    <circle cx="76.3" cy="43.7" r="8.5" fill="#f59e0b" />
+    <circle cx="132.6" cy="33.5" r="8.5" fill="#f59e0b" />
+    <circle cx="187.2" cy="53.9" r="8.5" fill="#f59e0b" />
+    <circle cx="217.9" cy="101.8" r="8.5" fill="#f59e0b" />
+  </g>
+</svg>

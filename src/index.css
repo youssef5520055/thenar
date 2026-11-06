@@ -1,0 +1,59 @@
+@import './styles/tokens.css';
+@import './styles/sol.css';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    border-color: var(--sol-line);
+    box-sizing: border-box;
+  }
+  
+  html, body {
+    background-color: var(--sol-paper);
+    color: var(--sol-ink);
+    font-family: var(--sol-font);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: clip;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* When document is RTL */
+  html[dir="rtl"] {
+    font-family: "IBM Plex Sans Arabic", "Cairo", var(--sol-font);
+  }
+
+  /* Numeric values look best with tabular figures */
+  .tabular-nums, .sol-mono, font-mono {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+/* Custom subtle scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--sol-line2);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--sol-muted);
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.001s !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001s !important;
+    scroll-behavior: auto !important;
+  }
+}

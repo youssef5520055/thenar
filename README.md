@@ -272,6 +272,28 @@ apps\enrollment\.venv\Scripts\python.exe -m pytest apps/enrollment/tests
 - [`docs/RUNBOOK.md`](./docs/RUNBOOK.md): Committee demonstration script, failure recovery, and staging deployment.
 - [`study/00_PROJECT_OVERVIEW_AR.md`](./study/00_PROJECT_OVERVIEW_AR.md): Authoritative Arabic project overview and defense reference.
 - [`study/Thenar_Study_Guide_AR.pdf`](./study/Thenar_Study_Guide_AR.pdf): Complete 42-page printable Arabic graduation study handbook.
+- [`security/SECURITY-REPORT.md`](./security/SECURITY-REPORT.md): Comprehensive independent application security review and vulnerability assessment.
+- [`security/SECURITY-REPORT.pdf`](./security/SECURITY-REPORT.pdf): Formal publication-quality PDF security review report.
+- [`SECURITY.md`](./SECURITY.md): Private vulnerability disclosure protocol and defense architecture highlights.
+
+---
+
+## 🛡️ Security & Hardening Assessment
+
+Thenar adheres to defense-in-depth principles, with all monorepo tiers verified by automated security tooling and independent review:
+
+| Security Domain | Implementation Details | Status |
+| :--- | :--- | :---: |
+| **Supply Chain (npm)** | Upgraded to `react-router` and `react-router-dom` `7.18.5` (patches CVE-2026-53666 and CVE-2026-53669). | **0 Vulns (PASS)** |
+| **Edge Decision Isolation** | Unlock decision executed on-device (ESP32); Gateway and Web client have zero autonomous unlock authority. | **Hardware Enforced** |
+| **Authentication Primitives** | Bearer tokens validated using `crypto.timingSafeEqual` to prevent timing side-channel attacks. | **Verified Safe** |
+| **CSV Export Sanitization** | RFC 4180 export cells prepended with apostrophe escaping for `=,+,-,@,\t,\r` (mitigates CWE-1236). | **Neutralized** |
+| **CORS Policy** | FastAPI enrollment service restricted to explicit localhost origins with environment configuration. | **Restricted** |
+| **Ingestion Rate Limiting** | Express Gateway throttles hardware ingest to 120 req/min and general API to 1000 req/15min (CWE-770). | **Active** |
+| **Automated CI Security** | GitHub Actions pipeline runs `npm audit --omit=dev`, Vitest, and pytest on all pull requests. | **Automated** |
+| **WCAG 2.2 AA Contrast** | Automated audit across 9,768 UI elements verified with 0 violations (minimum contrast ratio: 5.13:1). | **100% Compliant** |
+
+For full details, review [`security/AUDIT-BEFORE.md`](./security/AUDIT-BEFORE.md), [`security/AUDIT-AFTER.md`](./security/AUDIT-AFTER.md), and [`security/SECURITY-REPORT.md`](./security/SECURITY-REPORT.md).
 
 ---
 

@@ -1,0 +1,31 @@
+%% Diagram 13: Finite State Machine - Lock Mechanism
+%% Project: Thenar - Smart-Safe Handle Telemetry
+stateDiagram-v2
+    [*] --> LOCKED: System Initialization (Power-On / Reset)
+
+    LOCKED --> UNLOCKING: Dual-Gate ACCEPT<br/>(Gate 1 Minutiae MATCH && Gate 2 s(x) >= tau)<br/>[solenoidActive=true, boltRetracted=true]
+
+    LOCKED --> LOCKED: Attempt REJECT<br/>(s(x) < tau OR Gate 1 FAIL)<br/>[failureCounter < maxFailures]
+
+    LOCKED --> LOCKOUT: Consecutive Failures Exceeded<br/>[failureCounter >= maxFailures]<br/>(Exponential cooldown timer started)
+
+    LOCKED --> FAULT: Sensor Disconnection / NaN Signal<br/>(HX711 or IMU bus crash)
+
+    UNLOCKING --> UNLOCKED: Door Pulled Open<br/>[pullDoorOpen(), doorReedOpen=true]
+
+    UNLOCKING --> RELOCKING: Unlock Hold Timeout Elapsed (5s)<br/>[Door remained closed, doorReedOpen=false]
+
+    UNLOCKED --> RELOCKING: Physical Door Closed<br/>[closeDoor(), doorReedOpen=false]
+
+    RELOCKING --> LOCKED: Bolt Snaps Closed<br/>(Solenoid de-energized, mechanical spring return)
+
+    LOCKOUT --> LOCKED: Cooldown Timer Expired<br/>[checkLockoutExpiry - now >= lockoutEndTime]
+
+    FAULT --> LOCKED: Fault Cleared / Timeout (3s)<br/>(Fail-secure bolt stays engaged throughout)
+
+    note right of LOCKED: Solenoid OFF, Bolt Extended, Door Closed
+    note right of UNLOCKING: Solenoid ENERGIZED (12V), Bolt Retracted
+    note right of UNLOCKED: Door open, Reed Open, Solenoid OFF
+    note right of RELOCKING: Spring drives bolt forward into strike
+    note right of LOCKOUT: System frozen, Red alert banner, timer active
+    note right of FAULT: Hardware fail-secure safety abort

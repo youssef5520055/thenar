@@ -1,0 +1,63 @@
+%% Diagram 05: Route Map & Page Composition
+%% Project: Thenar - Smart-Safe Handle Telemetry
+flowchart TD
+    Router["HashRouter (App.tsx)"]
+
+    subgraph ROUTES["Application Routes"]
+        R_Root["/ (Default Route)"]
+        R_Live["/live"]
+        R_Log["/log"]
+        R_Profile["/profile"]
+        R_Analytics["/analytics"]
+        R_Attack["/attack"]
+        R_Settings["/settings"]
+    end
+
+    subgraph PAGES["Page Components"]
+        P_Dash["Dashboard.tsx"]
+        P_Live["LiveSession.tsx"]
+        P_Log["AttemptLog.tsx"]
+        P_Profile["EnrollmentProfile.tsx"]
+        P_Analytics["Analytics.tsx"]
+        P_Attack["AttackSimulator.tsx"]
+        P_Settings["Settings.tsx"]
+    end
+
+    subgraph SHARED_UI["Shared Layout & UI Components"]
+        H_Header["Header.tsx (Sticky Top Bar)"]
+        N_Nav["Navigation.tsx (Mobile Bottom Nav & More)"]
+        F_Footer["StippledHorizon.tsx (Canvas Wave Footer)"]
+        C_Orb["StippleOrb.tsx (Top Kinetic Sphere)"]
+        C_Lock["LockMechanismSVG.tsx (Physical Safe SVG)"]
+        C_Flow["GestureFlowStrip.tsx (5-Stage Flow Strip)"]
+        C_Chart["LiveChart.tsx (Recharts Multi-Axis Graph)"]
+        C_Notif["NotificationCenter.tsx (Alerts Popover)"]
+    end
+
+    Router --> R_Root & R_Live & R_Log & R_Profile & R_Analytics & R_Attack & R_Settings
+
+    R_Root --> P_Dash
+    R_Live --> P_Live
+    R_Log --> P_Log
+    R_Profile --> P_Profile
+    R_Analytics --> P_Analytics
+    R_Attack --> P_Attack
+    R_Settings --> P_Settings
+
+    Router -.->|Persists on all views| H_Header
+    Router -.->|Persists on all views| N_Nav
+    Router -.->|Persists on all views| F_Footer
+    H_Header -.->|Contains| C_Notif
+
+    P_Dash --> C_Orb & C_Lock & C_Flow
+    P_Live --> C_Chart
+    P_Log --> C_Chart
+    P_Attack --> C_Chart
+
+    classDef route fill:#efeccd,stroke:#e29d3b,stroke-width:1.5px,color:#141414;
+    classDef page fill:#d2efe9,stroke:#1aa59a,stroke-width:1.5px,color:#123b3a;
+    classDef comp fill:#f8f8f6,stroke:#123b3a,stroke-width:1.5px,color:#141414;
+
+    class R_Root,R_Live,R_Log,R_Profile,R_Analytics,R_Attack,R_Settings route;
+    class P_Dash,P_Live,P_Log,P_Profile,P_Analytics,P_Attack,P_Settings page;
+    class H_Header,N_Nav,F_Footer,C_Orb,C_Lock,C_Flow,C_Chart,C_Notif comp;

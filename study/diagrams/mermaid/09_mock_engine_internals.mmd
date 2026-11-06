@@ -1,0 +1,50 @@
+%% Diagram 09: Mock Engine Math & Signal Internals
+%% Project: Thenar - Smart-Safe Handle Telemetry
+flowchart TB
+    subgraph PRNG_BLOCK["1. Seeded Pseudorandom Number Generator (PRNG)"]
+        Seed["Input Seed: uint32 (default: 424242)"]
+        Mulberry["Mulberry32 PRNG Algorithm:<br/>a = (a + 0x6D2B79F5) >>> 0<br/>t = Math.imul(t ^ (t >>> 15), t | 1)..."]
+        NextFloat["prng.next() -> [0.0, 1.0)<br/>prng.gaussian(mean, std) -> Box-Muller Transform"]
+        Seed --> Mulberry --> NextFloat
+    end
+
+    subgraph DRIFT_BLOCK["2. Session Drift & Role Profiles"]
+        DayDrift["Session Day Drift (S1 to S4):<br/>• S1 (Baseline Day): driftFactor = 1.0<br/>• S2 (+24h): driftFactor = 1.03 (fatigue)<br/>• S3 (+7d): driftFactor = 0.96 (habituation)<br/>• S4 (+14d): driftFactor = 1.05 (delayed recall)"]
+        RoleProfiles["Adversary Dynamics Modulation:<br/>• Owner: Peak Force ~45 N, Duration ~1.2s, smooth bell curve<br/>• Impostor: Arbitrary Force ~85 N, Jerky rotation, mismatched timing<br/>• Mimicry L1: Matched duration, inconsistent angular deceleration<br/>• Mimicry L2: Coordinated force, subtle phase lag deviation"]
+    end
+
+    subgraph SIGNAL_SYNTHESIS["3. 3-Phase Kinematic Synthesis (100 Hz, dt = 0.01s)"]
+        P1["Phase 1: Contact & Grip Build-up (P1)<br/>• Force F(t) rises via Sigmoid: F_peak / (1 + exp(-k*(t - t0)))<br/>• Gyro w(t) ~ 0; Accel a(t) ~ micro-tremor"]
+        P2["Phase 2: Handle Rotation (P2)<br/>• Solenoid deadbolt resistance torque<br/>• Gyro w(t) follows Bell Curve: w_peak * exp(-((t - t_rot)/s)^2)<br/>• Accel magnitude surges with centripetal component"]
+        P3["Phase 3: Spring Return Rebound & Release (P3)<br/>• Force decays exponentially; mechanical bounce lobe<br/>• Negative angular velocity rebound; settling oscillation"]
+        P1 --> P2 --> P3
+    end
+
+    subgraph FEATURE_FORMULATION["4. 16-Dimensional Feature Extractor"]
+        F_Time["5 Timing Features:<br/>t_total, t_p1, t_p2, t_p3, delta_t_lag"]
+        F_Force["4 Force Features:<br/>f_peak, f_mean, f_integral (work), df_dt_max"]
+        F_Motion["5 Motion Features:<br/>w_peak, w_integral, a_peak, a_rms, jerk_peak"]
+        F_Cross["2 Cross-Channel Features:<br/>corr_force_gyro, phase_overlap"]
+    end
+
+    subgraph MAHALANOBIS_SCORER["5. Classification Metric & Distance"]
+        DistFormula["Regularized Mahalanobis Distance:<br/>D_M(x) = sqrt( sum( ((x_i - mu_i) / (sigma_i + epsilon))^2 ) )"]
+        ScoreFormula["Standardized Behavioral Score:<br/>s(x) = -D_M(x)<br/>(Genuine Owner: s(x) ~ -2.5 to -3.8; Impostor: s(x) < -10.0)"]
+        DistFormula --> ScoreFormula
+    end
+
+    NextFloat --> DayDrift & RoleProfiles --> SIGNAL_SYNTHESIS
+    SIGNAL_SYNTHESIS --> FEATURE_FORMULATION
+    FEATURE_FORMULATION --> MAHALANOBIS_SCORER
+
+    classDef prng fill:#efeccd,stroke:#e29d3b,stroke-width:1.5px,color:#141414;
+    classDef drift fill:#d2efe9,stroke:#1aa59a,stroke-width:1.5px,color:#123b3a;
+    classDef synth fill:#f8f8f6,stroke:#123b3a,stroke-width:1.5px,color:#141414;
+    classDef feat fill:#e8e8e5,stroke:#0284c7,stroke-width:1.5px,color:#141414;
+    classDef score fill:#123b3a,stroke:#1aa59a,stroke-width:2px,color:#ffffff;
+
+    class Seed,Mulberry,NextFloat prng;
+    class DayDrift,RoleProfiles drift;
+    class P1,P2,P3 synth;
+    class F_Time,F_Force,F_Motion,F_Cross feat;
+    class DistFormula,ScoreFormula score;

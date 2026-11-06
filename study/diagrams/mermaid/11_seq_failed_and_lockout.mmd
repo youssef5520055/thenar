@@ -1,0 +1,41 @@
+%% Diagram 11: Sequence Diagram - Failed Attempt & Escalating Lockout
+%% Project: Thenar - Smart-Safe Handle Telemetry
+sequenceDiagram
+    autonumber
+    actor Impostor as Adversary / Impostor
+    participant UI as Dashboard / UI View
+    participant Store as useThenarStore
+    participant Mock as Mock Engine
+    participant Storage as localStorage
+
+    Impostor->>UI: Triggers 'Simulate Failed Attempt'
+    UI->>Store: runSimulation('impostor', false)
+    Store->>Store: set({ isStreaming: true, activeGestureStep: 'touch' })
+    Store->>Mock: generateAttemptFrames('impostor', 'S4', defaultPRNG)
+    Mock-->>Store: returns anomalous TelemetryFrame[] (high force, jerky)
+
+    Store->>Mock: extractFeatures(frames)
+    Mock-->>Store: returns 16-D FeatureVector
+    Store->>Mock: computeMahalanobisScore(features, ownerProfile.means, ownerProfile.stds)
+    Mock-->>Store: returns { score: -14.85, deviations: [...] }
+
+    Note over Store: Dual-Gate Evaluation Rule
+    Note over Store: Gate 1 FAIL (or Gate 2 score [-14.85] < tau [-3.85]) -> REJECT!
+
+    Store->>Store: newFailures = failureCounter + 1
+    Store->>UI: addNotification('unlock_fail'), rejection reason logged
+
+    alt newFailures < maxFailuresBeforeLockout (e.g., < 5)
+        Store->>Store: failureCounter = newFailures, lockState = 'LOCKED'
+        Store->>Storage: saveState({ failureCounter: newFailures })
+        Store-->>UI: UI displays failure counter warning (e.g., '3 / 5')
+    else newFailures >= maxFailuresBeforeLockout (THRESHOLD REACHED!)
+        Note over Store,Storage: Escalating Penalty Lockout Activated
+        Store->>Store: penaltyDuration = lockoutDurationSeconds * (2 ^ lockoutRepeatCount)
+        Store->>Store: lockoutEndTime = Date.now() + penaltyDuration * 1000
+        Store->>Store: lockoutRepeatCount += 1
+        Store->>Store: lockState = 'LOCKOUT'
+        Store->>Storage: saveState({ lockState: 'LOCKOUT', lockoutEndTime, lockoutRepeatCount })
+        Store->>UI: addNotification('lockout_start'), Red lockout banner active
+        UI-->>Impostor: Interface locked (countdown timer active, simulation disabled)
+    end

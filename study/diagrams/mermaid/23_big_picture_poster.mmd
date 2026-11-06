@@ -1,0 +1,76 @@
+%% Diagram 23: The Big Picture Master Architecture Poster
+%% Project: Thenar - Smart-Safe Handle Telemetry
+flowchart TB
+    subgraph S1_PHYSICAL["1. PHYSICAL SMART-SAFE HANDLE (Hardware Layer)"]
+        direction LR
+        PH_Touch["Capacitive Touch Pad"]
+        PH_FP["R503 Optical Scanner<br/>(Minutiae Extract)"]
+        PH_Load["HX711 Load Cell<br/>(Grip Force N)"]
+        PH_IMU["MPU-6050 6-DoF IMU<br/>(deg/s & m/s^2)"]
+        PH_Bolt["Fail-Secure Deadbolt<br/>(12V Solenoid Coil)"]
+        PH_Reed["Magnetic Reed Switch<br/>(Door Frame Alignment)"]
+    end
+
+    subgraph S2_TELEMETRY["2. TELEMETRY & KINEMATIC STREAM (100 Hz Engine)"]
+        direction TB
+        Frames["100 Hz Streaming Ring Buffer (dt = 0.01s)<br/>Phase 1: Grip Build-up | Phase 2: Rotation | Phase 3: Release"]
+        Extract16["16-D Feature Extractor (extractFeatures)<br/>Timings, Force Work, Angular Velocity, Centripetal Accel, Jerk"]
+        Frames --> Extract16
+    end
+
+    subgraph S3_DUAL_GATE["3. DUAL-GATE BIOMETRIC CLASSIFICATION"]
+        direction TB
+        Gate1["Gate 1: Optical Minutiae<br/>Fingerprint ID Match == true<br/>(Baseline FAR ~0.001%)"]
+        Gate2["Gate 2: Behavioral Kinematics<br/>Regularized Mahalanobis Distance s(x)<br/>Operating Threshold tau (e.g. -3.85)"]
+        DecisionRule{"DUAL-GATE LOGIC:<br/>Gate 1 == PASS<br/>AND<br/>Gate 2 s(x) >= tau?"}
+
+        Gate1 & Gate2 --> DecisionRule
+    end
+
+    subgraph S4_STATE_MACHINE["4. LOCK STATE MACHINE & LOCKOUT PROTOCOL"]
+        direction TB
+        StateUnlocked["UNLOCKING / UNLOCKED<br/>• Solenoid energizes<br/>• Bolt retracts<br/>• Failure counter reset (0)"]
+        StateReject["REJECT / SECURED<br/>• Bolt remains locked<br/>• Failure counter += 1"]
+        StateLockout["LOCKOUT ESCALATION<br/>• If failures >= N (5)<br/>• Exponential backoff doubling<br/>• Persisted across reboots"]
+
+        DecisionRule -->|ACCEPT| StateUnlocked
+        DecisionRule -->|REJECT| StateReject --> StateLockout
+    end
+
+    subgraph S5_FRONTEND_UI["5. THENAR COMPANION UI (21st.dev Lagoon Design System)"]
+        direction TB
+        StippleOrb["Top Stipple Orb (StippleOrb.tsx)<br/>Fibonacci kinetic particle sphere with inertia & ripple"]
+        LockSVG["Interactive Physical Mechanism (LockMechanismSVG.tsx)"]
+        LiveChartComp["Multi-Channel Telemetry Graph (LiveChart.tsx)"]
+        Views["7 Comprehensive Routes (/ , /live, /log, /profile, /analytics, /attack, /settings)"]
+        I18nSystem["Zero-Dependency Bilingual System (EN / AR RTL with Cairo font)"]
+    end
+
+    subgraph S6_DATA_STORE["6. STATE MANAGEMENT & DATA PERSISTENCE"]
+        direction TB
+        ZustandStore["useThenarStore (Zustand)<br/>Synchronous state updates, lockout timer checking"]
+        Storage[("localStorage ('thenar_companion_state_v1')<br/>Full audit trail & profile persistence")]
+        ZustandStore <--> Storage
+    end
+
+    PH_Touch & PH_FP & PH_Load & PH_IMU ==> Frames
+    Extract16 ==> Gate2
+    StateUnlocked -.->|Actuates| PH_Bolt
+    PH_Reed -.->|Updates Door Ajar State| StateUnlocked
+
+    StateUnlocked & StateReject & StateLockout ==> ZustandStore
+    ZustandStore <==> S5_FRONTEND_UI
+
+    classDef hw fill:#efeccd,stroke:#e29d3b,stroke-width:1.5px,color:#141414;
+    classDef tel fill:#e8e8e5,stroke:#0284c7,stroke-width:1.5px,color:#141414;
+    classDef gate fill:#d2efe9,stroke:#1aa59a,stroke-width:2px,color:#123b3a;
+    classDef fsm fill:#fee2e2,stroke:#ef4444,stroke-width:1.5px,color:#7f1d1d;
+    classDef ui fill:#f8f8f6,stroke:#123b3a,stroke-width:2px,color:#141414;
+    classDef db fill:#123b3a,stroke:#1aa59a,stroke-width:2px,color:#ffffff;
+
+    class PH_Touch,PH_FP,PH_Load,PH_IMU,PH_Bolt,PH_Reed hw;
+    class Frames,Extract16 tel;
+    class Gate1,Gate2,DecisionRule gate;
+    class StateUnlocked,StateReject,StateLockout fsm;
+    class StippleOrb,LockSVG,LiveChartComp,Views,I18nSystem ui;
+    class ZustandStore,Storage db;

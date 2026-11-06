@@ -1,0 +1,77 @@
+%% Diagram 03: Frontend Layered Architecture
+%% Project: Thenar - Smart-Safe Handle Telemetry
+flowchart TB
+    subgraph PRESENTATION_LAYER["Presentation Layer (Routes & Views)"]
+        direction LR
+        App["App.tsx<br/>(HashRouter + .sol-root Shell)"]
+        Dash["pages/Dashboard.tsx<br/>(/)"]
+        Live["pages/LiveSession.tsx<br/>(/live)"]
+        Log["pages/AttemptLog.tsx<br/>(/log)"]
+        Profile["pages/EnrollmentProfile.tsx<br/>(/profile)"]
+        Analytics["pages/Analytics.tsx<br/>(/analytics)"]
+        Attack["pages/AttackSimulator.tsx<br/>(/attack)"]
+        Settings["pages/Settings.tsx<br/>(/settings)"]
+
+        App --> Dash & Live & Log & Profile & Analytics & Attack & Settings
+    end
+
+    subgraph COMPONENT_LAYER["Component Layer (Reusable UI & Visualizers)"]
+        direction TB
+        Header["components/Header.tsx<br/>(Sticky blur nav, status pills, toggles)"]
+        Nav["components/Navigation.tsx<br/>(Mobile bottom bar + More drawer)"]
+        Orb["components/StippleOrb.tsx<br/>(Fibonacci sphere, inertia drag, ripple)"]
+        Horizon["components/StippledHorizon.tsx<br/>(Interactive canvas wave footer)"]
+        LockSVG["components/LockMechanismSVG.tsx<br/>(Interactive physical safe & bolt SVG)"]
+        FlowStrip["components/GestureFlowStrip.tsx<br/>(Touch -> Grip -> Turn -> Release -> Decision)"]
+        Chart["components/LiveChart.tsx<br/>(Recharts 3-channel 100 Hz stream/replay/overlay)"]
+        Notif["components/NotificationCenter.tsx<br/>(Alert popover & unread badge)"]
+    end
+
+    subgraph STATE_LAYER["State & Logic Layer (Zustand & Persistence)"]
+        direction TB
+        Store["store/useThenarStore.ts<br/>(Lock state machine, attempts, profile, notifications)"]
+        LocalStorage[("Browser localStorage<br/>('thenar_companion_state_v1')")]
+        Store <-->|Auto-persists on update| LocalStorage
+    end
+
+    subgraph ENGINE_LAYER["Hardware Simulation & Math Engine"]
+        direction TB
+        Engine["mock/engine.ts<br/>(SeededPRNG, 100 Hz generator, feature extractor, Mahalanobis)"]
+        Types["mock/types.ts<br/>(TelemetryFrame, FeatureVector, AttemptRecord, OwnerProfile)"]
+        Engine --- Types
+    end
+
+    subgraph FOUNDATION_LAYER["Foundational Design & i18n System"]
+        direction LR
+        Tokens["styles/tokens.css<br/>(Lagoon theme tokens & CSS variables)"]
+        SolCSS["styles/sol.css<br/>(21st.dev reference layout & animations)"]
+        I18n["i18n/index.ts<br/>(getTranslation helper)"]
+        LangFiles["i18n/en.json & i18n/ar.json<br/>(Bilingual dictionary dictionaries)"]
+        I18n --- LangFiles
+    end
+
+    App --> Header & Nav & Horizon
+    Dash --> Orb & LockSVG & FlowStrip
+    Live --> Chart
+    Log --> Chart
+    Attack --> Chart
+    Header --> Notif
+
+    Dash & Live & Log & Profile & Analytics & Attack & Settings -->|Reads & Dispatches| Store
+    Header & Nav & LockSVG & FlowStrip -->|Reads & Dispatches| Store
+    Store -->|Invokes Simulation & Math| Engine
+    Dash & Live & Attack & Log -->|Consumes Types| Types
+    App & Dash & Live & Log & Profile & Analytics & Attack & Settings -->|Calls| I18n
+    App -->|Applies Styles| Tokens & SolCSS
+
+    classDef pres fill:#d2efe9,stroke:#1aa59a,stroke-width:1.5px,color:#123b3a;
+    classDef comp fill:#f8f8f6,stroke:#123b3a,stroke-width:1.5px,color:#141414;
+    classDef state fill:#efeccd,stroke:#e29d3b,stroke-width:1.5px,color:#141414;
+    classDef eng fill:#e8e8e5,stroke:#0284c7,stroke-width:1.5px,color:#141414;
+    classDef fnd fill:#ffffff,stroke:#9a9a95,stroke-width:1.5px,color:#141414;
+
+    class App,Dash,Live,Log,Profile,Analytics,Attack,Settings pres;
+    class Header,Nav,Orb,Horizon,LockSVG,FlowStrip,Chart,Notif comp;
+    class Store,LocalStorage state;
+    class Engine,Types eng;
+    class Tokens,SolCSS,I18n,LangFiles fnd;

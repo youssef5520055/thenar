@@ -1,0 +1,36 @@
+flowchart TD
+  subgraph Frontend["1. Web Frontend (/profile)"]
+    USER_ACTION["Owner Completes 15 Baseline Swipes (S1)"]
+    TRIGGER_ENROLL["POST /api/v1/profile/enroll"]
+    USER_ACTION --> TRIGGER_ENROLL
+  end
+
+  subgraph Gateway["2. Express Gateway Service"]
+    GW_ROUTE["profile.ts Route Handler"]
+    FETCH_SAMPLES["Fetch Genuine Attempts from SQLite"]
+    FORWARD_PY["HTTP POST http://localhost:8000/fit\nBody: {attempts: [...], alpha: 0.05}"]
+    SAVE_PROFILE["Save Model to profile_meta Table"]
+    TRIGGER_ENROLL --> GW_ROUTE
+    GW_ROUTE --> FETCH_SAMPLES
+    FETCH_SAMPLES --> FORWARD_PY
+  end
+
+  subgraph PythonML["3. Python Enrollment Service (FastAPI)"]
+    EXTRACT_MAT["Assemble 15x16 Feature Matrix X"]
+    LW_SHRINK["LedoitWolf().fit(X)\nEmpirical Covariance -> Shrunk Covariance Sigma"]
+    CALC_PRECISION["Compute Precision Matrix:\nSigma_Inv = inv(Sigma_shrunk)"]
+    LOO_CALIB["Leave-One-Out Tau Calibration:\nCalculate genuine scores s(x_i)\nSet tau = 5th_percentile - 0.5"]
+    BUILD_MODEL["Construct ModelExport Object:\n{means, invCov, tau, scaleFactor: 2.5}"]
+
+    FORWARD_PY --> EXTRACT_MAT
+    EXTRACT_MAT --> LW_SHRINK
+    LW_SHRINK --> CALC_PRECISION
+    CALC_PRECISION --> LOO_CALIB
+    LOO_CALIB --> BUILD_MODEL
+  end
+
+  subgraph Deployment["4. Embedded C-Header Export"]
+    BUILD_MODEL --> SAVE_PROFILE
+    SAVE_PROFILE --> GEN_C["generateCHeader() in packages/contracts\nOR POST /export/c-header"]
+    GEN_C --> C_FILE["thenar_model.h\n(Embedded C code for ESP32 firmware)"]
+  end

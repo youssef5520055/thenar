@@ -1,0 +1,47 @@
+stateDiagram-v2
+  [*] --> LOCKED: Device Boot (Read .device-state.json)
+
+  LOCKED --> SAMPLING: Touch Detected on Handle (Force > 0.5N)
+  
+  state SAMPLING {
+    [*] --> S1_Contact: 0 to 200ms
+    S1_Contact --> S2_Squeeze: 200 to 650ms
+    S2_Squeeze --> S3_Twist: 650 to 1150ms
+    S3_Twist --> S4_Hold: 1150 to 1500ms
+    S4_Hold --> [*]: 150 Frames Collected
+  }
+
+  SAMPLING --> EVALUATING: Turn Motion Completed
+  
+  state EVALUATING {
+    [*] --> CheckFault
+    CheckFault --> FaultDetected: Sensor Disconnected / NaN
+    CheckFault --> CheckGate1: Valid Sensor Signals
+    CheckGate1 --> Gate1Passed: Fingerprint Accepted
+    CheckGate1 --> Gate1Failed: Fingerprint Rejected
+    Gate1Passed --> CheckGate2: Calculate Mahalanobis s(x)
+    Gate1Failed --> CheckGate2: Log Behavioral Data
+    CheckGate2 --> DecisionGate
+  }
+
+  EVALUATING --> UNLOCKED: Gate 1 MATCH AND s(x) >= tau
+  EVALUATING --> LOCKED: Failure (failCount < 5)
+  EVALUATING --> LOCKOUT: 5th Consecutive Failure (failCount >= 5)
+
+  state UNLOCKED {
+    [*] --> SolenoidEnergized: 12V Pulse Applied
+    SolenoidEnergized --> BoltRetracted: Steel Pin Pulled (3000ms)
+    BoltRetracted --> AutoLockTimer: Timeout Expires
+    AutoLockTimer --> [*]: Cut Solenoid Power
+  }
+
+  UNLOCKED --> LOCKED: Spring Extends Bolt (Fail-Secure)
+
+  state LOCKOUT {
+    [*] --> CalculatePenalty: Penalty = 30s * 2^repeatCount
+    CalculatePenalty --> FreezeSensors: Save lockoutUntil to Disk
+    FreezeSensors --> CountDown: Refuse all touches
+    CountDown --> [*]: Date.now() > lockoutUntil
+  }
+
+  LOCKOUT --> LOCKED: Penalty Expired (Sensors Reactivated)

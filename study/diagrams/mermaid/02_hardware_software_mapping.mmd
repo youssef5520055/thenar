@@ -1,0 +1,44 @@
+%% Diagram 02: Hardware-to-Software Mapping Architecture
+%% Project: Thenar - Smart-Safe Handle Telemetry
+flowchart LR
+    subgraph PHYSICAL["Target Physical Hardware (Proposal Design)"]
+        direction TB
+        HW_Touch["Capacitive Touch Pad<br/>(Awakens ESP32 on touch)"]
+        HW_FP["R503 Optical Fingerprint Sensor<br/>(UART @ 57600 baud)"]
+        HW_Load["Load Cell + HX711 24-bit ADC<br/>(Embedded in Handle Core)"]
+        HW_IMU["MPU-6050 6-DoF IMU<br/>(I2C @ 400 kHz, Gyro + Accel)"]
+        HW_ESP["ESP32-WROOM-32 MCU<br/>(Dual Core 240 MHz, Wi-Fi 802.11 b/g/n)"]
+        HW_Mosfet["N-Channel MOSFET Switch<br/>(12V Solenoid Driver Circuit)"]
+        HW_Bolt["Fail-Secure Solenoid Deadbolt<br/>(Mechanical independent latch)"]
+        HW_Reed["Normally-Open Reed Switch<br/>(Magnetic door frame sense)"]
+        HW_Switch["Internal Service Mode Switch<br/>(Physical toggle inside safe)"]
+    end
+
+    subgraph PROTO_CODE["Thenar Software Modules (Web Demo Implementation)"]
+        direction TB
+        SW_Touch["Touch Trigger & T=0 Origin<br/>src/mock/engine.ts: generateAttemptFrames()"]
+        SW_FP["Gate 1 Minutiae Evaluation<br/>src/mock/types.ts: gate1Result, gate1TemplateId"]
+        SW_Load["100 Hz Force F(t) Channel<br/>src/mock/engine.ts & src/components/LiveChart.tsx"]
+        SW_IMU["100 Hz Angular Velocity w(t) & Accel a(t)<br/>src/components/LiveChart.tsx (Recharts)"]
+        SW_ESP["Mock Engine & Telemetry State Machine<br/>src/store/useThenarStore.ts & src/mock/engine.ts"]
+        SW_Mosfet["Solenoid Power Logic<br/>useThenarStore.ts: solenoidActive boolean"]
+        SW_Bolt["Lock State Vector & Animated Mechanism<br/>src/components/LockMechanismSVG.tsx"]
+        SW_Reed["Door Sensor Boolean<br/>useThenarStore.ts: doorReedOpen & pullDoorOpen()"]
+        SW_Switch["Calibration Gating Switch<br/>useThenarStore.ts: serviceSwitchEngaged"]
+    end
+
+    HW_Touch ====>|Emulated by| SW_Touch
+    HW_FP ====>|Emulated by| SW_FP
+    HW_Load ====>|Emulated by| SW_Load
+    HW_IMU ====>|Emulated by| SW_IMU
+    HW_ESP ====>|Emulated by| SW_ESP
+    HW_Mosfet ====>|Emulated by| SW_Mosfet
+    HW_Bolt ====>|Emulated by| SW_Bolt
+    HW_Reed ====>|Emulated by| SW_Reed
+    HW_Switch ====>|Emulated by| SW_Switch
+
+    classDef hw fill:#efeccd,stroke:#e29d3b,stroke-width:1.5px,color:#141414;
+    classDef sw fill:#d2efe9,stroke:#1aa59a,stroke-width:1.5px,color:#123b3a;
+
+    class HW_Touch,HW_FP,HW_Load,HW_IMU,HW_ESP,HW_Mosfet,HW_Bolt,HW_Reed,HW_Switch hw;
+    class SW_Touch,SW_FP,SW_Load,SW_IMU,SW_ESP,SW_Mosfet,SW_Bolt,SW_Reed,SW_Switch sw;

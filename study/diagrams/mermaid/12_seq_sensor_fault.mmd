@@ -1,0 +1,36 @@
+%% Diagram 12: Sequence Diagram - Sensor Fault Injection
+%% Project: Thenar - Smart-Safe Handle Telemetry
+sequenceDiagram
+    autonumber
+    actor Tester as Tester / Operator
+    participant LiveUI as LiveSession (/live)
+    participant Store as useThenarStore
+    participant Mock as Mock Engine
+    participant Solenoid as Solenoid Deadbolt
+
+    Tester->>LiveUI: Toggles 'Inject Sensor Fault' (injectFault = true)
+    LiveUI-->>Tester: Fault armed badge (ARMED)
+    Tester->>LiveUI: Clicks 'Start Capture'
+    LiveUI->>Mock: generateAttemptFrames('owner', 'S4', prng, injectFault=true)
+    Mock-->>LiveUI: returns frames with corrupted force channel midway
+
+    Note over LiveUI,Store: Real-time 100 Hz Streaming Phase
+    loop During kinematic stream (dt = 10ms)
+        LiveUI->>LiveUI: Updates animated scrolling LiveChart
+        opt Mid-gesture (elapsed > 45% of trajectory)
+            Note over LiveUI: HX711 Load Cell signal drops to NaN / disconnected
+            LiveUI->>LiveUI: setSensorHealth({ hx711: false })
+            LiveUI-->>Tester: HX711 status dot turns RED
+        end
+    end
+
+    Note over LiveUI,Store: Fail-Secure Emergency Abort Protocol
+    LiveUI->>Store: set({ lockState: 'FAULT' })
+    LiveUI->>Store: addNotification('sensor_fault', 'live.decision_fault')
+    Store->>Solenoid: Bolt remains SECURED (Fail-Secure deadbolt never retracts)
+    LiveUI-->>Tester: Emergency FAULT banner displayed
+
+    Note over LiveUI,Store: Auto-Recovery Timer
+    LiveUI->>LiveUI: Waits 3000ms safety timeout
+    LiveUI->>Store: set({ lockState: 'LOCKED' })
+    LiveUI-->>Tester: System returns to secure standby (LOCKED)

@@ -1,0 +1,40 @@
+%% Diagram 21: Developer Build & Production Pipeline
+%% Project: Thenar - Smart-Safe Handle Telemetry
+flowchart LR
+    subgraph DEV_WORKFLOW["1. Local Development Workflow"]
+        Install["npm install<br/>(Resolves React, Vite, Tailwind, Recharts, Zustand, Lucide)"]
+        DevServer["npm run dev<br/>(Vite Hot Module Replacement - HMR @ localhost:5173)"]
+        BrowserDev["Developer Browser Session<br/>(Instant component re-rendering)"]
+        Install --> DevServer --> BrowserDev
+    end
+
+    subgraph CI_BUILD["2. Production Build Pipeline ('npm run build')"]
+        TypeCheck["tsc (TypeScript Compiler)<br/>Type-checking whole codebase<br/>Zero 'any' regressions & interface compliance"]
+        ViteBuild["vite build (Rollup Bundler)<br/>• CSS Minification & PostCSS processing<br/>• Code-splitting & dead-code elimination<br/>• Asset hashing & tree-shaking"]
+        TypeCheck --> ViteBuild
+    end
+
+    subgraph ARTIFACTS["3. Static Production Distribution (/dist)"]
+        IndexHtml["dist/index.html (1.37 kB)<br/>Entry HTML shell with font preconnects"]
+        CSSBundle["dist/assets/index-[hash].css (~64 kB)<br/>Tailwind tokens + 21st.dev lagoon styles"]
+        JSBundle["dist/assets/index-[hash].js (~887 kB)<br/>Minified React, Recharts, Zustand, & Canvas engine"]
+        ViteBuild --> IndexHtml & CSSBundle & JSBundle
+    end
+
+    subgraph DEPLOYMENT["4. Static Hosting & Production Preview"]
+        PreviewCmd["npm run preview<br/>(Local static preview @ localhost:4173)"]
+        StaticHost["Any Static Host (No Backend Required)<br/>GitHub Pages, Vercel, Netlify, Cloudflare Pages<br/>(HashRouter ensures route resolution without server redirects)"]
+        IndexHtml & CSSBundle & JSBundle --> PreviewCmd & StaticHost
+    end
+
+    DEV_WORKFLOW -.->|Before Shipping| CI_BUILD
+
+    classDef dev fill:#efeccd,stroke:#e29d3b,stroke-width:1.5px,color:#141414;
+    classDef ci fill:#d2efe9,stroke:#1aa59a,stroke-width:1.5px,color:#123b3a;
+    classDef dist fill:#f8f8f6,stroke:#123b3a,stroke-width:1.5px,color:#141414;
+    classDef deploy fill:#123b3a,stroke:#1aa59a,stroke-width:2px,color:#ffffff;
+
+    class Install,DevServer,BrowserDev dev;
+    class TypeCheck,ViteBuild ci;
+    class IndexHtml,CSSBundle,JSBundle dist;
+    class PreviewCmd,StaticHost deploy;

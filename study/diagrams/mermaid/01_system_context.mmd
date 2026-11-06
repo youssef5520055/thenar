@@ -1,0 +1,50 @@
+%% Diagram 01: System Context Diagram
+%% Project: Thenar - Smart-Safe Handle Telemetry
+flowchart TB
+    subgraph REAL_WORLD["Physical World (User & Operator)"]
+        Owner["Owner / User<br/>(Physical Interaction)"]
+    end
+
+    subgraph DEMO_CLIENT["Thenar Web Application (In-Browser Client Prototype)"]
+        direction TB
+        UI["React 18 + Tailwind UI<br/>(Lagoon Design System)"]
+        Store["Zustand Store<br/>(Physical State Machine & Config)"]
+        MockEngine["Mock Hardware & Telemetry Engine<br/>(100 Hz PRNG Signal Generator)"]
+        Storage[("localStorage<br/>(Encrypted Session & Profile Persistence)")]
+
+        UI <-->|User Interactions & Real-time Graphs| Store
+        Store <-->|Triggers Simulation & Receives Telemetry| MockEngine
+        Store <-->|Persists State, Attempts, & Lockout| Storage
+    end
+
+    subgraph SIMULATED_HARDWARE["Simulated Hardware Domain (Target Physical Safe)"]
+        direction TB
+        ESP32["ESP32 Microcontroller<br/>(Telemetry Streamer & Motor Controller)"]
+        FP["R503 Optical Fingerprint Scanner<br/>(Gate 1 Minutiae Matching)"]
+        LoadCell["HX711 + Load Cell<br/>(Grip Force Measurement)"]
+        IMU["MPU-6050 6-DoF IMU<br/>(Gyroscope & Accelerometer)"]
+        Solenoid["Fail-Secure Solenoid Deadbolt<br/>(Independent Mechanical Bolt)"]
+        Reed["Magnetic Reed Switch<br/>(Door Frame Alignment Sensor)"]
+
+        ESP32 --- FP
+        ESP32 --- LoadCell
+        ESP32 --- IMU
+        ESP32 --- Solenoid
+        ESP32 --- Reed
+    end
+
+    Owner ==>|1. Finger Touch & Minutiae Scan| FP
+    Owner ==>|2. Grip Force Build-up| LoadCell
+    Owner ==>|3. Rotational Turn & Release| IMU
+    Owner ==>|4. Pulls Open Door| Reed
+    Solenoid -.->|"Retracts Bolt (Unlocks Safe)"| Owner
+
+    MockEngine -.->|Emulates Physical Signals| ESP32
+
+    classDef real fill:#d2efe9,stroke:#1aa59a,stroke-width:2px,color:#123b3a;
+    classDef client fill:#f8f8f6,stroke:#123b3a,stroke-width:2px,color:#141414;
+    classDef hardware fill:#efeccd,stroke:#e29d3b,stroke-width:1.5px,stroke-dasharray: 4 4,color:#141414;
+
+    class Owner real;
+    class UI,Store,MockEngine,Storage client;
+    class ESP32,FP,LoadCell,IMU,Solenoid,Reed hardware;

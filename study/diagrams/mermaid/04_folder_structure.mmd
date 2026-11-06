@@ -1,0 +1,81 @@
+%% Diagram 04: Folder Structure Tree
+%% Project: Thenar - Smart-Safe Handle Telemetry
+graph TD
+    Root["prototype/ (Project Root)"]
+
+    subgraph CONFIG_FILES["Build & Configuration"]
+        Pkg["package.json (Dependencies & Scripts)"]
+        TsCfg["tsconfig.json (Strict TypeScript Config)"]
+        ViteCfg["vite.config.ts (Build tooling & plugins)"]
+        TailwindCfg["tailwind.config.js (Theme mapping)"]
+        IndexHtml["index.html (HTML5 Shell & Fonts)"]
+    end
+
+    subgraph SRC_DIR["src/ (Application Source)"]
+        MainTsx["main.tsx (Vite root entry point)"]
+        AppTsx["App.tsx (Root layout & HashRouter)"]
+
+        subgraph COMPONENTS_DIR["src/components/"]
+            C1["Header.tsx (Sticky navigation & status)"]
+            C2["Navigation.tsx (Mobile bottom nav & More)"]
+            C3["StippleOrb.tsx (Fibonacci particle canvas)"]
+            C4["StippledHorizon.tsx (Wave canvas footer)"]
+            C5["LockMechanismSVG.tsx (Physical safe SVG)"]
+            C6["GestureFlowStrip.tsx (5-stage step strip)"]
+            C7["LiveChart.tsx (Recharts telemetry stream)"]
+            C8["NotificationCenter.tsx (Alerts popover)"]
+        end
+
+        subgraph PAGES_DIR["src/pages/"]
+            P1["Dashboard.tsx (Route: /)"]
+            P2["LiveSession.tsx (Route: /live)"]
+            P3["AttemptLog.tsx (Route: /log)"]
+            P4["EnrollmentProfile.tsx (Route: /profile)"]
+            P5["Analytics.tsx (Route: /analytics)"]
+            P6["AttackSimulator.tsx (Route: /attack)"]
+            P7["Settings.tsx (Route: /settings)"]
+        end
+
+        subgraph MOCK_DIR["src/mock/"]
+            M1["engine.ts (Math, PRNG, 100Hz signals, Mahalanobis)"]
+            M2["types.ts (Interfaces & data contracts)"]
+        end
+
+        subgraph STORE_DIR["src/store/"]
+            S1["useThenarStore.ts (Zustand state & persistence)"]
+        end
+
+        subgraph I18N_DIR["src/i18n/"]
+            I1["index.ts (getTranslation helper)"]
+            I2["en.json (English dictionary)"]
+            I3["ar.json (Arabic dictionary)"]
+        end
+
+        subgraph STYLES_DIR["src/styles/"]
+            ST1["tokens.css (Lagoon palette CSS variables)"]
+            ST2["sol.css (21st.dev reference stylesheet)"]
+        end
+    end
+
+    subgraph STUDY_DIR["study/ (Documentation & Teaching Pack)"]
+        SD1["00_PROJECT_OVERVIEW_AR.md (Comprehensive Arabic Guide)"]
+        SD2["README_AR.md (Index & Reading Roadmap)"]
+        SD3["Thenar_Study_Guide_AR.pdf (Printable Study Guide)"]
+        SD4["diagrams/ (Mermaid, SVG, & PNG)"]
+        SD5["explanations/ (9 In-depth chapters 01-09)"]
+        SD6["assets/ (21 Screens in EN/AR Desktop/Mobile)"]
+    end
+
+    Root --> CONFIG_FILES
+    Root --> SRC_DIR
+    Root --> STUDY_DIR
+
+    SRC_DIR --> COMPONENTS_DIR & PAGES_DIR & MOCK_DIR & STORE_DIR & I18N_DIR & STYLES_DIR
+
+    classDef root fill:#123b3a,stroke:#1aa59a,stroke-width:2px,color:#ffffff;
+    classDef dir fill:#d2efe9,stroke:#1aa59a,stroke-width:1.5px,color:#123b3a;
+    classDef file fill:#f8f8f6,stroke:#9a9a95,stroke-width:1px,color:#141414;
+
+    class Root root;
+    class CONFIG_FILES,SRC_DIR,STUDY_DIR,COMPONENTS_DIR,PAGES_DIR,MOCK_DIR,STORE_DIR,I18N_DIR,STYLES_DIR dir;
+    class Pkg,TsCfg,ViteCfg,TailwindCfg,IndexHtml,MainTsx,AppTsx,C1,C2,C3,C4,C5,C6,C7,C8,P1,P2,P3,P4,P5,P6,P7,M1,M2,S1,I1,I2,I3,ST1,ST2,SD1,SD2,SD3,SD4,SD5,SD6 file;

@@ -1,0 +1,109 @@
+erDiagram
+  DEVICES ||--o{ LOCK_STATUS : "has"
+  DEVICES ||--o{ ATTEMPTS : "records"
+  DEVICES ||--o{ SETTINGS : "configures"
+  DEVICES ||--o{ PROFILE_META : "calibrates"
+  DEVICES ||--o{ NOTIFICATIONS : "triggers"
+  ATTEMPTS ||--o{ FRAMES : "contains"
+  DEVICES ||--o{ AUDIT_LOG : "audits"
+
+  DEVICES {
+    string id PK "thenar-safe-01"
+    string name "Master Bedroom Safe"
+    string firmwareVersion "1.0.4-rc2"
+    integer batteryLevel "94"
+    integer wifiRssi "-58"
+    string hardwareRevision "revB-esp32s3"
+    string lastSeen "ISO-8601"
+    string createdAt "ISO-8601"
+  }
+
+  LOCK_STATUS {
+    integer id PK "Auto Increment"
+    string deviceId FK "Reference devices.id"
+    string state "LOCKED | UNLOCKED | LOCKOUT | TAMPER"
+    integer solenoidEngaged "0 or 1"
+    integer boltExtended "0 or 1"
+    integer doorReedClosed "0 or 1"
+    integer failureCount "0 to N"
+    string lockoutUntil "ISO-8601 or NULL"
+    integer lockoutRepeatCount "0 to N"
+    string updatedAt "ISO-8601"
+  }
+
+  ATTEMPTS {
+    string id PK "UUID / att-..."
+    string deviceId FK "Reference devices.id"
+    string timestamp "ISO-8601"
+    string outcome "ACCEPT | REJECT | FAULT"
+    integer fpMatched "0 or 1"
+    integer fpTemplateId "1 or NULL"
+    real score "-2.45"
+    real tau "-3.85"
+    real durationMs "1500"
+    real t1Ms "200"
+    real t2Ms "450"
+    real t3Ms "500"
+    real t4Ms "350"
+    text deviationsJson "JSON deviations map"
+    integer experimentMode "0 or 1"
+    string session "S1 | S2 | S3 | S4"
+    string role "genuine | impostor | mimic"
+    string participantCode "ANON-01"
+    string createdAt "ISO-8601"
+  }
+
+  FRAMES {
+    integer id PK "Auto Increment"
+    string attemptId FK "Reference attempts.id"
+    real t "Time offset in ms"
+    real force "Force in Newtons"
+    real gyroPitch "Degrees per second"
+    real gyroRoll "Degrees per second"
+    real gyroYaw "Degrees per second"
+    real accelX "Acceleration in G"
+    real accelY "Acceleration in G"
+    real accelZ "Acceleration in G"
+  }
+
+  SETTINGS {
+    string deviceId PK "Reference devices.id"
+    real tau "-3.85"
+    integer solenoidDurationMs "3000"
+    integer maxFailuresBeforeLockout "5"
+    integer lockoutDurationSeconds "30"
+    integer experimentMode "0 or 1"
+    string updatedAt "ISO-8601"
+  }
+
+  PROFILE_META {
+    string deviceId PK "Reference devices.id"
+    string profileId "UUID"
+    string enrolledAt "ISO-8601"
+    integer attemptCount "15"
+    real calculatedTau "-3.85"
+    real estimatedFar "0.008"
+    real estimatedFrr "0.042"
+    text featureMeansJson "16-D means array"
+    text invCovMatrixJson "16x16 precision matrix"
+    string updatedAt "ISO-8601"
+  }
+
+  NOTIFICATIONS {
+    string id PK "UUID"
+    string deviceId FK "Reference devices.id"
+    string type "INFO | WARN | CRITICAL"
+    string title "Notification Title"
+    string message "Detailed Description"
+    integer read "0 or 1"
+    string createdAt "ISO-8601"
+  }
+
+  AUDIT_LOG {
+    integer id PK "Auto Increment"
+    string deviceId FK "Reference devices.id"
+    string eventType "ATTEMPT | LOCKOUT | CONFIG_CHANGE"
+    text detailsJson "Detailed payload"
+    string ipAddress "127.0.0.1"
+    string createdAt "ISO-8601"
+  }

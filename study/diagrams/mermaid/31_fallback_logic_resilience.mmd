@@ -1,0 +1,28 @@
+flowchart TD
+  START(["App.tsx Mounts / User Opens Web App"]) --> INIT["Call initApiAndWs() in useThenarStore.ts"]
+
+  INIT --> PROBE{"HTTP GET /api/v1/status\n(Gateway Health Check)"}
+
+  %% Online Branch
+  PROBE -- "200 OK Received" --> SET_ONLINE["Set isGatewayOnline = true\ngatewayMode = 'connected'"]
+  SET_ONLINE --> SYNC_STATE["syncFromGateway():\nFetch attempts, settings, profile from SQLite"]
+  SYNC_STATE --> OPEN_WS["Connect to ws://localhost:3000/ws/live"]
+  OPEN_WS --> UI_ONLINE["Header Status Chip: Gateway: Online (Emerald Green)"]
+  UI_ONLINE --> LISTEN_WS["Listen for Real-Time Telemetry & Lock Status"]
+
+  %% Offline Fallback Branch
+  PROBE -- "Connection Refused / Network Error" --> SET_OFFLINE["Set isGatewayOnline = false\ngatewayMode = 'fallback'"]
+  SET_OFFLINE --> LOAD_LOCAL["Load cached state from localStorage\n(Debounced Persistence)"]
+  LOAD_LOCAL --> UI_OFFLINE["Header Status Chip: Offline Demo Mode (Amber Warning)"]
+  UI_OFFLINE --> LOCAL_DISPATCH["All simulations routed to packages/engine\n(Mulberry32 In-Browser Synthesizer)"]
+
+  %% Interactive Simulation Branch
+  USER_CLICK["User Triggers Scenario in UI (e.g. Owner Unlock)"] --> CHECK_GATEWAY{"Check isGatewayOnline?"}
+  CHECK_GATEWAY -- "YES" --> CALL_API["POST /api/v1/demo/simulate\nSend to Gateway Server"]
+  CALL_API --> API_SUCCESS{"API Responded?"}
+  API_SUCCESS -- "YES" --> APPLY_REAL["Record Real DB Attempt & Animate UI"]
+  API_SUCCESS -- "NO (Server Crashed)" --> LOG_WARN["Log console.warn & Transition to Mock"]
+  LOG_WARN --> RUN_MOCK["Execute In-Browser Mock Engine"]
+  CHECK_GATEWAY -- "NO" --> RUN_MOCK
+
+  RUN_MOCK --> UPDATE_LOCAL["Update Zustand Store Locally (Zero Crashing!)"]

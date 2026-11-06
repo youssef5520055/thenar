@@ -1,0 +1,93 @@
+classDiagram
+  class Device {
+    +string id
+    +string name
+    +string firmwareVersion
+    +number batteryLevel
+    +number wifiRssi
+    +string hardwareRevision
+    +string lastSeen
+  }
+
+  class LockStatus {
+    +LockState state
+    +boolean solenoidEngaged
+    +boolean boltExtended
+    +boolean doorReedClosed
+    +number failureCount
+    +string? lockoutUntil
+    +number lockoutRepeatCount
+    +string updatedAt
+  }
+
+  class Attempt {
+    +string id
+    +string deviceId
+    +string timestamp
+    +AttemptOutcome outcome
+    +FingerprintResult fingerprint
+    +number score
+    +number tau
+    +number durationMs
+    +PhaseTimings phases
+    +Map~string, number~ deviations
+    +boolean experimentMode
+    +SessionType session
+    +RoleType role
+  }
+
+  class Frame {
+    +number t
+    +number force
+    +Vector3 gyro
+    +Vector3 accel
+  }
+
+  class Settings {
+    +string deviceId
+    +number tau
+    +number solenoidDurationMs
+    +number maxFailuresBeforeLockout
+    +number lockoutDurationSeconds
+    +boolean experimentMode
+    +string updatedAt
+  }
+
+  class ProfileMeta {
+    +string deviceId
+    +string profileId
+    +string enrolledAt
+    +number attemptCount
+    +number calculatedTau
+    +number estimatedFar
+    +number estimatedFrr
+    +number[] featureMeans
+    +number[][] invCovMatrix
+  }
+
+  class ModelExport {
+    +string profileId
+    +number calculatedTau
+    +number scaleFactor
+    +number[] featureMeans
+    +number[][] invCovMatrix
+    +string generatedAt
+  }
+
+  class Notification {
+    +string id
+    +string deviceId
+    +NotificationType type
+    +string title
+    +string message
+    +boolean read
+    +string createdAt
+  }
+
+  Device "1" -- "1" LockStatus : tracks
+  Device "1" -- "*" Attempt : logs
+  Attempt "1" -- "*" Frame : contains in experimentMode
+  Device "1" -- "1" Settings : governed by
+  Device "1" -- "1" ProfileMeta : calibrated with
+  ProfileMeta "1" -- "1" ModelExport : serializes into
+  Device "1" -- "*" Notification : dispatches

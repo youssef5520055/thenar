@@ -1,0 +1,56 @@
+%% Diagram 15: Attack Simulator & Adversarial Evaluation Flow
+%% Project: Thenar - Smart-Safe Handle Telemetry
+flowchart TD
+    Start(["Security Analyst Enters Attack Simulator (/attack)"])
+
+    subgraph CONFIG_VECTOR["1. Threat Vector & Bypass Configuration"]
+        SelectScenario{"Select Adversary Model"}
+        A1["A1: Casual Impostor (Naive)<br/>Random stranger, arbitrary grip force, jerky rotation"]
+        A2L1["A2: Observer Mimicry Level 1<br/>Visual observer timing imitation, uncoordinated torque"]
+        A2L2["A2: Informed Mimicry Level 2<br/>Trained adversary with feedback matching velocity & force"]
+
+        SelectScenario --> A1 & A2L1 & A2L2
+
+        FPToggle["Fingerprint Sensor Compromise Toggle<br/>Simulates stolen silicone mold or minutiae spoofing"]
+        FPOff["Gate 1 STRICT (FAIL)"]
+        FPOn["Gate 1 COMPROMISED (PASS)<br/>(Crucial test: Can Gate 2 alone repel the breach?)"]
+
+        FPToggle --> FPOff & FPOn
+    end
+
+    subgraph EXECUTE_EVAL["2. Kinematic Synthesis & Dual-Gate Evaluation"]
+        Trigger["Execute Attack Vector"]
+        Synth["generateAttemptFrames(scenario, 'S4')<br/>Synthesizes attacker 100 Hz kinematic telemetry"]
+        Extract["extractFeatures(attackerFrames)<br/>Extracts 16-D feature vector"]
+        Mahalanobis["computeMahalanobisScore()<br/>Calculates Mahalanobis distance s(x) against genuine owner"]
+        GateEval{"Dual-Gate Rule:<br/>FP_Compromised == true<br/>AND s(x) >= tau?"}
+
+        Trigger --> Synth --> Extract --> Mahalanobis --> GateEval
+    end
+
+    subgraph VERDICT_PANEL["3. Defense Verdict & Visual Signal Overlay"]
+        Repelled["VERDICT: ATTACK REPELLED (SECURED)<br/>• Gate 2 Behavioral Stopping Power successfully blocked the spoof!<br/>• Solenoid stays de-energized<br/>• Failure counter incremented -> Lockout warning"]
+        Breached["VERDICT: BREACH SUCCESSFUL (CRITICAL)<br/>• Adversary matched both biometric identity and kinematics<br/>• Solenoid retracts bolt"]
+
+        GateEval -->|"NO (Normal Outcome)"| Repelled
+        GateEval -->|"YES (Rare Vulnerability)"| Breached
+
+        OverlayChart["Signal Overlay Chart (LiveChart.tsx)<br/>Dashed White Curve: Attacker Attempt Vector<br/>Solid Teal Band: Enrolled Owner 95% Confidence Envelope"]
+        ZScoreGrid["Anomalous Feature Distance Grid<br/>Displays largest z-score deviations (+3.4σ peak force, +2.8σ jerk...)"]
+
+        Repelled & Breached --> OverlayChart & ZScoreGrid
+    end
+
+    Start --> CONFIG_VECTOR --> EXECUTE_EVAL --> VERDICT_PANEL
+
+    classDef cfg fill:#efeccd,stroke:#e29d3b,stroke-width:1.5px,color:#141414;
+    classDef exec fill:#d2efe9,stroke:#1aa59a,stroke-width:1.5px,color:#123b3a;
+    classDef safe fill:#1aa59a,stroke:#123b3a,stroke-width:2px,color:#ffffff;
+    classDef breach fill:#ef4444,stroke:#7f1d1d,stroke-width:2px,color:#ffffff;
+    classDef chart fill:#f8f8f6,stroke:#123b3a,stroke-width:1.5px,color:#141414;
+
+    class SelectScenario,A1,A2L1,A2L2,FPToggle,FPOff,FPOn cfg;
+    class Trigger,Synth,Extract,Mahalanobis,GateEval exec;
+    class Repelled safe;
+    class Breached breach;
+    class OverlayChart,ZScoreGrid chart;

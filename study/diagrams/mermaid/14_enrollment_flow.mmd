@@ -1,0 +1,55 @@
+%% Diagram 14: One-Owner Enrollment & Calibration Flow
+%% Project: Thenar - Smart-Safe Handle Telemetry
+flowchart TD
+    Start(["Operator Opens Safe & Enters Enrollment (/profile)"])
+
+    subgraph STEP1["Step 1: Physical Service Switch Gating"]
+        SW_Check{"Is Service Switch ON?<br/>(Inside safe interior)"}
+        SW_Prompt["Safety Gate: Retraining blocked<br/>Flip physical toggle ON"]
+        SW_Engage["setServiceSwitch(true)<br/>Calibration Mode ACTIVE"]
+        SW_Check -->|NO| SW_Prompt --> SW_Check
+        SW_Check -->|YES| SW_Engage
+    end
+
+    subgraph STEP2["Step 2: Trial Capture (15-25 Gestures)"]
+        SelectTarget["Select Target Count<br/>(15, 20 [Recommended], or 25 Trials)"]
+        RecordLoop["Record Genuine Gesture Loop<br/>Operator grips and turns handle"]
+        TrialProgress["Sampling & Kinematic Feature Extraction<br/>recordedTrials / targetTrials"]
+        SelectTarget --> RecordLoop --> TrialProgress
+        TrialProgress -->|recordedTrials < targetTrials| RecordLoop
+    end
+
+    subgraph STEP3["Step 3: Regularized Covariance Optimization"]
+        FitTrigger["Fit Covariance Model"]
+        ProgressAnim["Optimization Progress Loop (0% -> 100%)"]
+        MatrixCalc["Compute Sample Mean Vector mu (16-D)<br/>Compute Covariance Matrix Sigma (16x16)<br/>Apply Ledoit-Wolf / Diagonal Shrinkage<br/>Invert: Sigma^-1"]
+        FitTrigger --> ProgressAnim --> MatrixCalc
+    end
+
+    subgraph STEP4["Step 4: Operating Threshold (tau) Calibration"]
+        LOOCV["Leave-One-Out Cross-Validation (LOOCV)<br/>Calculate s(x_i) on genuine enrollment set"]
+        PercentileSlider["Percentile Cutoff Slider (1st - 15th)<br/>Default: 5th Percentile -> Balanced Security (FRR ~5%)"]
+        CalcTau["tau = -3.85 - (5 - percentileCutoff) * 0.15<br/>Display genuine score histogram"]
+        LOOCV --> PercentileSlider --> CalcTau
+    end
+
+    subgraph STEP5["Step 5: Profile Freeze & ESP32 Flash Export"]
+        FreezeAction["Click 'Freeze Profile & Export to Flash'"]
+        Confetti["Celebration Confetti + Success Toast"]
+        FlashSave["Serialize mu & Sigma^-1 into compact C structs<br/>Write to ESP32 SPIFFS / EEPROM (Simulated in store)"]
+        Disengage["Automatically Flip Service Switch OFF<br/>(Normal Secure Operation Resumed)"]
+        FreezeAction --> Confetti & FlashSave --> Disengage
+    end
+
+    Start --> STEP1
+    STEP1 --> STEP2
+    STEP2 --> STEP3
+    STEP3 --> STEP4
+    STEP4 --> STEP5
+
+    classDef step fill:#d2efe9,stroke:#1aa59a,stroke-width:1.5px,color:#123b3a;
+    classDef action fill:#efeccd,stroke:#e29d3b,stroke-width:1.5px,color:#141414;
+    classDef finish fill:#123b3a,stroke:#1aa59a,stroke-width:2px,color:#ffffff;
+
+    class SW_Check,SW_Prompt,SW_Engage,SelectTarget,RecordLoop,TrialProgress,FitTrigger,ProgressAnim,MatrixCalc,LOOCV,PercentileSlider,CalcTau action;
+    class FreezeAction,Confetti,FlashSave,Disengage finish;

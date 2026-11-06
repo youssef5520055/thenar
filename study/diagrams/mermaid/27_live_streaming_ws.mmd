@@ -1,0 +1,32 @@
+sequenceDiagram
+  autonumber
+  actor Device as ESP32 / Simulator (100Hz)
+  participant DevChannel as /ws/device (Authenticated)
+  participant WSServer as Gateway Memory Router
+  participant LiveChannel as /ws/live (Public Subscribers)
+  actor Frontend as React App (LiveSession Page)
+
+  Frontend->>LiveChannel: WS Handshake (Connect to /ws/live)
+  LiveChannel-->>Frontend: 101 Switching Protocols (Connected)
+
+  Device->>DevChannel: WS Handshake (/ws/device?token=SECRET)
+  DevChannel-->>Device: 101 Switching Protocols (Authorized)
+
+  Note over Device,Frontend: Physical Turn Begins (1.5 seconds / 150 Frames)
+
+  loop Every 10ms (100 Hz Stream)
+    Device->>DevChannel: {"type": "frame", "data": {t, force, gyro, accel}}
+    DevChannel->>WSServer: In-memory packet ingestion
+    Note over WSServer: NO Disk I/O: Frames bypass database in normal mode!
+    WSServer->>LiveChannel: Broadcast {"type": "live_frame", "data": {...}}
+    LiveChannel-->>Frontend: Dispatch to ws.ts handler
+    Frontend->>Frontend: appendLiveFrame() in Zustand store
+    Frontend->>Frontend: Re-render SVG 3-Channel Oscilloscope (60fps)
+  end
+
+  Note over Device,Frontend: Turn Finishes: Edge Decision Executed
+
+  Device->>DevChannel: {"type": "status", "data": {state, boltExtended, solenoidEngaged}}
+  DevChannel->>WSServer: Route state change
+  WSServer->>LiveChannel: Broadcast {"type": "status", "data": {...}}
+  LiveChannel-->>Frontend: Update Solenoid Bolt & Orb Colors

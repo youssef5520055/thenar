@@ -1,0 +1,71 @@
+flowchart TB
+  subgraph EdgeLayer["1. Edge Hardware & Device Simulation"]
+    DS["apps/device-sim\n(ESP32 Hardware Emulator)"]
+    DEV_STATE[(".device-state.json\n(Persistent Non-Volatile Memory)")]
+    DS <--> DEV_STATE
+  end
+
+  subgraph SharedPackages["2. Shared Monorepo Packages"]
+    CONTRACTS["packages/contracts\n(Zod Schemas + OpenAPI 3.0 + C-Header)"]
+    ENGINE["packages/engine\n(16-D Features + Mahalanobis + Golden Vectors)"]
+  end
+
+  subgraph GatewayService["3. apps/gateway (Port 3000)"]
+    GW_CORE["Express App Core\n(Helmet + CORS + Pino Logger)"]
+    
+    subgraph REST_Routes["REST API Routes (/api/v1)"]
+      R_STATUS["/status\n(Lock status & penalty)"]
+      R_ATTEMPTS["/attempts\n(Attempt ingestion & queries)"]
+      R_SETTINGS["/settings\n(Threshold & timings)"]
+      R_PROFILE["/profile\n(Proxy to Enrollment)"]
+      R_DEMO["/demo/simulate\n(Scenario test runner)"]
+      R_EXPORT["/export\n(Forensic CSV / JSON)"]
+    end
+
+    subgraph WSServer["WebSocket Server"]
+      WS_DEV["/ws/device\n(Authenticated Device Channel)"]
+      WS_LIVE["/ws/live\n(Browser Subscriber Channel)"]
+    end
+
+    DB_SQLITE[("SQLite WAL Database\n(thenar.db / 8 Tables)")]
+  end
+
+  subgraph MLService["4. apps/enrollment (Port 8000)"]
+    PY_API["FastAPI App\n(Python 3.11)"]
+    PY_LW["Ledoit-Wolf Covariance\n(Scikit-learn)"]
+    PY_TAU["Leave-One-Out Calibration\n(Tau Threshold Optimization)"]
+    PY_C["C-Header Exporter\n(thenar_model.h Generator)"]
+    PY_API --> PY_LW
+    PY_API --> PY_TAU
+    PY_API --> PY_C
+  end
+
+  subgraph WebFrontend["5. apps/web (Port 5173)"]
+    REACT_APP["React 18 SPA\n(Vite + Tailwind + Recharts)"]
+    ZUSTAND_STORE["Zustand Store\n(useThenarStore.ts)"]
+    API_CLIENT["REST Client (client.ts)"]
+    WS_CLIENT["Resilient WS Client (ws.ts)"]
+    MOCK_FALLBACK["In-Browser Mock Engine\n(Graceful Offline Fallback)"]
+
+    REACT_APP <--> ZUSTAND_STORE
+    ZUSTAND_STORE <--> API_CLIENT
+    ZUSTAND_STORE <--> WS_CLIENT
+    ZUSTAND_STORE -.-> MOCK_FALLBACK
+  end
+
+  %% Connections
+  DS -- "HTTP POST /attempts\n(Device Token)" --> R_ATTEMPTS
+  DS -- "100Hz Frame Stream\n(WebSocket)" --> WS_DEV
+  WS_DEV -- "In-Memory Frame Forwarding" --> WS_LIVE
+  WS_LIVE -- "Real-time Telemetry Broadcast" --> WS_CLIENT
+
+  API_CLIENT -- "Fetch Status & Logs" --> REST_Routes
+  REST_Routes <--> DB_SQLITE
+
+  R_PROFILE -- "HTTP POST /fit\n(Training Requests)" --> PY_API
+
+  CONTRACTS -.-> DS
+  CONTRACTS -.-> GW_CORE
+  CONTRACTS -.-> REACT_APP
+  ENGINE -.-> DS
+  ENGINE -.-> MOCK_FALLBACK

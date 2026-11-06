@@ -1,0 +1,74 @@
+%% Diagram 08: End-to-End Data Flow Pipeline
+%% Project: Thenar - Smart-Safe Handle Telemetry
+flowchart TD
+    Start(["User Trigger: 'Simulate Owner Unlock' or Physical Touch"])
+
+    subgraph SIGNAL_GENERATION["1. Signal Generation (100 Hz Sampling)"]
+        PRNG["SeededPRNG (Mulberry32)<br/>Deterministic & Reproducible"]
+        Params["Role Parameters & Day Drift<br/>(Owner / Impostor / Mimicry L1-L2; Sessions S1-S4)"]
+        Gen["generateAttemptFrames()<br/>100-300 frames @ dt=0.01s (100 Hz)"]
+        RawFrames[/"TelemetryFrame[]<br/>{t, force, gyro, accel, phase}"/]
+
+        PRNG & Params --> Gen --> RawFrames
+    end
+
+    subgraph FEATURE_EXTRACTION["2. Biometric Feature Extraction"]
+        Segment["Phase Segmentation<br/>P1 (Contact/Grip) -> P2 (Rotation) -> P3 (Release)"]
+        Extract["extractFeatures(frames)<br/>Calculates 16 Kinematic & Dynamic Metrics"]
+        Vector[/"FeatureVector (16-D)<br/>Duration, Peak Force, Work, Peak Gyro, RMS Accel, Jerk..."/]
+
+        RawFrames --> Segment --> Extract --> Vector
+    end
+
+    subgraph CLASSIFICATION["3. Classification & Decision Rule"]
+        Profile[("Owner Profile Baseline<br/>Means mu & Stds sigma")]
+        Mahalanobis["computeMahalanobisScore()<br/>s(x) = -sqrt( sum( ((x_i - mu_i)/sigma_i)^2 ) )"]
+        Tau["Operating Threshold tau<br/>(e.g., tau = -3.85 / calibrated percentile)"]
+        Gate1["Gate 1: Fingerprint Minutiae<br/>(Match == true)"]
+        DualGate{"Dual-Gate Rule:<br/>Gate 1 PASS<br/>AND s(x) >= tau?"}
+
+        Vector & Profile --> Mahalanobis
+        Mahalanobis --> DualGate
+        Tau --> DualGate
+        Gate1 --> DualGate
+    end
+
+    subgraph STATE_MACHINE["4. Lock State Machine & Actuation"]
+        AcceptBranch["Decision: ACCEPT<br/>• failureCounter = 0<br/>• lockState = 'UNLOCKING'<br/>• solenoidActive = true<br/>• boltRetracted = true"]
+        RejectBranch["Decision: REJECT<br/>• failureCounter += 1<br/>• bolt remains secured<br/>• Check Lockout Threshold"]
+        LockoutCheck{"failureCounter >= maxFailures?"}
+        LockoutActive["lockState = 'LOCKOUT'<br/>• lockoutEndTime = now + duration<br/>• Exponential penalty doubling"]
+
+        DualGate -->|YES| AcceptBranch
+        DualGate -->|NO| RejectBranch
+        RejectBranch --> LockoutCheck
+        LockoutCheck -->|YES| LockoutActive
+        LockoutCheck -->|NO| IdleState["lockState = 'LOCKED'"]
+    end
+
+    subgraph UI_LOG_EXPORT["5. UI Feedback, Audit Log, & Export"]
+        Confetti["Canvas Confetti + Toast Notification"]
+        LockAnim["LockMechanismSVG Animated Retraction"]
+        LogEntry[/"AttemptRecord Saved to Store<br/>{id, timestamp, score, tau, decision, frames}"/]
+        TableUI["AttemptLog.tsx Table & Detail Drawer"]
+        FileExport["Export to CSV / JSON File"]
+
+        AcceptBranch --> Confetti & LockAnim & LogEntry
+        RejectBranch --> LogEntry
+        LockoutActive --> LogEntry
+        LogEntry --> TableUI --> FileExport
+    end
+
+    Start --> SIGNAL_GENERATION
+
+    classDef gen fill:#efeccd,stroke:#e29d3b,stroke-width:1.5px,color:#141414;
+    classDef feat fill:#d2efe9,stroke:#1aa59a,stroke-width:1.5px,color:#123b3a;
+    classDef rule fill:#f8f8f6,stroke:#123b3a,stroke-width:1.5px,color:#141414;
+    classDef act fill:#e8e8e5,stroke:#0284c7,stroke-width:1.5px,color:#141414;
+    classDef out fill:#ffffff,stroke:#9a9a95,stroke-width:1.5px,color:#141414;
+
+    class PRNG,Params,Gen,RawFrames gen;
+    class Segment,Extract,Vector feat;
+    class Profile,Mahalanobis,Tau,Gate1,DualGate rule;
+    class AcceptBranch,RejectBranch,LockoutCheck,LockoutActive,IdleState act;
+    class Confetti,LockAnim,LogEntry,TableUI,FileExport out;

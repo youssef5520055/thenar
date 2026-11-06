@@ -1,0 +1,74 @@
+%% Diagram 06: Component Tree & Props Hierarchy
+%% Project: Thenar - Smart-Safe Handle Telemetry
+flowchart TD
+    App["App.tsx"]
+
+    subgraph GLOBAL_SHELL["Global App Shell"]
+        Header["Header.tsx<br/>(Reads: esp32Online, wifiRssi, notifications, language, theme)"]
+        NotifCenter["NotificationCenter.tsx<br/>(Props: notifications, onClose, onClear)"]
+        Nav["Navigation.tsx<br/>(Reads: location.pathname, language, lockState)"]
+        Horizon["StippledHorizon.tsx<br/>(Interactive canvas footer)"]
+        Header --> NotifCenter
+    end
+
+    subgraph PAGE_DASHBOARD["Dashboard.tsx (/)"]
+        Orb["StippleOrb.tsx<br/>(Props: orbState, label)"]
+        LockSVG["LockMechanismSVG.tsx<br/>(Reads: lockState, doorReedOpen, boltRetracted, solenoidActive)"]
+        FlowStrip["GestureFlowStrip.tsx<br/>(Reads: activeGestureStep, lockState)"]
+    end
+
+    subgraph PAGE_LIVE["LiveSession.tsx (/live)"]
+        LiveChart_Live["LiveChart.tsx<br/>(Props: frames, isLive=true, height=380, highlightPhases=true)"]
+        DecisionPanel["Decision Verdict Panel<br/>(Gate 1 Minutiae & Gate 2 s(x) vs tau Gauge)"]
+    end
+
+    subgraph PAGE_LOG["AttemptLog.tsx (/log)"]
+        FilterToolbar["Filter & Search Bar<br/>(Search, OutcomeFilter, SessionDayFilter)"]
+        AttemptsTable["Attempts Table (Desktop) / Cards (Mobile)"]
+        DetailDrawer["Detail Drawer Modal<br/>(16-D Feature Grid & z-score deviation bars)"]
+        ReplayModal["Replay Full Modal<br/>(LiveChart.tsx with isReplay=true)"]
+        LiveChart_Replay["LiveChart.tsx<br/>(Props: frames=selectedAttempt.frames, isReplay=true)"]
+        ReplayModal --> LiveChart_Replay
+    end
+
+    subgraph PAGE_ATTACK["AttackSimulator.tsx (/attack)"]
+        ScenarioGrid["Threat Scenario Cards<br/>(A1 Naive, A2-L1 Observer, A2-L2 Informed)"]
+        CompromiseToggle["FP Compromise Toggle<br/>(Simulated Silicone Minutiae Bypass)"]
+        LiveChart_Attack["LiveChart.tsx<br/>(Props: frames=ownerBaseline, overlayFrames=attackerFrames)"]
+    end
+
+    subgraph PAGE_PROFILE["EnrollmentProfile.tsx (/profile)"]
+        Wizard["5-Step Enrollment Wizard<br/>(Step 1: Service Switch -> Step 2: Record N -> Step 3: Fit -> Step 4: Tau -> Step 5: Freeze)"]
+        ScoreHist["Genuine Score Histogram<br/>(Recharts BarChart with tau ReferenceLine)"]
+        StabilityCurve["Covariance Stability Curve<br/>(Recharts LineChart: N Trials vs % Stability)"]
+    end
+
+    subgraph PAGE_ANALYTICS["Analytics.tsx (/analytics)"]
+        Notice["Scientific Integrity Callout"]
+        Tabs["Tab Switcher (R1, R2, R3, R4, R5)"]
+        Tables["Thesis Benchmark Tables (R1 to R5 with neutral '—')"]
+        ROCDET["ROC Chance Baseline & DET Log Frame SVG plots"]
+    end
+
+    App --> Header & Nav & Horizon
+    App --> PAGE_DASHBOARD
+    App --> PAGE_LIVE
+    App --> PAGE_LOG
+    App --> PAGE_ATTACK
+    App --> PAGE_PROFILE
+    App --> PAGE_ANALYTICS
+
+    PAGE_DASHBOARD --> Orb & LockSVG & FlowStrip
+    PAGE_LIVE --> LiveChart_Live & DecisionPanel
+    PAGE_LOG --> FilterToolbar & AttemptsTable & DetailDrawer & ReplayModal
+    PAGE_ATTACK --> ScenarioGrid & CompromiseToggle & LiveChart_Attack
+    PAGE_PROFILE --> Wizard & ScoreHist & StabilityCurve
+    PAGE_ANALYTICS --> Notice & Tabs & Tables & ROCDET
+
+    classDef shell fill:#efeccd,stroke:#e29d3b,stroke-width:1.5px,color:#141414;
+    classDef page fill:#d2efe9,stroke:#1aa59a,stroke-width:1.5px,color:#123b3a;
+    classDef comp fill:#f8f8f6,stroke:#123b3a,stroke-width:1.5px,color:#141414;
+
+    class Header,NotifCenter,Nav,Horizon shell;
+    class PAGE_DASHBOARD,PAGE_LIVE,PAGE_LOG,PAGE_ATTACK,PAGE_PROFILE,PAGE_ANALYTICS page;
+    class Orb,LockSVG,FlowStrip,LiveChart_Live,DecisionPanel,FilterToolbar,AttemptsTable,DetailDrawer,ReplayModal,LiveChart_Replay,ScenarioGrid,CompromiseToggle,LiveChart_Attack,Wizard,ScoreHist,StabilityCurve,Notice,Tabs,Tables,ROCDET comp;

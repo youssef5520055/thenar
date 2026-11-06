@@ -1,0 +1,58 @@
+%% Diagram 19: Theme & Canvas Particle Animation Pipeline
+%% Project: Thenar - Smart-Safe Handle Telemetry
+flowchart TB
+    subgraph THEME_ENGINE["1. Design Token System (src/styles/tokens.css & sol.css)"]
+        Light["Light Mode Paper (Default):<br/>--sol-paper: #efefed, --sol-card: #f8f8f6, --sol-ink: #141414"]
+        Dark["Dark Mode Obsidian:<br/>--sol-paper: #111111, --sol-card: #1d1d1c, --sol-ink: #f1f1ee"]
+        Lagoon["Lagoon Reference Palette:<br/>• Accent: #1aa59a<br/>• Button: #123b3a<br/>• Mint: #d2efe9<br/>• Cream: #efeccd"]
+        ThemeToggle["Theme Switcher: document.documentElement.setAttribute('data-theme', theme)"]
+        ThemeToggle --> Light & Dark & Lagoon
+    end
+
+    subgraph ORB_MATH["2. Stipple Orb Math & Geometry (StippleOrb.tsx)"]
+        Fibonacci["Fibonacci Spiral on Sphere:<br/>y = 1 - ((i + 0.5) / n) * 2<br/>r = sqrt(1 - y*y), theta = golden * i + jitter<br/>Point coordinates: (x, y, z)"]
+        Lighting["Directional Light Vector:<br/>LIGHT = [0.5, -0.72, 0.48] normalized<br/>lit = dot(point, LIGHT)<br/>density = 0.1 + 0.9 * smooth(-0.7, 0.75, lit)"]
+        ColorRamp["Color Gradient Ramp:<br/>Light Mode: Card -> Ink -> Accent<br/>Dark Mode: Panel -> Accent -> Mint"]
+        Fibonacci --> Lighting --> ColorRamp
+    end
+
+    subgraph INTERACTION_PHYSICS["3. Pointer Physics & Gesture Response"]
+        PointerDrag["Pointer Move / Drag:<br/>Updates yaw velocity (vy) & pitch velocity (vx)<br/>Inertia momentum with damping decay (* 0.94 / frame)"]
+        ProximityParting["Pointer Proximity Parting:<br/>Dots within 90px displace outward along repulsion vector"]
+        ShockwaveRipple["Click / Tap Shockwave:<br/>Expands spherical wave radius r_ripple at 320 px/sec<br/>Displaces dot positions sinusoidally with decaying amplitude"]
+        ReducedMotion["prefers-reduced-motion Gate:<br/>Pauses requestAnimationFrame loop; renders static beautiful projection"]
+        PointerDrag & ProximityParting & ShockwaveRipple --> ReducedMotion
+    end
+
+    subgraph BUCKETED_RENDER["4. High-Performance Canvas 2D Rendering"]
+        Buckets["Bucketed Batch Drawing (makeBuckets):<br/>Groups particles into color & alpha bins (colors * alphas)<br/>Minimizes Canvas context state changes"]
+        CanvasFlush["buckets.flush(ctx, colors):<br/>Executes single batch fillRect / fillPath per bucket<br/>Guarantees solid 60 fps on mid-tier mobile GPUs"]
+        Buckets --> CanvasFlush
+    end
+
+    subgraph THENAR_ORB_HOOK["5. Thenar Biometric State Binding (orbState)"]
+        OrbStateProp["orbState: 'idle' | 'gesture' | 'accept' | 'reject' | 'lockout' | 'fault'"]
+        IdleState["idle: Standard Lagoon teal stippling"]
+        AcceptPulse["accept: Subtle mint/teal radiant expansion"]
+        RejectFlash["reject: Subtle crimson vibration"]
+        LockoutGlow["lockout: Red-tinted static perimeter"]
+
+        OrbStateProp --> IdleState & AcceptPulse & RejectFlash & LockoutGlow
+    end
+
+    Lagoon --> ColorRamp
+    ColorRamp --> Buckets
+    INTERACTION_PHYSICS --> Buckets
+    THENAR_ORB_HOOK --> ColorRamp
+
+    classDef theme fill:#efeccd,stroke:#e29d3b,stroke-width:1.5px,color:#141414;
+    classDef math fill:#d2efe9,stroke:#1aa59a,stroke-width:1.5px,color:#123b3a;
+    classDef phys fill:#f8f8f6,stroke:#123b3a,stroke-width:1.5px,color:#141414;
+    classDef render fill:#e8e8e5,stroke:#0284c7,stroke-width:1.5px,color:#141414;
+    classDef state fill:#123b3a,stroke:#1aa59a,stroke-width:2px,color:#ffffff;
+
+    class Light,Dark,Lagoon,ThemeToggle theme;
+    class Fibonacci,Lighting,ColorRamp math;
+    class PointerDrag,ProximityParting,ShockwaveRipple,ReducedMotion phys;
+    class Buckets,CanvasFlush render;
+    class OrbStateProp,IdleState,AcceptPulse,RejectFlash,LockoutGlow state;

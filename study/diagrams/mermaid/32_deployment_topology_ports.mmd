@@ -1,0 +1,34 @@
+flowchart LR
+  subgraph UserDevice["Host Machine / Browser"]
+    BROWSER["Web Browser\n(Owner Companion App)"]
+    SIM_CLI["Developer Terminal\n(npm run sim)"]
+  end
+
+  subgraph DockerNetwork["Thenar Docker Network (thenar-net)"]
+    subgraph WebContainer["web Container (apps/web)"]
+      WEB_SRV["Vite / Nginx Server\nPort: 5173"]
+    end
+
+    subgraph GatewayContainer["gateway Container (apps/gateway)"]
+      GW_SRV["Node.js Express Server\nPort: 3000"]
+      GW_WS["WebSocket Server\nPort: 3000 (/ws/*)"]
+    end
+
+    subgraph EnrollmentContainer["enrollment Container (apps/enrollment)"]
+      PY_SRV["Uvicorn FastAPI Server\nPort: 8000"]
+    end
+
+    subgraph StorageVolume["Persistent Volumes"]
+      DB_VOL[("SQLite File Volume\n./data/thenar.db")]
+    end
+  end
+
+  BROWSER -- "HTTP :5173 (UI Assets)" --> WEB_SRV
+  BROWSER -- "REST API :3000 (/api/v1/*)" --> GW_SRV
+  BROWSER -- "WebSocket :3000 (/ws/live)" --> GW_WS
+
+  SIM_CLI -- "Device Telemetry & WS (/ws/device)" --> GW_WS
+  SIM_CLI -- "HTTP POST /api/v1/attempts" --> GW_SRV
+
+  GW_SRV -- "Read / Write WAL" --> DB_VOL
+  GW_SRV -- "HTTP POST :8000 (/fit, /score)" --> PY_SRV

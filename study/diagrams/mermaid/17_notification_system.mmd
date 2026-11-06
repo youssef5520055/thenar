@@ -1,0 +1,49 @@
+%% Diagram 17: Notification & Alert Dispatch Architecture
+%% Project: Thenar - Smart-Safe Handle Telemetry
+flowchart LR
+    subgraph EVENT_SOURCES["1. System Event Triggers"]
+        direction TB
+        E_Accept["Unlock Success<br/>(Gate 1 PASS & Gate 2 PASS)"]
+        E_Reject["Attempt Rejected<br/>(Gate 1 FAIL or s(x) < tau)"]
+        E_Lockout["Lockout Freeze<br/>(Consecutive failures >= N)"]
+        E_Fault["Sensor Disconnect<br/>(HX711 / IMU fault)"]
+        E_Door["Door Left Ajar<br/>(Reed switch open timeout)"]
+    end
+
+    subgraph DISPATCH_LOGIC["2. Notification Dispatcher"]
+        direction TB
+        Action["addNotification({<br/>  type: 'accept'|'reject'|'lockout'|'fault'|'door',<br/>  titleKey: string,<br/>  descKey: string<br/>})"]
+        ID_Gen["Auto UUID + ISO Timestamp<br/>read = false (Unread state)"]
+        Action --> ID_Gen
+    end
+
+    subgraph STORE_PERSIST["3. Zustand Notification Slice"]
+        direction TB
+        StoreList["notifications: AppNotification[]<br/>Prepend new alert: [newAlert, ...existing]"]
+        Storage[("localStorage Persistence<br/>('thenar_companion_state_v1')")]
+        StoreList <--> Storage
+    end
+
+    subgraph PRESENTATION_SURFACE["4. UI Presentation & Operator Actions"]
+        direction TB
+        BellIcon["Header Bell Icon (Header.tsx)<br/>Unread Counter Badge (notifications.filter(!read).length)"]
+        Drawer["NotificationCenter.tsx Popover<br/>• Styled notification cards with icon & color coding<br/>• Relative time formatting ('Just now', '5m ago')<br/>• 'Mark all read' (markNotificationsAsRead)<br/>• 'Clear all history' (clearNotifications)"]
+        Confetti["Visual Confetti Burst (Accept events)"]
+
+        BellIcon --> Drawer
+    end
+
+    E_Accept & E_Reject & E_Lockout & E_Fault & E_Door --> Action
+    ID_Gen --> StoreList
+    StoreList -.->|Reactive Subscription| BellIcon
+    E_Accept -.->|Optional visual effect| Confetti
+
+    classDef src fill:#efeccd,stroke:#e29d3b,stroke-width:1.5px,color:#141414;
+    classDef logic fill:#d2efe9,stroke:#1aa59a,stroke-width:1.5px,color:#123b3a;
+    classDef store fill:#123b3a,stroke:#1aa59a,stroke-width:2px,color:#ffffff;
+    classDef ui fill:#f8f8f6,stroke:#123b3a,stroke-width:1.5px,color:#141414;
+
+    class E_Accept,E_Reject,E_Lockout,E_Fault,E_Door src;
+    class Action,ID_Gen logic;
+    class StoreList,Storage store;
+    class BellIcon,Drawer,Confetti ui;

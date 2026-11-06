@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>Thenar - دليل المذاكرة والمناقشة الشامل لمشروع التخرج</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Inter:wght@400;600;700&display=swap');
+
+    @page {
+      size: A4;
+      margin: 16mm 14mm 16mm 14mm;
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Cairo', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      color: #123b3a;
+      background: #ffffff;
+      line-height: 1.6;
+      font-size: 13px;
+    }
+
+    .latin {
+      font-family: 'Inter', sans-serif;
+      direction: ltr;
+      display: inline-block;
+    }
+
+    .page-break {
+      page-break-before: always;
+    }
+
+    .avoid-break {
+      page-break-inside: avoid;
+    }
+
+    /* Cover Page */
+    .cover {
+      height: 96vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      text-align: center;
+      padding: 30px 20px;
+      background: linear-gradient(180deg, #f0fbf9 0%, #ffffff 60%, #e6f7f4 100%);
+      border: 3px solid #1aa59a;
+      border-radius: 20px;
+    }
+
+    .cover-logo {
+      width: 110px;
+      height: 110px;
+      object-fit: contain;
+      margin-bottom: 14px;
+    }
+
+    .cover-title {
+      font-size: 38px;
+      font-weight: 900;
+      color: #123b3a;
+      margin: 0 0 8px 0;
+      letter-spacing: -0.5px;
+    }
+
+    .cover-subtitle {
+      font-size: 19px;
+      font-weight: 700;
+      color: #1aa59a;
+      margin: 0 0 16px 0;
+    }
+
+    .cover-tagline {
+      font-size: 15px;
+      color: #4a6b69;
+      font-style: italic;
+      margin-bottom: 24px;
+    }
+
+    .cover-badge {
+      display: inline-block;
+      background: #d2efe9;
+      color: #123b3a;
+      padding: 6px 20px;
+      border-radius: 50px;
+      font-weight: 700;
+      font-size: 13.5px;
+      border: 1px solid #1aa59a;
+      margin-bottom: 28px;
+    }
+
+    .cover-meta {
+      width: 100%;
+      max-width: 520px;
+      background: #ffffff;
+      border: 1px solid #d2efe9;
+      border-radius: 12px;
+      padding: 16px 22px;
+      text-align: right;
+      box-shadow: 0 4px 16px rgba(18, 59, 58, 0.05);
+    }
+
+    .meta-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 6px 0;
+      border-bottom: 1px dashed #e6f7f4;
+      font-size: 12.5px;
+    }
+
+    .meta-row:last-child {
+      border-bottom: none;
+    }
+
+    .meta-label {
+      font-weight: 700;
+      color: #1aa59a;
+    }
+
+    .meta-val {
+      color: #123b3a;
+      font-weight: 600;
+    }
+
+    /* Headings */
+    h1 {
+      color: #123b3a;
+      font-size: 22px;
+      font-weight: 800;
+      border-bottom: 2px solid #1aa59a;
+      padding-bottom: 6px;
+      margin-top: 24px;
+      margin-bottom: 14px;
+      page-break-after: avoid;
+    }
+
+    h2 {
+      color: #1aa59a;
+      font-size: 16.5px;
+      font-weight: 700;
+      margin-top: 18px;
+      margin-bottom: 10px;
+      page-break-after: avoid;
+    }
+
+    h3 {
+      color: #123b3a;
+      font-size: 14.5px;
+      font-weight: 700;
+      margin-top: 14px;
+      margin-bottom: 8px;
+      page-break-after: avoid;
+    }
+
+    p {
+      margin-top: 0;
+      margin-bottom: 10px;
+      text-align: justify;
+    }
+
+    /* Cards & Boxes */
+    .card {
+      background: #f8fcfb;
+      border: 1px solid #d2efe9;
+      border-radius: 10px;
+      padding: 12px 16px;
+      margin-bottom: 12px;
+    }
+
+    .alert-box {
+      border-right: 4px solid #1aa59a;
+      background: #f0fbf9;
+      padding: 10px 14px;
+      border-radius: 0 8px 8px 0;
+      margin-bottom: 12px;
+      font-size: 12.5px;
+    }
+
+    .alert-danger {
+      border-right-color: #ff5b4f;
+      background: #fff5f5;
+    }
+
+    .alert-success {
+      border-right-color: #10b981;
+      background: #f0fdf4;
+    }
+
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 14px;
+      font-size: 12px;
+    }
+
+    th {
+      background: #e6f7f4;
+      color: #123b3a;
+      font-weight: 700;
+      border: 1px solid #c2e9e2;
+      padding: 7px 9px;
+      text-align: right;
+    }
+
+    td {
+      border: 1px solid #d2efe9;
+      padding: 7px 9px;
+      vertical-align: top;
+    }
+
+    tr:nth-child(even) {
+      background: #fafdfc;
+    }
+
+    /* Code blocks */
+    pre, code {
+      font-family: 'Consolas', 'Courier New', monospace;
+      direction: ltr;
+      text-align: left;
+    }
+
+    pre {
+      background: #0f2b2a;
+      color: #d2efe9;
+      padding: 10px 12px;
+      border-radius: 8px;
+      font-size: 10.5px;
+      overflow-x: hidden;
+      margin-bottom: 10px;
+      line-height: 1.4;
+    }
+
+    code.inline {
+      background: #e6f7f4;
+      color: #0e5e57;
+      padding: 1px 4px;
+      border-radius: 4px;
+      font-size: 11.5px;
+    }
+
+    /* Diagrams & Images */
+    .img-container {
+      text-align: center;
+      margin: 14px 0;
+    }
+
+    .img-container img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 8px;
+      border: 1px solid #d2efe9;
+      box-shadow: 0 3px 10px rgba(18, 59, 58, 0.05);
+    }
+
+    .img-caption {
+      font-size: 11px;
+      color: #557976;
+      margin-top: 5px;
+      font-weight: 600;
+    }
+
+    /* Q&A Section */
+    .qa-item {
+      background: #ffffff;
+      border: 1px solid #d2efe9;
+      border-radius: 8px;
+      padding: 12px 16px;
+      margin-bottom: 12px;
+      page-break-inside: avoid;
+      box-shadow: 0 2px 6px rgba(18, 59, 58, 0.02);
+    }
+
+    .qa-q {
+      font-weight: 800;
+      font-size: 13.5px;
+      color: #123b3a;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .qa-badge {
+      background: #1aa59a;
+      color: #ffffff;
+      padding: 1px 7px;
+      border-radius: 16px;
+      font-size: 10.5px;
+      font-weight: 700;
+    }
+
+    .qa-a {
+      font-size: 12.5px;
+      color: #244b49;
+      line-height: 1.55;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ================= COVER PAGE ================= -->
+  <div class="cover">
+    <div style="width: 100%;">
+      <img src="assets/icon-512.png" alt="Thenar Logo" class="cover-logo" style="width: 105px; height: 105px; object-fit: contain; filter: drop-shadow(0 4px 12px rgba(26, 165, 154, 0.25));" />
+      <div class="cover-title">مشروع تخرج: Thenar</div>
+      <div class="cover-subtitle">منظومة الأمان الذكية لمقبض الخزنة والتحقق البيومتري المزدوج</div>
+      <div class="cover-tagline">"It knows how you open." — التحقق ثنائي البوابات: بصمة الإصبع + ديناميكية القبضة السلوكية</div>
+      <div class="cover-badge">الكتاب الشامل: المعمارية الهندسية، الـ Backend، الذكاء الاصطناعي، وأسئلة المناقشة</div>
+    </div>
+
+    <div class="cover-meta">
+      <div class="meta-row">
+        <span class="meta-label">المشروع:</span>
+        <span class="meta-val">Thenar — Dual-Gate Smart-Safe Handle System</span>
+      </div>
+      <div class="meta-row">
+        <span class="meta-label">التخصص:</span>
+        <span class="meta-val">هندسة الإلكترونيات والاتصالات وهندسة الحاسبات</span>
+      </div>
+      <div class="meta-row">
+        <span class="meta-label">العام الأكاديمي:</span>
+        <span class="meta-val">2026/2027 — السنة الرابعة (Graduation Project)</span>
+      </div>
+      <div class="meta-row">
+        <span class="meta-label">المعمارية:</span>
+        <span class="meta-val latin">Monorepo: React 18, Express, SQLite, FastAPI, ESP32</span>
+      </div>
+      <div class="meta-row">
+        <span class="meta-label">حالة التوثيق:</span>
+        <span class="meta-val">مرجع معتمد وشامل مع 34 مخططاً هندسياً و 55 سؤال دفاع</span>
+      </div>
+    </div>
+
+    <div style="font-size: 11px; color: #557976;">
+      تم الفحص والتحقق الكامل من كافة المسارات البرمجية والحسابات الرياضية في نوفمبر 2026
+    </div>
+  </div>
+
+  <!-- ================= TABLE OF CONTENTS ================= -->
+  <div class="page-break"></div>
+  <h1>فهرس الموضوعات ومسار المذاكرة الشامل</h1>
+  <p>تم تقسيم هذا الدليل إلى أقسام هندسية متسلسلة تأخذك من فلسفة المشكلة وصولاً إلى معمارية الـ Backend الحقيقية، والخوارزميات الرياضية، وانتهاءً ببنك أسئلة المناقشة الشامل.</p>
+
+  <div class="card avoid-break">
+    <h3 style="color: #1aa59a; margin-top: 0;">الأقسام والفصول الرئيسية:</h3>
+    <ol style="margin: 0; padding-right: 20px; line-height: 1.8;">
+      <li><strong>الفصل الأول:</strong> المشكلة الهندسية وثغرات البصمة العادية وفلسفة التحقق المزدوج (Dual-Gate).</li>
+      <li><strong>الفصل الثاني:</strong> مصفوفة الصدق والأمانة العلمية: ما تم بناؤه حقيقياً وما تم محاكاته برمجياً.</li>
+      <li><strong>الفصل الثالث:</strong> المعمارية الهندسية ومخطط البوستر الشامل (The Big Picture Poster).</li>
+      <li><strong>الفصل الرابع:</strong> استعراض الشاشات السبعة وتجربة المالك في الواجهة الأمامية React.</li>
+      <li><strong>الفصل الخامس:</strong> الرياضيات الحركية: مراحل اللف S1-S4، استخراج الميزات الـ 16، ومسافة ماهالانوبيس.</li>
+      <li><strong>الفصل السادس:</strong> إدارة الحالة بـ Zustand، العقوبة التصاعدية (Lockout)، والحفظ الدائم.</li>
+      <li><strong>الفصل السابع:</strong> معمارية الـ Backend المتكاملة، خادم Express، وقاعدة بيانات SQLite WAL.</li>
+      <li><strong>الفصل الثامن:</strong> دورة حياة الطلبات وبث الإطارات بالوقت الفعلي بـ 100Hz عبر WebSocket.</li>
+      <li><strong>الفصل التاسع:</strong> تدريب النموذج البيومتري بخوارزمية Ledoit-Wolf وتصدير كود C للمتحكم.</li>
+      <li><strong>الفصل العاشر:</strong> آلة الحالة لمحاكي العتاد ونظام التبديل الاحتياطي المرن (Graceful Fallback).</li>
+      <li><strong>الفصل الحادي عشر:</strong> هرم الاختبارات الشاملة (Golden Vectors) وخريطة الفيرموير لـ ESP32.</li>
+      <li><strong>الفصل الثاني عشر:</strong> بنك أسئلة المناقشة والدفاع: 55 سؤالاً وجواباً نموذجياً للجنة التحكيم!</li>
+    </ol>
+  </div>
+
+  <div class="alert-box">
+    <strong>💡 نصيحة الدكتور في المناقشة:</strong> ركز على أن قرار الفتح يُتخذ دائماً على <strong>العتاد المدمج (ESP32)</strong> بسرعة فائقة واستقلالية تامة (Edge Autonomy) وفق مبدأ Fail-Secure، بينما يتولى خادم الـ Gateway المراقبة والتدقيق وتدريب النماذج الإحصائية.
+  </div>
+
+  <!-- ================= SECTION 1: THE PROBLEM & DUAL-GATE ================= -->
+  <div class="page-break"></div>
+  <h1>1. المشكلة الهندسية وفلسفة التحقق ثنائي البوابات (Dual-Gate)</h1>
+
+  <h2>1.1 لماذا تفشل أقفال البصمة التقليدية؟</h2>
+  <p>أقفال الخزن التجارية تعتمد على فحص بصمة الإصبع الثابتة (Static Minutiae Matching). هذا الاعتماد الأحادي يعاني من ثغرات قاتلة:</p>
+  <ul>
+    <li><strong>قوالب السيليكون والجيلاتين:</strong> رفع البصمة الكامنة عن الأسطح الزجاجية وصنع قوالب مرنة تحاكي بصمة المالك.</li>
+    <li><strong>الإكراه والتهديد المباشر:</strong> إجبار المالك على وضع إصبعه تحت التهديد لفتح الخزنة.</li>
+    <li><strong>الاستغلال أثناء النوم أو فقدان الوعي:</strong> وضع إصبع المالك وهو نائم على الحساس.</li>
+  </ul>
+
+  <h2>1.2 الحل: التحقق الحركي السلوكي (Behavioral Biometrics)</h2>
+  <p>يقدم <strong>Thenar</strong> حلاً يعتمد على فحص <strong>أسلوبك الحركي الشخصي</strong> عبر حارسين متتاليين:</p>
+
+  <div class="img-container avoid-break">
+    <img src="diagrams/png/01_system_context.png" alt="System Context Diagram" style="max-height: 280px;" />
+    <div class="img-caption">شكل 1: مخطط سياق النظام العام (System Context Diagram)</div>
+  </div>
+
+  <div class="card avoid-break">
+    <h3 style="margin-top: 0; color: #1aa59a;">قاعدة القرار ثنائي البوابات:</h3>
+    <p><strong>البوابة الأولى (Gate 1):</strong> مطابقة بصمة الإصبع الثابتة عبر حساس بصري R503.</p>
+    <p><strong>البوابة الثانية (Gate 2):</strong> قياس قوة القبضة (Load Cell + HX711) والسرعة الزاوية والعزم (MPU-6050 IMU) وحساب سكور السلوك $s(x)$. الخزنة تفتح فقط إذا تحقق:</p>
+    <center><strong class="latin" style="color: #1aa59a; font-size: 14px;">Decision = (Gate 1 == MATCH) AND (s(x) &ge; &tau;) AND (NOT SensorFault)</strong></center>
+  </div>
+
+  <h2>1.3 الفصل الميكانيكي المستقل (Mechanically Independent Solenoid Bolt)</h2>
+  <p>المقبض يدور بحرية تامة وهو <strong>مفصول ميكانيكياً بنسبة 100%</strong> عن لسان القفل الكهربائي (Fail-Secure Solenoid Deadbolt). اللسان مدعوم بنوابض ميكانيكية تبقيه مقفولاً دائماً، ولا يرتد إلا بنبضة كهربائية 12V لمدة 3 ثوانٍ فقط لو صدر قرار ACCEPT.</p>
+
+  <!-- ================= SECTION 2: PHYSICAL VS SIMULATED ================= -->
+  <div class="page-break"></div>
+  <h1>2. مصفوفة الصدق والأمانة العلمية (Physical vs. Simulated)</h1>
+  <p>يوضح الجدول التالي ما تم إنجازه كبرمجيات حقيقية وما يعمل بالمحاكاة في هذا النموذج الأولي:</p>
+
+  <table class="avoid-break">
+    <thead>
+      <tr>
+        <th style="width: 28%;">المكون الهندسي</th>
+        <th style="width: 24%;">الحالة في المشروع</th>
+        <th>التوصيف التقني الدقيق</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>واجهة المالك (React Web App)</strong></td>
+        <td><span style="color: #10b981; font-weight: 700;">حقيقي 100% (Production)</span></td>
+        <td>تطبيق ويب متكامل بـ React 18 و TypeScript مع مزامنة لحظية ودعم النمط الاحتياطي.</td>
+      </tr>
+      <tr>
+        <td><strong>خادم البوابة (Gateway API & WS)</strong></td>
+        <td><span style="color: #10b981; font-weight: 700;">حقيقي 100% (Production)</span></td>
+        <td>خادم Node.js / Express مع WebSocket وقاعدة بيانات SQLite بنمط WAL Mode.</td>
+      </tr>
+      <tr>
+        <td><strong>خدمة التدريب البيومتري</strong></td>
+        <td><span style="color: #10b981; font-weight: 700;">حقيقي 100% (Production)</span></td>
+        <td>خدمة Python FastAPI مع Scikit-learn وخوارزمية Ledoit-Wolf وتصدير كود C.</td>
+      </tr>
+      <tr>
+        <td><strong>حزمة العقود المشتركة</strong></td>
+        <td><span style="color: #10b981; font-weight: 700;">حقيقي 100% (Production)</span></td>
+        <td>مخططات Zod ومواصفات OpenAPI 3.0 ومولد كود C للمتحكمات المدمجة.</td>
+      </tr>
+      <tr>
+        <td><strong>محرك الحسابات والمتجهات</strong></td>
+        <td><span style="color: #10b981; font-weight: 700;">حقيقي 100% (Production)</span></td>
+        <td>استخراج 16 ميزة حركية ومسافة ماهالانوبيس واختبارات المتجهات الذهبية.</td>
+      </tr>
+      <tr>
+        <td><strong>محاكي العتاد (Device Sim)</strong></td>
+        <td><span style="color: #e9a23b; font-weight: 700;">محاكاة برمجية كاملة</span></td>
+        <td>كود Node.js يحاكي شريحة ESP32 وتدفق الإطارات بـ 100Hz وذاكرة الفلاش.</td>
+      </tr>
+      <tr>
+        <td><strong>المقبض الفيزيائي والحساسات</strong></td>
+        <td><span style="color: #1aa59a; font-weight: 700;">مخطط تصميم هندسي</span></td>
+        <td>مواصفات ربط حساسات HX711 و MPU-6050 و R503 مع نواتي ESP32.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="img-container avoid-break">
+    <img src="diagrams/png/02_hardware_software_mapping.png" alt="Hardware Software Mapping" style="max-height: 270px;" />
+    <div class="img-caption">شكل 2: مخطط الربط بين قطع العتاد الفيزيائية والوحدات البرمجية المقابلة في الكود</div>
+  </div>
+
+  <!-- ================= SECTION 3: THE BIG PICTURE ================= -->
+  <div class="page-break"></div>
+  <h1>3. المعمارية الهندسية ومخطط البوستر الشامل</h1>
+  <p>يوضح هذا المخطط الماستر المعمارية الشاملة للنظام، مقسمة إلى أربع طبقات واضحة:</p>
+
+  <div class="img-container avoid-break">
+    <img src="diagrams/png/23_big_picture_poster.png" alt="Big Picture Poster" style="max-height: 440px;" />
+    <div class="img-caption">شكل 3: بوستر الماستر الهندسي الشامل لمشروع Thenar</div>
+  </div>
+
+  <!-- ================= SECTION 4: 7 SCREENS ================= -->
+  <div class="page-break"></div>
+  <h1>4. استعراض الشاشات وتجربة الاستخدام في الواجهة</h1>
+  <p>يحتوي التطبيق على 7 شاشات مصممة بنظام البطاقات الزجاجية الأنيقة (Lagoon Theme):</p>
+
+  <div class="img-container avoid-break">
+    <img src="assets/dashboard_en_desktop.png" alt="Dashboard Screen" style="max-height: 280px;" />
+    <div class="img-caption">شكل 4: لوحة التحكم الرئيسية (Dashboard) وتظهر القفل الميكانيكي المتحرك وشارة اتصال الـ Gateway</div>
+  </div>
+
+  <div class="img-container avoid-break">
+    <img src="assets/live_en_desktop.png" alt="Live Session Oscilloscope" style="max-height: 280px;" />
+    <div class="img-caption">شكل 5: راسم الإشارة المباشر ثلاثي القنوات (Live Session) بـ 100 هرتز المتصل بالـ WebSocket</div>
+  </div>
+
+  <!-- ================= SECTION 5: KINEMATICS & MATH ================= -->
+  <div class="page-break"></div>
+  <h1>5. الرياضيات الحركية ومسافة ماهالانوبيس</h1>
+
+  <h2>5.1 المراحل الحركية الأربعة للفت المقبض (S1 - S4)</h2>
+  <ul>
+    <li><strong>S1 (الاقتراب واللمس - 0 إلى 200ms):</strong> يلمس الإصبع وسادة البصمة، وقوة القبضة شبه منعدمة.</li>
+    <li><strong>S2 (بناء قوة القبضة - 200 إلى 650ms):</strong> تضغط عضلات راحة اليد وتتصاعد القوة لتصل لذروتها ($F_{peak} \approx 18.4\text{N}$).</li>
+    <li><strong>S3 (عزم اللف والدوران - 650 إلى 1150ms):</strong> يلف المعصم المقبض، وترتفع السرعة الزاوية ($\omega_z \approx 82^\circ/\text{s}$).</li>
+    <li><strong>S4 (الثبات والارتخاء - 1150 إلى 1500ms):</strong> يثبت المقبض بانتظار القرار ثم يعود لوضعه بفعل السوستة.</li>
+  </ul>
+
+  <h2>5.2 مصفوفة مسافة ماهالانوبيس وتحويل السكور</h2>
+  <p>تستخدم مسافة ماهالانوبيس معكوس مصفوفة التغاير ($\Sigma^{-1}$) لتطبيع المقاييس وتصحيح الترابط الإحصائي بين الخصائص الـ 16:</p>
+  <div class="card avoid-break" style="text-align: center;">
+    <span style="font-size: 15px; font-weight: 700; color: #123b3a;" class="latin">
+      D<sub>M</sub><sup>2</sup> = (x - &mu;)<sup>T</sup> &middot; &Sigma;<sup>-1</sup> &middot; (x - &mu;)
+    </span>
+    <br/>
+    <span style="font-size: 15px; font-weight: 700; color: #1aa59a; margin-top: 6px; display: inline-block;" class="latin">
+      s(x) = - (1 / 2.5) &middot; &radic;( D<sub>M</sub><sup>2</sup> )
+    </span>
+  </div>
+
+  <!-- ================= SECTION 6: ESCALATING LOCKOUT ================= -->
+  <div class="page-break"></div>
+  <h1>6. إدارة الحالة ونظام الإغلاق الأمني المتصاعد (Lockout)</h1>
+
+  <p>يحسب النظام عدد المحاولات الفاشلة المتتالية؛ فإذا بلغت 5 محاولات يدخل في وضع العقوبة الزمنية التي تتضاعف أسياً لمنع التخمين المستمر:</p>
+  <div class="card avoid-break" style="text-align: center;">
+    <span style="font-size: 16px; font-weight: 800; color: #ff5b4f;" class="latin">
+      Penalty Duration = 30s &times; 2<sup>repeatCount</sup>
+    </span>
+    <p style="margin-top: 6px; font-size: 12px; text-align: center;">
+      5 أخطاء: 30 ثانية | تكرار الخطأ: 60 ثانية | التكرار الثالث: 120 ثانية... تحفظ في الذاكرة الدائمة!
+    </p>
+  </div>
+
+  <div class="img-container avoid-break">
+    <img src="diagrams/png/13_lock_state_machine.png" alt="Lock State Machine" style="max-height: 290px;" />
+    <div class="img-caption">شكل 6: آلة الحالة المنتهية للقفل الإلكتروني (Finite State Machine)</div>
+  </div>
+
+  <!-- ================= SECTION 7: BACKEND ARCHITECTURE & SQLITE WAL ================= -->
+  <div class="page-break"></div>
+  <h1>7. معمارية الـ Backend المتكاملة وقاعدة بيانات SQLite WAL</h1>
+
+  <p>يتكون الـ Backend من خادم Express خفيف وسريع بنمط REST API مع قنوات WebSocket، وقاعدة بيانات SQLite تعمل بنمط الكتابة المسبقة (Write-Ahead Logging):</p>
+
+  <div class="img-container avoid-break">
+    <img src="diagrams/png/24_backend_architecture.png" alt="Backend Architecture" style="max-height: 380px;" />
+    <div class="img-caption">شكل 7: المعمارية الشاملة للـ Backend وقنوات الاتصال والخدمات المصغرة</div>
+  </div>
+
+  <h2>7.1 جداول قاعدة البيانات الثمانية (Database Schema)</h2>
+  <div class="img-container avoid-break">
+    <img src="diagrams/png/25_database_er.png" alt="Database ER Diagram" style="max-height: 340px;" />
+    <div class="img-caption">شكل 8: مخطط العلاقات الكينونية (ER Diagram) لقاعدة بيانات SQLite</div>
+  </div>
+
+  <!-- ================= SECTION 8: REQUEST LIFECYCLE & WEBSOCKET ================= -->
+  <div class="page-break"></div>
+  <h1>8. دورة حياة الطلبات والبث المباشر للإشارات الحركية</h1>
+
+  <h2>8.1 دورة حياة تسجيل محاولة جديدة (POST /attempts)</h2>
+  <div class="img-container avoid-break">
+    <img src="diagrams/png/26_request_lifecycle_attempts.png" alt="Request Lifecycle Diagram" style="max-height: 320px;" />
+    <div class="img-caption">شكل 9: دورة حياة تسجيل محاولة جديدة والمعاملة الذرية في قاعدة البيانات</div>
+  </div>
+
+  <h2>8.2 بث الإطارات بـ 100Hz عبر قناة الـ WebSocket المزدوجة</h2>
+  <div class="img-container avoid-break">
+    <img src="diagrams/png/27_live_streaming_ws.png" alt="WebSocket Live Streaming" style="max-height: 320px;" />
+    <div class="img-caption">شكل 10: بث عينات الحساسات بـ 100 هرتز في الذاكرة دون إرهاق القرص الصلب</div>
+  </div>
+
+  <!-- ================= SECTION 9: AI ENROLLMENT & C-HEADER ================= -->
+  <div class="page-break"></div>
+  <h1>9. تدريب الذكاء الاصطناعي بليدوا-وولف وتصدير كود C</h1>
+
+  <p>للتغلب على مشكلة قلة عينات التدريب للمالك ($N \approx 15$) مقارنة بعدد الخصائص الـ 16، تستخدم خدمة الـ Python خوارزمية <strong>Ledoit-Wolf Shrinkage</strong> لحساب مصفوفة دقة مستقرة، مع معايرة العتبة $\tau$ عبر التحقق المتبادل Leave-One-Out:</p>
+
+  <div class="img-container avoid-break">
+    <img src="diagrams/png/28_enrollment_pipeline_python.png" alt="Enrollment Pipeline" style="max-height: 380px;" />
+    <div class="img-caption">شكل 11: مسار تدريب النموذج البيومتري في خدمة الـ Python وتصدير كود thenar_model.h</div>
+  </div>
+
+  <!-- ================= SECTION 10: STATE MACHINE & FALLBACK ================= -->
+  <div class="page-break"></div>
+  <h1>10. آلة الحالة لمحاكي العتاد ونظام التبديل الاحتياطي المرن</h1>
+
+  <div class="img-container avoid-break">
+    <img src="diagrams/png/29_device_state_machine_lockout.png" alt="Device State Machine" style="max-height: 320px;" />
+    <div class="img-caption">شكل 12: آلة حالة محاكي العتاد ومحاكاة ذاكرة الفلاش الدائمة</div>
+  </div>
+
+  <h2>10.1 التبديل الاحتياطي المرن (Graceful Fallback Mode)</h2>
+  <p>يضمن هذا التصميم أن تطبيق الواجهة لا ينهار أبداً إذا كان الخادم مغلقاً؛ فيتحول تلقائياً إلى المحاكي الداخلي مع إظهار شارة `Offline Demo Mode` بكل سلاسة:</p>
+
+  <div class="img-container avoid-break">
+    <img src="diagrams/png/31_fallback_logic_resilience.png" alt="Fallback Logic Resilience" style="max-height: 320px;" />
+    <div class="img-caption">شكل 13: خريطة تدفق منطق التبديل الاحتياطي المرن في الواجهة الأمامية</div>
+  </div>
+
+  <!-- ================= SECTION 11: TESTING PYRAMID & ESP32 FIRMWARE ================= -->
+  <div class="page-break"></div>
+  <h1>11. هرم الاختبارات الشاملة وخريطة فيرموير ESP32</h1>
+
+  <h2>11.1 هرم الاختبارات والمتجهات الذهبية (Golden Vectors)</h2>
+  <p>لضمان تطابق الحسابات الرياضية بين TypeScript و Python، نستخدم اختبار المتجهات الذهبية لفحص مسافة ماهالانوبيس بدقة 6 خانات عشرية:</p>
+
+  <div class="img-container avoid-break">
+    <img src="diagrams/png/33_test_strategy_pyramid.png" alt="Testing Strategy Pyramid" style="max-height: 320px;" />
+    <div class="img-caption">شكل 14: هرم استراتيجية الاختبار الشاملة والتحقق المتبادل</div>
+  </div>
+
+  <h2>11.2 خريطة فيرموير ESP32 الحقيقي (5 FreeRTOS Tasks)</h2>
+  <div class="img-container avoid-break">
+    <img src="diagrams/png/34_future_esp32_firmware_integration.png" alt="Future ESP32 Integration" style="max-height: 330px;" />
+    <div class="img-caption">شكل 15: بنية البرنامج المدمج لشريحة ESP32-S3 وتقسيم المهام بين النواتين</div>
+  </div>
+
+  <!-- ================= SECTION 12: DEFENSE Q&A (55 QUESTIONS) ================= -->
+  <div class="page-break"></div>
+  <h1>12. بنك أسئلة المناقشة والدفاع الشامل (55 سؤالاً وجواباً نموذجياً)</h1>
+
+  <h2>الجزء الأول: 25 سؤالاً في الفكرة العامة والواجهة والحركيات</h2>
+
+  <div class="qa-item">
+    <div class="qa-q"><span class="qa-badge">س 1</span> ما هي المشكلة الجوهرية في أقفال البصمة العادية التي دعتكم لابتكار Thenar؟</div>
+    <div class="qa-a">البصمة الثابتة وسيلة سهلة التزييف والسرقة بقوالب السيليكون، كما أنها لا تحمي المالك في حالات الفتح تحت التهديد والإكراه أو أثناء النوم. مشروع Thenar يحل هذه المعضلة بإضافة حارس ثانٍ يفحص "السلوك الحركي الحي" أثناء فتح القفل.</div>
+  </div>
+
+  <div class="qa-item">
+    <div class="qa-q"><span class="qa-badge">س 2</span> ما هو مبدأ التحقق ثنائي البوابات (Dual-Gate Verification) المطبق في المشروع؟</div>
+    <div class="qa-a">هو تسلسل أمني إلزامي: البوابة الأولى تفحص تطابق خطوط البصمة (Gate 1). إذا نجحت، تقوم البوابة الثانية (Gate 2) بفحص سكور التوافق السلوكي $s(x)$ الناتج عن قوة القبضة وديناميكية دوران اليد. القفل لا يفتح إلا إذا كانت النتيجة: <code>(Gate 1 == MATCH) AND (s(x) &ge; &tau;)</code>.</div>
+  </div>
+
+  <div class="qa-item">
+    <div class="qa-q"><span class="qa-badge">س 3</span> لماذا صممتم المقبض مفصولاً ميكانيكياً عن لسان القفل؟</div>
+    <div class="qa-a">لأن في الأكر العادية دوران اليد يسحب اللسان ميكانيكياً، مما يعني أن المهاجم لو لف المقبض بقوة مفرطة قد يفتح الباب. في Thenar، المقبض يلف بحرية لتسجيل الحركة فقط، بينما لسان القفل (Solenoid Bolt) مفصول تماماً ومحكوم كهربائياً؛ فلا يرتد إلا بنبضة 12V بعد صدور قرار القبول الرياضي.</div>
+  </div>
+
+  <div class="qa-item">
+    <div class="qa-q"><span class="qa-badge">س 4</span> ما هو مبدأ الأمان في وضع الإغلاق (Fail-Secure) المعتمد في القفل الميكانيكي؟</div>
+    <div class="qa-a">مبدأ Fail-Secure يعني أن القفل في وضعه الطبيعي وبدون طاقة كهربائية يكون مقفولاً بإحكام بواسطة سوستة فولاذية صلبة. في حالة انقطاع الكهرباء، أو احتراق أحد الحساسات، يظل اللسان ممتداً داخل إطار الباب، مما يستحيل معه فتح الخزنة بالخطأ.</div>
+  </div>
+
+  <div class="qa-item">
+    <div class="qa-q"><span class="qa-badge">س 5</span> ما هي الأطوار الحركية الأربعة للفت المقبض (S1 إلى S4)؟</div>
+    <div class="qa-a">المحاولة تستغرق 1.5 ثانية وتنقسم إلى: S1 ملامسة الإصبع للحساس البصري (0 - 200ms)، S2 تصاعد قوة القبضة (200 - 650ms)، S3 حركة الدوران الزاوي وعزم اللف (650 - 1150ms)، و S4 ثبات المقبض ورجوعه بالسوستة (1150 - 1500ms).</div>
+  </div>
+
+  <div class="qa-item">
+    <div class="qa-q"><span class="qa-badge">س 6</span> ما هي الخصائص الـ 16 المستخرجة من الإشارة الحركية؟</div>
+    <div class="qa-a">تنقسم إلى ثلاث مجموعات: 6 خصائص لقوة القبضة (الذروة، زمن الذروة، سرعة الشد، المتوسط، المساحة AUC، وسرعة الإفلات)، و7 خصائص لحركة الدوران (أقصى سرعة زاوية، زمن الدوران، التسارع الزاوي، الزاوية الكلية، الرجفان Jerk، محصلة التسارع، ورجفان الثبات)، و3 خصائص ترابطية (الفارق الزمني بين الضغط والدوران، ومعامل الارتباط بين القوة والسرعة، ونسبة الطاقة).</div>
+  </div>
+
+  <div class="qa-item">
+    <div class="qa-q"><span class="qa-badge">س 7</span> لماذا استخدمتم مسافة ماهالانوبيس بدلاً من المسافة الإقليدية البسيطة؟</div>
+    <div class="qa-a">المسافة الإقليدية تفترض أن المتغيرات مستقلة ولها نفس المقياس. في حركة اليد، المتغيرات لها مقاييس مختلفة تماماً (نيوتن مقابل درجات/ثانية) وتوجد علاقات ترابط قوية بين القوة والسرعة. مسافة ماهالانوبيس تستخدم مصفوفة التباين المشترك ($\Sigma^{-1}$) لتطبيع المقاييس وتصحيح الارتباط الإحصائي، مما يعطي دقة تمييز أعلى بمراحل.</div>
+  </div>
+
+  <div class="qa-item">
+    <div class="qa-q"><span class="qa-badge">س 8</span> كيف يصد النظام هجوم البصمة الجيلاتينية أو السيليكونية المسروقة؟</div>
+    <div class="qa-a">عندما يضع المهاجم قالب السيليكون على الحساس، تنجح البوابة الأولى (Gate 1 Match). ولكن بمجرد أن يمسك المهاجم المقبض ويديره، فإن اختلاف حجم يده، وقوة قبضته، وزاوية معصمه ينتج متجهاً حركياً شاذاً ينحرف بأكثر من 3.5 انحراف معياري عن بصمة المالك. فيسجل الحارس الثاني سكوراً منخفضاً جداً ($s(x) \approx -9.87 < \tau$) فيتم صد الهجوم وإطلاق إنذار أمني فوري.</div>
+  </div>
+
+  <div class="qa-item">
+    <div class="qa-q"><span class="qa-badge">س 9</span> كيف يعمل نظام الإغلاق الأمني المتصاعد (Escalating Lockout)؟</div>
+    <div class="qa-a">يحسب النظام عدد المحاولات الفاشلة المتتالية. عند بلوغ 5 محاولات خاطئة، يدخل النظام في وضع العقوبة، ويتم تجميد واجهة الفتح لـ 30 ثانية. إذا كرر المهاجم المحاولات الخاطئة، تتضاعف المدة أسياً ($30 \times 2^1 = 60s$ ثم $120s$ ثم $240s$) لمنع هجمات التخمين الآلي، ويتم حفظ موعد النهاية في الذاكرة الدائمة فلا تلغيه إعادة التشغيل.</div>
+  </div>
+
+  <div class="qa-item">
+    <div class="qa-q"><span class="qa-badge">س 10</span> لماذا فضلتم Zustand على Redux لإدارة الحالة؟</div>
+    <div class="qa-a">مكتبة Zustand أخف بكثير (أقل من 2KB مقابل أكثر من 30KB لـ Redux Toolkit)، ولا تتطلب أي Boilerplate معقد، وتوفر اشتراكاً مباشراً للحالة، وتدعم الحفظ المحلي بسهولة، وهو ما يتناسب تماماً مع تطبيقات إنترنت الأشياء والمراقبة الفورية.</div>
+  </div>
+
+  <!-- Q&A Part 2: Backend & Embedded Questions -->
+  <div class="page-break"></div>
+  <h2>الجزء الثاني: 30 سؤالاً في الـ Backend وقواعد البيانات وهندسة النظم المدمجة</h2>
+
+  <div class="qa-item">
+    <div class="qa-q"><span class="qa-badge">س 11</span> أين يُتخذ قرار فتح الخزنة بالضبط؟ هل يتخذه الـ Backend أم العتاد على المقبض؟ ولماذا؟</div>
+    <div class="qa-a">القرار يُتخذ حصرياً على العتاد المدمج (ESP32) وليس على الـ Backend! هذا يضمن استقلالية الأمان (Edge Autonomy) وفق مبدأ Fail-Secure، بحيث إذا انقطعت شبكة الواي فاي أو توقف السيرفر تظل الخزنة تعمل بكفاءة للمالك، بالإضافة إلى تحقيق سرعة استجابة فائقة (أقل من 1.5ms).</div>
+  </div>
+
+  <div class="qa-item">
+    <div class="qa-q"><span class="qa-badge">س 12</span> ما هي بنية الـ Monorepo وما الفائدة الهندسية منها في مشروعكم؟</div>
+    <div class="qa-a">المشروع منظم كـ Monorepo عبر npm workspaces يجمع حزم `packages/contracts` و `packages/engine` وتطبيقات `apps/web` و `apps/gateway` و `apps/enrollment` و `apps/device-sim`. الفائدة هي ضمان وجود مصدر موحد للحقيقة (Single Source of Truth)؛ فأي تعديل في مخططات Zod ينعكس فوراً وتلقائياً على الخادم والواجهة والمحاكي مع تدقيق صارم للأنواع بواسطة TypeScript.</div>
+  </div>
+
+  <div class="qa-item">
+    <div class="qa-q"><span class="qa-badge">س 13</span> هل يتم تخزين الإطارات الحركية الخام (Raw 100Hz Frames) لجميع المحاولات في قاعدة البيانات؟</div>
+    <div class="qa-a">لا! في الوضع الطبيعي تُخزن المحاولات كبيانات ملخصة فقط (النتيجة، السكور، العتبة، أزمنة الأطوار، والانحرافات للرفض). الإطارات الخام تُخزن فقط عندما يقوم المالك بتفعيل وضع الأبحاث (experimentMode = true) لترشيد مساحة التخزين وحماية الخصوصية.</div>
+  </div>
+
+  <div class="qa-item">
+    <div class="qa-q"><span class="qa-badge">س 14</span> هل يتم تخزين صور بصمات الأصابع أو قوالب النقاط الحلمية في قاعدة البيانات؟</div>
+    <div class="qa-a">مستحيل تماماً! لا يتم تخزين أي صور أو قوالب بصمة في الـ Backend أو حتى إرسالها عبر الشبكة. حساس البصمة R503 يخزن القوالب مشفرة محلياً داخله، وما يُرسل للخادم هو فقط النتيجة المنطقية (matched: true/false) ومعرف القالب المطابق.</div>
+  </div>
+
+  <div class="qa-item">
+    <div class="qa-q"><span class="qa-badge">س 15</span> كيف يتعامل تطبيق الويب إذا كان خادم الـ Gateway مغلقاً أثناء العرض التقديمي؟</div>
+    <div class="qa-a">النظام مزود بميزة التبديل الاحتياطي المرن (Graceful Mock Fallback) داخل useThenarStore.ts؛ فإذا لم يستجب الخادم، تتحول الشارة العلوية إلى `Offline Demo Mode` وتتحول كل طلبات المحاكاة إلى المحرك المدمج في المتصفح دون أي انهيار أو توقف في تجربة الاستخدام.</div>
+  </div>
+
+  <div class="qa-item">
+    <div class="qa-q"><span class="qa-badge">س 16</span> ما هو دور خدمة Python Enrollment ولماذا لم يتم التدريب داخل Node.js؟</div>
+    <div class="qa-a">لأن لغة Python ومكتبة Scikit-learn هي المعيار العالمي للحسابات الرياضية ومصفوفات الجبر الخطي. استخدمنا خوارزمية Ledoit-Wolf Covariance Shrinkage وحسابات التحقق المتبادل Leave-One-Out المتوفرة بكفاءة عددية فائقة في Python.</div>
+  </div>
+
+  <div class="qa-item">
+    <div class="qa-q"><span class="qa-badge">س 17</span> ما هي مشكلة قلة عينات التدريب وكيف حلتها خوارزمية Ledoit-Wolf Shrinkage؟</div>
+    <div class="qa-a">عندما نجمع 15 أو 20 محاولة فتح للمالك بينما عدد الخصائص 16، فإن مصفوفة التغاير التجريبية تكون غير مستقرة رياضياً ومقلوبها يضخم التشويش. خوارزمية Ledoit-Wolf تسحب المصفوفة تحليلياً نحو مصفوفة قطرية متجانسة بمعامل انكماش أمثل، مما يضمن استقرار مقلوب مصفوفة الدقة ($\Sigma^{-1}$) رياضياً بنسبة 100%.</div>
+  </div>
+
+  <div class="qa-item">
+    <div class="qa-q"><span class="qa-badge">س 18</span> كيف يتم اختيار وضبط قيمة العتبة $\tau$ تلقائياً؟</div>
+    <div class="qa-a">في دالة calibrate_tau_leave_one_out()، نطبق التحقق المتبادل على عينات تدريب المالك، ونأخذ القيمة عند النسبة المئوية الخامسة (5th Percentile) مطروحاً منها هامش أمان 0.5، لضمان قبول 95% على الأقل من محاولات المالك الطبيعية مع صد هجمات الدخلاء بنسبة تتجاوز 99%.</div>
+  </div>
+
+  <div class="qa-item">
+    <div class="qa-q"><span class="qa-badge">س 19</span> لماذا اخترتم قاعدة بيانات SQLite بنمط WAL Mode بدلاً من PostgreSQL؟</div>
+    <div class="qa-a">لأن الخزنة الذكية جهاز مستقل (Edge Appliance) أو تعمل على خادم منزلي صغير؛ و SQLite لا تتطلب تثبيت خوادم إضافية وتعمل في نفس العملية البرمجية (In-Process) بسرعة فائقة. ونمط WAL Mode يفصل القراءة عن الكتابة دون حدوث Database Locks.</div>
+  </div>
+
+  <div class="qa-item">
+    <div class="qa-q"><span class="qa-badge">س 20</span> ما هي المعاملات الذرية (Atomic Transactions) وأين تم استخدامها في الخادم؟</div>
+    <div class="qa-a">المعاملة الذرية تضمن تنفيذ جميع العمليات معاً أو إلغاءها بالكامل عند الخطأ. استخدمناها في `POST /api/v1/attempts` عبر `db.transaction()` لتسجيل المحاولة، وتحديث حالة وعدادات القفل، وتدوين سجل التدقيق في خطوة ذرية موحدة تمنع أي تعارض.</div>
+  </div>
+
+  <div class="qa-item">
+    <div class="qa-q"><span class="qa-badge">س 21</span> لماذا تم فصل قنوات الـ WebSocket إلى `/ws/live` و `/ws/device`؟</div>
+    <div class="qa-a">لعزل المسؤوليات الأمنية وتحسين الكفاءة؛ فقناة العتاد `/ws/device` موثقة بالرمز المميز لاستقبال السيل الكثيف لعينات الحساسات (100Hz)، بينما قناة المتصفح `/ws/live` مخصصة للواجهات لاستقبال البث اللحظي دون السماح للمتصفح بالتحكم المباشر في العتاد.</div>
+  </div>
+
+  <div class="qa-item">
+    <div class="qa-q"><span class="qa-badge">س 22</span> كيف يتصرف عميل الـ WebSocket في الواجهة إذا انقطعت الشبكة مؤقتاً؟</div>
+    <div class="qa-a">يطبق خوارزمية Exponential Backoff لإعادة المحاولة (1s ثم 2s ثم 4s حتى 10s)، ويستأنف المزامنة تلقائياً بمجرد عودة الخادم دون الحاجة لإعادة تحميل الصفحة يدوياً.</div>
+  </div>
+
+  <div class="qa-item">
+    <div class="qa-q"><span class="qa-badge">س 23</span> ما هو اختبار المتجهات الذهبية (Golden Vector Test) ولماذا هو حاسم؟</div>
+    <div class="qa-a">هو اختبار يقارن مخرجات محرك TypeScript في `packages/engine` ومكتبة Scikit-learn في Python لنفس المدخلات الحتمية، ويتأكد من تطابق سكور ماهالانوبيس حتى الخانة العشرية السادسة، مما يضمن خلو النظام من أي انحراف خوارزمي عبر لغات البرمجة.</div>
+  </div>
+
+  <div class="qa-item">
+    <div class="qa-q"><span class="qa-badge">س 24</span> كيف تم اختبار خادم الـ Gateway آلياً؟</div>
+    <div class="qa-a">في ملف gateway.test.ts، نستخدم Vitest مع تشغيل الخادم في الذاكرة عبر SQLite `:memory:` و Supertest، ويتم اختبار 10 حالات متكاملة تشمل المصادقة، تسجيل المحاولات، المعاملات، والمحاكاة بنجاح 100%.</div>
+  </div>
+
+  <div class="qa-item">
+    <div class="qa-q"><span class="qa-badge">س 25</span> ما هي وظيفة دالة generateCHeader() وما الذي تنتجه؟</div>
+    <div class="qa-a">تقوم بتحويل مصفوفة التغاير المعكوسة والمتوسطات وقيمة العتبة إلى ملف كود C نقي (`thenar_model.h`) جاهز للتحميل المباشر على معالج ESP32 ليعمل بحسابات مدمجة فائقة السرعة بدون أي مكتبات ذكاء اصطناعي خارجية.</div>
+  </div>
+
+  <div class="qa-item">
+    <div class="qa-q"><span class="qa-badge">س 26</span> كيف يتم تقسيم مهام FreeRTOS على نواتي معالج ESP32 الحقيقي؟</div>
+    <div class="qa-a">النواة Core 0 متفرغة لمهمة أخذ العينات الدقيقة من الحساسات (100Hz Timer Task)، بينما النواة Core 1 تدير مهام قراءة البصمة (UART)، وحساب درجة السلوك وتفعيل نبضة السولينويد، وبث البيانات عبر الواي فاي إلى الـ Gateway.</div>
+  </div>
+
+  <div class="qa-item">
+    <div class="qa-q"><span class="qa-badge">س 27</span> كيف تحمون المعالج من تفادي فترة الإغلاق الأمني بإعادة تشغيل الكهرباء؟</div>
+    <div class="qa-a">يتم حفظ عداد الفشل وموعد نهاية العقوبة في الذاكرة غير المتطايرة (Non-Volatile Flash Memory). عند الإقلاع، يقرأ المعالج الذاكرة ويقارن التوقيت بالـ RTC الداخلي، فإذا كان وقت العقوبة سارياً يرفض تشغيل الحساسات تماماً.</div>
+  </div>
+
+  <div class="qa-item">
+    <div class="qa-q"><span class="qa-badge">س 28</span> كيف يتم تأمين الاتصال بين العتاد والخادم في بيئة الإنتاج الحقيقية؟</div>
+    <div class="qa-a">عبر تفعيل بروتوكول Mutual TLS (mTLS) مع تثبيت شهادة رقمية مشفرة على شريحة الـ ESP32 محمية بواسطة شريحة أمان عتادية وتفعيل ميزات Secure Boot و Flash Encryption في معالج ESP32.</div>
+  </div>
+
+  <div class="qa-item">
+    <div class="qa-q"><span class="qa-badge">س 29</span> ما هو بروتوكول جمع البيانات الميداني (S1 إلى S4)؟</div>
+    <div class="qa-a">هو بروتوكول معملي لتقييم النظام تجريبياً: S1 تسجيل 15 محاولة مبدئية للمالك، S2 تكرار المحاولات بعد أسبوع لقياس استقرار السلوك مع الوقت، S3 محاولات 10 متطوعين غرباء بدون معرفة، و S4 محاولات تقليد واعية بعد مشاهدة فيديو تدريبي للمالك.</div>
+  </div>
+
+  <div class="qa-item">
+    <div class="qa-q"><span class="qa-badge">س 30</span> ما هي الرسالة الختامية للجنة المناقشة حول القيمة الهندسية لمشروع Thenar؟</div>
+    <div class="qa-a">مشروع Thenar يقدم منظومة أمنية متكاملة مصممة من الحافة إلى السحابة (End-to-End Cyber-Physical Architecture). يحل ثغرة سرقة البصمات الواقعية بفيزياء حركة الإنسان، بهندسة كود نظيفة وعقود بيانات موحدة، واختبارات رياضية محكمة، مع احترام كامل لمبدأ الأمان في وضع الإغلاق (Fail-Secure).</div>
+  </div>
+
+  <!-- ================= CONCLUSION ================= -->
+  <div class="page-break"></div>
+  <div style="text-align: center; padding: 30px 20px;">
+    <h1 style="border: none; color: #1aa59a; font-size: 26px;">خاتمة وتمنيات بالتفوق والنجاح</h1>
+    <p style="max-width: 600px; margin: 0 auto 16px auto; font-size: 13.5px;">
+      بهذا تكون قد استوعبت كافة الأبعاد الهندسية، والبرمجية، والرياضية، والأمنية لمشروع <strong>Thenar</strong>.
+      أنت الآن مستعد تماماً للوقوف أمام لجنة التحكيم والمناقشة بكل ثقة وتميز واقتدار.
+    </p>
+    <div style="display: inline-block; background: #e6f7f4; border: 1px solid #1aa59a; border-radius: 12px; padding: 12px 24px; font-weight: 700; color: #123b3a; font-size: 14px;">
+      Thenar: "It knows how you open." — بالتوفيق والتفوق الدائم بإذن الله!
+    </div>
+  </div>
+
+</body>
+</html>

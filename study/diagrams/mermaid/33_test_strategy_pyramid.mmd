@@ -1,0 +1,26 @@
+flowchart TB
+  subgraph TestPyramid["Thenar Verification & Testing Pyramid"]
+    E2E["1. End-to-End Simulation Tests\n(apps/device-sim CLI --scenario)\n9 Real-world scenarios, 100Hz streaming, Lockout verification"]
+    
+    INT["2. Gateway API Integration Tests\n(apps/gateway/src/gateway.test.ts - 10 Tests via Vitest + Supertest)\nStatus, Ingestion, Auth check, Settings, Transactions, SQLite Memory DB"]
+    
+    GOLDEN["3. Golden-Vector Cross-Platform Tests\n(golden-vectors.json)\nTypeScript Engine vs Python Scikit-learn\nNumerical tolerance < 0.0001 on Mahalanobis score s(x)"]
+    
+    UNIT["4. Package Unit Tests\n(packages/contracts & packages/engine Tests)\nZod schema validation, C-header generation, Mulberry32 PRNG, 16-D Feature extraction"]
+
+    E2E --> INT
+    INT --> GOLDEN
+    GOLDEN --> UNIT
+  end
+
+  subgraph Automation["Continuous Verification Commands"]
+    CMD_ALL["npm run test:all\n(Runs Vitest across all JS/TS workspaces)"]
+    CMD_PY["pytest apps/enrollment/tests\n(Runs Python ML tests & Golden Vectors)"]
+    CMD_SIM["npm run sim\n(Executes device hardware simulation)"]
+  end
+
+  CMD_ALL -.-> UNIT
+  CMD_ALL -.-> GOLDEN
+  CMD_ALL -.-> INT
+  CMD_PY -.-> GOLDEN
+  CMD_SIM -.-> E2E

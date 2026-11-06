@@ -1,0 +1,47 @@
+%% Diagram 18: Internationalization (i18n) & RTL Layout Architecture
+%% Project: Thenar - Smart-Safe Handle Telemetry
+flowchart TB
+    Toggle["User Language Toggle (Header.tsx)<br/>setLanguage('en' | 'ar')"]
+
+    subgraph STORE_EFFECT["1. Store Update & DOM Synchronization (App.tsx)"]
+        Store["useThenarStore.setState({ language })"]
+        DOM_Sync["document.documentElement.lang = language<br/>document.documentElement.dir = (language === 'ar' ? 'rtl' : 'ltr')"]
+        Store --> DOM_Sync
+    end
+
+    subgraph DICTIONARY_LOOKUP["2. Zero-Dependency Translation Engine (src/i18n/)"]
+        Index["getTranslation(lang, key)<br/>Traverses nested dictionary keys ('dashboard.hero_title')"]
+        EN_Dict["en.json<br/>Complete English UI Strings"]
+        AR_Dict["ar.json<br/>High-Fidelity Egyptian-friendly Arabic Strings"]
+        Index --> EN_Dict & AR_Dict
+    end
+
+    subgraph LAYOUT_MIRRORING["3. CSS & Layout Behavior in RTL (dir='rtl')"]
+        FlexMirror["Flexbox & Grid Automatic Reversal<br/>• Brand Emblem moves to Right<br/>• Status Pills move to Left<br/>• Sidebar / Tabs mirror alignment"]
+        FontSwitch["Typography System<br/>• Arabic font fallback (Cairo / IBM Plex Sans Arabic)<br/>• Balanced line heights for Arabic descenders"]
+        IconDirection["Directional Icons<br/>• Chevron & Arrow icons flip direction where appropriate"]
+    end
+
+    subgraph STRICT_LTR_PRESERVED["4. Strictly Preserved LTR Islands (dir='ltr')"]
+        Charts["Recharts Multi-Axis Graphs (LiveChart.tsx)<br/>X-axis (Time: 0s -> 1.5s) remains strictly Left-to-Right<br/>Force (Left Y-axis) & Gyro/Accel (Right Y-axis) remain fixed"]
+        Numbers["Western Digits (0, 1, 2... 9)<br/>Preserves standard sensor units (N, deg/s, m/s^2, dBm)"]
+        OrbCanvas["Stipple Orb Canvas (StippleOrb.tsx)<br/>Physics-based 3D particle lighting & drag coordinates are invariant"]
+    end
+
+    Toggle --> STORE_EFFECT
+    STORE_EFFECT --> LAYOUT_MIRRORING
+    DOM_Sync -.->|Triggers re-render| Index
+    Index --> LAYOUT_MIRRORING
+    LAYOUT_MIRRORING -.->|Enforces dir='ltr' attribute on| STRICT_LTR_PRESERVED
+
+    classDef toggle fill:#efeccd,stroke:#e29d3b,stroke-width:1.5px,color:#141414;
+    classDef sync fill:#d2efe9,stroke:#1aa59a,stroke-width:1.5px,color:#123b3a;
+    classDef dict fill:#f8f8f6,stroke:#123b3a,stroke-width:1.5px,color:#141414;
+    classDef layout fill:#e8e8e5,stroke:#0284c7,stroke-width:1.5px,color:#141414;
+    classDef ltr fill:#123b3a,stroke:#1aa59a,stroke-width:2px,color:#ffffff;
+
+    class Toggle toggle;
+    class Store,DOM_Sync sync;
+    class Index,EN_Dict,AR_Dict dict;
+    class FlexMirror,FontSwitch,IconDirection layout;
+    class Charts,Numbers,OrbCanvas ltr;

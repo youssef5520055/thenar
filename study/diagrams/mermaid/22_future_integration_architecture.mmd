@@ -1,0 +1,64 @@
+%% Diagram 22: Planned Future Physical Integration Architecture
+%% Project: Thenar - Smart-Safe Handle Telemetry
+flowchart TB
+    subgraph PHYSICAL_DEVICE["Future Physical Edge Device (ESP32-WROOM-32)"]
+        direction TB
+        HardwareCore["Dual-Core 240 MHz Tensilica LX6"]
+
+        subgraph SENSORS_ACTUATORS["Physical Peripherals"]
+            R503["R503 Optical Fingerprint Scanner (UART)"]
+            HX711["Load Cell + HX711 24-bit ADC (GPIO)"]
+            MPU6050["MPU-6050 6-DoF IMU (I2C)"]
+            MOSFET["MOSFET Driver + 12V Solenoid Bolt"]
+            Reed["Magnetic Reed Switch"]
+        end
+
+        subgraph FIRMWARE_LAYER["ESP32 FreeRTOS Firmware Tasks"]
+            Task_Sample["Task 1: 100 Hz ISR Ring Buffer<br/>Captures Force, Gyro, Accel into SRAM"]
+            Task_Extract["Task 2: Fixed-Point Feature Extractor<br/>Computes 16-D kinematic vector"]
+            Task_Infer["Task 3: On-Device Mahalanobis Edge Inference<br/>s(x) >= tau check in < 15 ms"]
+            Task_Actuate["Task 4: Solenoid Relay Fire (12V pulse)"]
+            Task_Comms["Task 5: Wi-Fi WebSocket / HTTP Server<br/>(AsyncWebServer / WebSocketsServer)"]
+        end
+
+        R503 & HX711 & MPU6050 & Reed --> Task_Sample --> Task_Extract --> Task_Infer --> Task_Actuate --> MOSFET
+        Task_Sample & Task_Infer --> Task_Comms
+    end
+
+    subgraph NETWORK_BOUNDARY["Wi-Fi Network Boundary (WPA2 Local Safe AP)"]
+        direction LR
+        WS_Stream["WebSocket Stream ('ws://192.168.4.1/telemetry')<br/>Binary/JSON 100 Hz stream: {t, force, gyro, accel, phase}"]
+        REST_API["REST Endpoints ('http://192.168.4.1/api/...')<br/>• POST /api/enroll (Uploads frozen mu and Sigma^-1)<br/>• POST /api/settings (Updates lockout thresholds)<br/>• GET /api/log (Syncs onboard SPIFFS attempt history)"]
+    end
+
+    subgraph COMPANION_APP["Thenar Owner Companion Web App"]
+        direction TB
+        subgraph REPLACED_MODULE["Modules Being Replaced"]
+            MockGen["src/mock/engine.ts: generateAttemptFrames()<br/>[REPLACED by real WebSocket telemetry client]"]
+            MockInference["In-browser inference<br/>[Offloaded to ESP32 Task 3; app acts as verified inspector]"]
+        end
+
+        subgraph PRESERVED_MODULES["Modules Preserved 1:1"]
+            UI_Views["All 7 Views & Components (Dashboard, Live, Log, Analytics...)"]
+            ZustandStore["useThenarStore.ts (State, Lockout timers, Notifications)"]
+            LiveCharts["LiveChart.tsx & StippleOrb.tsx (Kinetic visualizers)"]
+            ThemeI18n["Lagoon Design System, sol.css, & Arabic RTL"]
+        end
+    end
+
+    Task_Comms <==>|Wi-Fi 802.11 b/g/n| WS_Stream & REST_API
+    WS_Stream ==>|Real-time Frames| LiveCharts
+    WS_Stream ==>|Decision Packets| ZustandStore
+    REST_API <==>|Profile Sync & Settings| ZustandStore
+
+    classDef hw fill:#efeccd,stroke:#e29d3b,stroke-width:1.5px,color:#141414;
+    classDef fw fill:#d2efe9,stroke:#1aa59a,stroke-width:1.5px,color:#123b3a;
+    classDef net fill:#e8e8e5,stroke:#0284c7,stroke-width:1.5px,color:#141414;
+    classDef rep fill:#fee2e2,stroke:#ef4444,stroke-width:1.5px,stroke-dasharray: 4 4,color:#7f1d1d;
+    classDef keep fill:#f8f8f6,stroke:#123b3a,stroke-width:1.5px,color:#141414;
+
+    class HardwareCore,R503,HX711,MPU6050,MOSFET,Reed hw;
+    class Task_Sample,Task_Extract,Task_Infer,Task_Actuate,Task_Comms fw;
+    class WS_Stream,REST_API net;
+    class MockGen,MockInference rep;
+    class UI_Views,ZustandStore,LiveCharts,ThemeI18n keep;

@@ -1,0 +1,43 @@
+%% Diagram 20: Scientific Evaluation & Benchmark Tables Architecture
+%% Project: Thenar - Smart-Safe Handle Telemetry
+flowchart TD
+    Thesis["Graduation Project Proposal Evaluation Framework"]
+
+    subgraph SCIENTIFIC_PROTOCOL["Scientific Integrity & Evaluation Protocol"]
+        Notice["Protocol Notice:<br/>'Results are filled from measured held-out sessions;<br/>confidence intervals resample volunteers and sessions.'<br/>NO invented metrics (EER/AUC/FAR) are fabricated in the demo prototype."]
+    end
+
+    subgraph BENCHMARK_TABLES["Empirical Verification Benchmark Tables (/analytics)"]
+        direction TB
+        R1["Table R1: One-Class Model Comparison<br/>• M1: Mahalanobis (Shrinkage Covariance)<br/>• M2: One-Class SVM (RBF Kernel)<br/>• M3: k-NN Distance (k=3)<br/>• M4: Supervised Impostor Baseline<br/>Metrics: EER (%), AUC, FAR @ fixed FRR, Flash Size, Latency<br/>[Status: Displays neutral '—' pending trial freeze]"]
+
+        R2["Table R2: Sensor Modality Ablation Analysis<br/>• Force Only (HX711 Load Cell, 6 features)<br/>• Motion Only (MPU-6050 IMU, 8 features)<br/>• Combined Dual-Modal (Force + Motion, 16 features)<br/>[Status: Displays neutral '—' pending laboratory test]"]
+
+        R3["Table R3: Adversarial Threat Scenario Evaluation<br/>• A1: Casual Impostor (Naive)<br/>• A2: Observer Mimicry Level 1<br/>• A2: Informed Mimicry Level 2<br/>• Silicone Spoofed Fingerprint Bypass<br/>[Status: Displays neutral '—' with 95% Confidence Intervals]"]
+
+        R4["Table R4: ESP32 Microcontroller Resource Profile<br/>• Ring Buffer Acquisition (< 10 ms / tick)<br/>• 16-D Feature Extraction Pipeline (< 35 ms)<br/>• Mahalanobis Inference (< 15 ms)<br/>• Total Solenoid Decision Latency (< 100 ms)<br/>[Status: Target budgets specified; measured values '—']"]
+
+        R5["Table R5: Participant-Level Impostor & Volunteer Cohort<br/>• 20 Enrolled Volunteers (P01 - P20)<br/>• Cross-participant evaluation grid<br/>[Status: Awaiting official thesis cohort data freeze]"]
+    end
+
+    subgraph VISUAL_FRAMES["Metric Graphic Frames (Custom SVG)"]
+        ROCCurve["Receiver Operating Characteristic (ROC) Frame<br/>• Diagonal dashed chance baseline (AUC = 0.50)<br/>• LTR Axes: True Accept Rate vs False Accept Rate<br/>• Overlay pill: 'Pending Final Evaluation'"]
+        DETCurve["Detection Error Trade-off (DET) Frame<br/>• Log-scaled axes: False Reject Rate vs False Accept Rate<br/>• Overlay pill: 'Pending Final Evaluation'"]
+    end
+
+    Thesis --> SCIENTIFIC_PROTOCOL
+    SCIENTIFIC_PROTOCOL --> BENCHMARK_TABLES
+    SCIENTIFIC_PROTOCOL --> VISUAL_FRAMES
+
+    BENCHMARK_TABLES --> R1 & R2 & R3 & R4 & R5
+    VISUAL_FRAMES --> ROCCurve & DETCurve
+
+    classDef thesis fill:#123b3a,stroke:#1aa59a,stroke-width:2px,color:#ffffff;
+    classDef proto fill:#d2efe9,stroke:#1aa59a,stroke-width:1.5px,color:#123b3a;
+    classDef tbl fill:#f8f8f6,stroke:#123b3a,stroke-width:1.5px,color:#141414;
+    classDef plot fill:#efeccd,stroke:#e29d3b,stroke-width:1.5px,color:#141414;
+
+    class Thesis thesis;
+    class Notice proto;
+    class R1,R2,R3,R4,R5 tbl;
+    class ROCCurve,DETCurve plot;

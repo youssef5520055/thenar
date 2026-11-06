@@ -1,0 +1,59 @@
+%% Diagram 07: State Management & Persistence Architecture
+%% Project: Thenar - Smart-Safe Handle Telemetry
+flowchart TB
+    subgraph STORE["Zustand Store: src/store/useThenarStore.ts"]
+        direction TB
+
+        subgraph STATE_FIELDS["Store State Slices (Verified)"]
+            S_Lock["Lock State Vector:<br/>• lockState ('LOCKED'|'UNLOCKING'|'UNLOCKED'|'RELOCKING'|'LOCKOUT'|'FAULT')<br/>• doorReedOpen: boolean<br/>• solenoidActive: boolean<br/>• boltRetracted: boolean<br/>• failureCounter: number<br/>• lockoutEndTime: number | null<br/>• lockoutDurationSeconds: number<br/>• lockoutRepeatCount: number<br/>• maxFailuresBeforeLockout: number<br/>• unlockHoldSeconds: number<br/>• activeGestureStep: StepEnum"]
+            S_Hardware["Hardware & Link:<br/>• esp32Online: boolean<br/>• wifiRssi: number<br/>• serviceSwitchEngaged: boolean<br/>• sensors: SensorHealth (hx711, gyro, accel, fp)<br/>• injectSensorFault: boolean"]
+            S_Attempts["Attempts & Telemetry:<br/>• attempts: AttemptRecord[]<br/>• activeSessionFrames: TelemetryFrame[]<br/>• isStreaming: boolean<br/>• playbackSpeed: number"]
+            S_Profile["Owner Profile:<br/>• ownerProfile: OwnerProfile (means, stds, tau, enrolled, trials)"]
+            S_UI["Preferences & Alerts:<br/>• language: 'en' | 'ar'<br/>• theme: 'dark' | 'light'<br/>• notifications: AppNotification[]"]
+        end
+
+        subgraph ACTIONS["Store Dispatch Actions (Verified)"]
+            A_Sim["runSimulation(role, gate1Override)"]
+            A_Door["pullDoorOpen() / closeDoor()"]
+            A_Lockout["checkLockoutExpiry()"]
+            A_Settings["updateSettings(newSettings)"]
+            A_Reset["resetToSeedData() / resetOwnerProfile()"]
+            A_Pref["setLanguage(lang) / setTheme(theme)"]
+            A_Notif["addNotification() / markNotificationsAsRead() / clearNotifications()"]
+            A_Switch["setServiceSwitch(val) / setInjectSensorFault(val)"]
+        end
+    end
+
+    subgraph PERSISTENCE["Storage Boundary"]
+        Storage[("localStorage<br/>('thenar_companion_state_v1')<br/>Safe JSON Try/Catch Serialization")]
+    end
+
+    subgraph READERS["UI Consumers (Readers)"]
+        V_Dash["Dashboard.tsx"]
+        V_Live["LiveSession.tsx"]
+        V_Log["AttemptLog.tsx"]
+        V_Prof["EnrollmentProfile.tsx"]
+        V_Att["AttackSimulator.tsx"]
+        V_Set["Settings.tsx"]
+        V_Head["Header.tsx"]
+        V_Lock["LockMechanismSVG.tsx"]
+    end
+
+    ACTIONS -->|Mutates State| STATE_FIELDS
+    STATE_FIELDS -->|"saveState() Debounced Sync"| Storage
+    Storage -->|"loadPersistedState() Hydration"| STATE_FIELDS
+
+    STATE_FIELDS -.->|Subscribes / Re-renders| READERS
+    READERS ==>|Invokes Actions| ACTIONS
+
+    classDef store fill:#f8f8f6,stroke:#123b3a,stroke-width:2px,color:#141414;
+    classDef slice fill:#d2efe9,stroke:#1aa59a,stroke-width:1.5px,color:#123b3a;
+    classDef action fill:#efeccd,stroke:#e29d3b,stroke-width:1.5px,color:#141414;
+    classDef reader fill:#e8e8e5,stroke:#0284c7,stroke-width:1.5px,color:#141414;
+    classDef db fill:#123b3a,stroke:#1aa59a,stroke-width:2px,color:#ffffff;
+
+    class STORE store;
+    class S_Lock,S_Hardware,S_Attempts,S_Profile,S_UI slice;
+    class A_Sim,A_Door,A_Lockout,A_Settings,A_Reset,A_Pref,A_Notif,A_Switch action;
+    class V_Dash,V_Live,V_Log,V_Prof,V_Att,V_Set,V_Head,V_Lock reader;
+    class Storage db;

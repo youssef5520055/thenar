@@ -1,0 +1,36 @@
+sequenceDiagram
+  autonumber
+  actor Device as ESP32 / Device-Sim
+  participant GW as Gateway Router (/attempts)
+  participant Auth as Token Middleware
+  participant Schema as Zod Validator (contracts)
+  participant DB as SQLite WAL Database
+  participant WS as WebSocket Manager (/ws/live)
+  actor UI as Web Dashboard
+
+  Note over Device,UI: Edge Decision Completed: Device evaluated Gate 1 + Gate 2
+
+  Device->>GW: POST /api/v1/attempts<br/>Header: x-device-token: secret<br/>Body: Attempt JSON
+  
+  GW->>Auth: Verify x-device-token
+  alt Token Missing or Invalid
+    Auth-->>Device: 401 Unauthorized (Error JSON)
+  else Token Valid
+    Auth->>Schema: AttemptSchema.safeParse(body)
+    alt Invalid Payload
+      Schema-->>Device: 400 Bad Request (Validation Issues)
+    else Schema Validated
+      Schema->>DB: BEGIN TRANSACTION
+      DB->>DB: INSERT INTO attempts (id, outcome, score, tau, ...)
+      DB->>DB: UPDATE lock_status SET failureCount, state, updatedAt
+      DB->>DB: INSERT INTO audit_log (eventType, detailsJson)
+      DB->>DB: COMMIT TRANSACTION
+      DB-->>GW: Transaction Committed Successfully
+
+      GW->>WS: broadcastAttempt(attempt)
+      WS-->>UI: WebSocket Frame: {"type": "attempt", "data": {...}}
+      Note over UI: Zustand updates attempts[], plays sound, updates lock canvas
+
+      GW-->>Device: 201 Created {"success": true, "attemptId": "..."}
+    end
+  end

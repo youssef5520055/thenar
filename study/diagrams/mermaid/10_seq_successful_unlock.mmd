@@ -1,0 +1,50 @@
+%% Diagram 10: Sequence Diagram - Successful Owner Unlock
+%% Project: Thenar - Smart-Safe Handle Telemetry
+sequenceDiagram
+    autonumber
+    actor Owner as Owner (Physical)
+    participant UI as Dashboard / UI View
+    participant Store as useThenarStore
+    participant Mock as Mock Engine
+    participant Solenoid as Solenoid Deadbolt
+    participant Reed as Reed Switch
+
+    Note over Owner,Reed: Phase 1: Contact, Touch Awakening & Grip Build-up
+    Owner->>UI: Presses 'Simulate Owner Unlock' (or touches handle)
+    UI->>Store: runSimulation('owner', true)
+    Store->>Store: set({ isStreaming: true, activeGestureStep: 'touch' })
+    Store->>Mock: generateAttemptFrames('owner', 'S4', defaultPRNG)
+    Mock-->>Store: returns TelemetryFrame[] (100 Hz kinematic stream)
+
+    Note over Owner,Reed: Phase 2 & 3: Handle Rotation, Release & Feature Calculation
+    Store->>Store: set({ activeGestureStep: 'turn' -> 'release' -> 'decision' })
+    Store->>Mock: extractFeatures(frames)
+    Mock-->>Store: returns 16-D FeatureVector
+    Store->>Mock: computeMahalanobisScore(features, ownerProfile.means, ownerProfile.stds)
+    Mock-->>Store: returns { score: -3.12, deviations: [...] }
+
+    Note over Store: Dual-Gate Evaluation Rule
+    Note over Store: Gate 1 (FP) == true AND s(x) [-3.12] >= tau [-3.85] -> ACCEPT!
+
+    Store->>Store: failureCounter = 0, lockState = 'UNLOCKING'
+    Store->>Solenoid: solenoidActive = true, boltRetracted = true
+    Solenoid-->>UI: LockMechanismSVG animates bolt retracting
+    Store->>UI: addNotification('unlock_success'), triggers confetti
+
+    Note over Owner,Reed: Physical Door Pull & Solenoid Hold Interval
+    opt Owner pulls door open
+        Owner->>UI: pullDoorOpen()
+        UI->>Store: doorReedOpen = true, lockState = 'UNLOCKED'
+        Store->>Reed: Magnetic circuit opens (Door Ajar)
+    end
+
+    Note over Store,Solenoid: Automatic Re-locking Sequence
+    Store->>Store: wait unlockHoldSeconds (default 5s)
+    opt When door is closed
+        Owner->>UI: closeDoor()
+        UI->>Store: closeDoor()
+        Store->>Store: doorReedOpen = false, lockState = 'RELOCKING'
+        Store->>Solenoid: solenoidActive = false (Solenoid de-energized)
+        Store->>Store: lockState = 'LOCKED', boltRetracted = false
+        Solenoid-->>UI: Deadbolt snaps into door strike plate
+    end

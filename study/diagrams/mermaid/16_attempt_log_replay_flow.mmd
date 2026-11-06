@@ -1,0 +1,57 @@
+%% Diagram 16: Attempt Audit Log & Replay Pipeline
+%% Project: Thenar - Smart-Safe Handle Telemetry
+flowchart TD
+    Attempts[("Store Attempts Array: AttemptRecord[]<br/>Seed attempts (S1-S4) + Live simulated sessions")]
+
+    subgraph FILTERING["1. Query & Filtering Engine"]
+        SearchInput["Text Search (Session ID, Role, or Tag)"]
+        OutcomePill["Outcome Filter (ALL | ACCEPT | REJECT)"]
+        SessionPill["Session Day Filter (ALL | S1 | S2 | S3 | S4)"]
+        Predicate["Filter Predicate (in-memory filtering)"]
+
+        SearchInput & OutcomePill & SessionPill --> Predicate
+        Attempts --> Predicate
+    end
+
+    subgraph PRESENTATION["2. Dual-Mode Responsive Presentation"]
+        DesktopTable["Desktop View (overflow-x-auto Table)<br/>Columns: Time, Session ID, Role, Gate 1, Score s(x), tau, Decision, Counter, Actions"]
+        MobileCards["Mobile View (Vertical Stack Cards)<br/>Compact badges, quick stats, right chevron tap target"]
+
+        Predicate --> DesktopTable & MobileCards
+    end
+
+    subgraph INSPECTION["3. Single Attempt Inspection Drawer"]
+        RowClick["User clicks row or card"]
+        Drawer["Detail Drawer Modal<br/>• Full timestamp & session metadata<br/>• 16-D Extracted Metric Badges (Duration, Peak Force, Gyro, Accel)<br/>• z-Score Deviation Horizontal Bar Chart (+/- 2sigma tolerance)"]
+
+        DesktopTable & MobileCards --> RowClick --> Drawer
+    end
+
+    subgraph INTERACTIVE_REPLAY["4. Synchronized Telemetry Replay Modal"]
+        ReplayBtn["User clicks 'Replay'"]
+        ReplayModal["Interactive Replay Modal<br/>Loads full recorded 100 Hz frames into LiveChart.tsx<br/>Replay slider & synchronized cursor across Force, Gyro, & Accel"]
+
+        DesktopTable & Drawer --> ReplayBtn --> ReplayModal
+    end
+
+    subgraph EXPORT_OPTIONS["5. Audit Trail Data Export"]
+        ExportAllCSV["Export Log to CSV (downloadFile)"]
+        ExportAllJSON["Export Log to JSON (downloadFile)"]
+        ExportFramesCSV["Export Single Attempt Raw Frames (CSV)"]
+        ExportFramesJSON["Export Single Attempt Telemetry (JSON)"]
+
+        Predicate --> ExportAllCSV & ExportAllJSON
+        Drawer --> ExportFramesCSV & ExportFramesJSON
+    end
+
+    classDef store fill:#123b3a,stroke:#1aa59a,stroke-width:2px,color:#ffffff;
+    classDef filter fill:#efeccd,stroke:#e29d3b,stroke-width:1.5px,color:#141414;
+    classDef ui fill:#d2efe9,stroke:#1aa59a,stroke-width:1.5px,color:#123b3a;
+    classDef modal fill:#f8f8f6,stroke:#123b3a,stroke-width:1.5px,color:#141414;
+    classDef export fill:#e8e8e5,stroke:#0284c7,stroke-width:1.5px,color:#141414;
+
+    class Attempts store;
+    class SearchInput,OutcomePill,SessionPill,Predicate filter;
+    class DesktopTable,MobileCards ui;
+    class RowClick,Drawer,ReplayBtn,ReplayModal modal;
+    class ExportAllCSV,ExportAllJSON,ExportFramesCSV,ExportFramesJSON export;

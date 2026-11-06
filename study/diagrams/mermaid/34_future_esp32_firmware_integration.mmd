@@ -1,0 +1,60 @@
+flowchart TB
+  subgraph PhysicalSensors["Physical Sensors on Smart-Safe Handle"]
+    LOAD_CELL["Strain Gauge Load Cell\n(Embedded in handle grip)"]
+    HX711["HX711 24-bit ADC Module\n(80/100 SPS Bit-bang)"]
+    MPU6050["MPU-6050 6-DoF IMU\n(I2C Fast Mode 400kHz)"]
+    FPM["R503 Optical Fingerprint Sensor\n(UART2 57600 baud)"]
+    REED["Magnetic Reed Switch\n(Door closed contact)"]
+
+    LOAD_CELL --> HX711
+  end
+
+  subgraph ESP32["ESP32-S3 Microcontroller (Dual Xtensa LX7 Cores)"]
+    subgraph Core0["Core 0: Hard Real-Time Acquisition (FreeRTOS)"]
+      TASK_SENSE["Task 1: Sensor Sampling (Priority 5)\nTriggered every 10ms via HW Timer"]
+      RING_BUF[("Ring Buffer\n(150 Frames = 1.5s window)")]
+      TASK_SENSE --> RING_BUF
+    end
+
+    subgraph Core1["Core 1: Inference, Actuation & Telemetry"]
+      TASK_FP["Task 2: Fingerprint Listener (Priority 4)\nUART packet parser & template matcher"]
+      
+      TASK_AI["Task 3: On-Device Biometric Classifier (Priority 3)\nExtracts 16-D Features\nRuns thenar_compute_score() via thenar_model.h\nEvaluates Gate 1 AND Gate 2"]
+      
+      TASK_ACT["Task 4: Actuator Gate Controller (Priority 6)\nGPIO Trigger to MOSFET Driver\nEnergizes 12V Solenoid for 3000ms"]
+
+      TASK_WIFI["Task 5: Gateway Telemetry Task (Priority 2)\nWi-Fi Station Mode\nPOST /api/v1/attempts & WS Stream"]
+
+      FLASH_NVM[(".device-state in NVM Flash\n(Escalating Lockout Memory)")]
+    end
+
+    HX711 --> TASK_SENSE
+    MPU6050 --> TASK_SENSE
+    FPM --> TASK_FP
+    REED --> TASK_AI
+
+    RING_BUF --> TASK_AI
+    TASK_FP --> TASK_AI
+    TASK_AI --> TASK_ACT
+    TASK_AI --> TASK_WIFI
+    TASK_AI <--> FLASH_NVM
+  end
+
+  subgraph ActuatorBolt["Mechanical Locking Mechanism"]
+    MOSFET["IRFZ44N MOSFET Driver"]
+    SOLENOID["12V Pull-Type Solenoid"]
+    SPRING["Fail-Secure Steel Spring"]
+    DEADBOLT["Stainless Steel Deadbolt"]
+
+    TASK_ACT --> MOSFET
+    MOSFET -- "12V Pulse" --> SOLENOID
+    SOLENOID -- "Pulls pin (3s)" --> DEADBOLT
+    SPRING -- "Pushes pin (Fail-Secure)" --> DEADBOLT
+  end
+
+  subgraph CloudGateway["Thenar Gateway Server (Host / Pi)"]
+    GW_API["REST /api/v1/attempts"]
+    GW_WS_DEV["WebSocket /ws/device"]
+    TASK_WIFI -- "Wi-Fi WPA3" --> GW_API
+    TASK_WIFI -- "100Hz Frame Stream" --> GW_WS_DEV
+  end

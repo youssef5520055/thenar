@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Thenar Mermaid Batch Renderer</title>
+  <script src="/mermaid.min.js"></script>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 32px;
+      background: #ffffff;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Cairo", sans-serif;
+      display: inline-block;
+      min-width: 100vw;
+      min-height: 100vh;
+    }
+    #wrapper {
+      display: inline-block;
+      background: #ffffff;
+      padding: 24px;
+      border-radius: 12px;
+      border: 1px solid #d2efe9;
+      box-shadow: 0 4px 20px rgba(18, 59, 58, 0.05);
+    }
+    #container {
+      display: inline-block;
+      background: #ffffff;
+    }
+    svg {
+      max-width: none !important;
+      height: auto !important;
+      display: block;
+    }
+    .mermaid {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+    }
+  </style>
+</head>
+<body>
+  <div id="wrapper">
+    <div id="container"></div>
+  </div>
+
+  <script>
+    mermaid.initialize({
+      startOnLoad: false,
+      theme: 'base',
+      themeVariables: {
+        primaryColor: '#e6f7f5',
+        primaryTextColor: '#0d2827',
+        primaryBorderColor: '#1aa59a',
+        lineColor: '#1aa59a',
+        secondaryColor: '#fef7e6',
+        tertiaryColor: '#f1f8f7',
+        background: '#ffffff',
+        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+        fontSize: '14px',
+        edgeLabelBackground: '#ffffff',
+        actorBorder: '#1aa59a',
+        actorBkg: '#e6f7f5',
+        actorTextColor: '#0d2827',
+        signalColor: '#1aa59a',
+        signalTextColor: '#0d2827',
+        labelBoxBkgColor: '#e6f7f5',
+        labelBoxBorderColor: '#1aa59a',
+        labelTextColor: '#0d2827',
+        loopTextColor: '#0d2827',
+        noteBorderColor: '#e9a23b',
+        noteBkgColor: '#fff9e6',
+        noteTextColor: '#4a3000'
+      }
+    });
+
+    let counter = 0;
+
+    window.renderDiagramCode = async function(name, mmdCode) {
+      counter++;
+      const id = 'svg_' + counter;
+      const { svg } = await mermaid.render(id, mmdCode);
+      const container = document.getElementById('container');
+      container.innerHTML = svg;
+      
+      // Auto-post SVG to server
+      try {
+        await fetch('/save_svg', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name: name.replace('.mmd', ''), svg })
+        });
+      } catch (err) {
+        console.error('Failed to save SVG', err);
+      }
+      return true;
+    };
+  </script>
+</body>
+</html>
